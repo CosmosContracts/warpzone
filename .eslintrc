@@ -1,0 +1,60 @@
+{
+	"env": {
+		"browser": true,
+		"node": true,
+		"es2021": true
+	},
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"ecmaVersion": 2021,
+		"sourceType": "module",
+		"project": "./tsconfig.json",
+		"ecmaFeatures": {
+			"jsx": true
+		}
+	},
+	"plugins": ["@typescript-eslint"],
+	"extends": ["next", "prettier", "plugin:prettier/recommended"],
+	"rules": {
+		"import/extensions": "off",
+		"import/prefer-default-export": "off",
+		"import/no-cycle": ["off", { "ignoreExternal": true }],
+		"import/no-unresolved": "error",
+		"react/prop-types": "off",
+		"react/function-component-definition": ["off"],
+		"react/react-in-jsx-scope": "off",
+		"react/jsx-props-no-spreading": ["error", { "custom": "ignore" }],
+		"react/jsx-filename-extension": [1, { "extensions": [".ts", ".tsx"] }],
+		"react/no-unescaped-entities": "off",
+		"react/require-default-props": "off",
+		"jsx-a11y/anchor-is-valid": "off",
+		"prettier/prettier": "error",
+		"no-use-before-define": "off",
+		"@typescript-eslint/no-use-before-define": [
+			"error",
+			{ "functions": false, "classes": false, "variables": true }
+		],
+		"@typescript-eslint/no-unused-vars": "error",
+		"@typescript-eslint/no-explicit-any": "error",
+		"@typescript-eslint/explicit-function-return-type": "off",
+		"@typescript-eslint/explicit-module-boundary-types": "off",
+		"no-param-reassign": [
+			"error",
+			{ "props": true, "ignorePropertyModificationsFor": ["state"] }
+		]
+	},
+	"settings": {
+		"import/parsers": {
+			"@typescript-eslint/parser": [".ts", ".tsx"]
+		},
+		"import/resolver": {
+			"typescript": {
+				"alwaysTryTypes": true
+			},
+			"node": {
+				"extensions": [".js", ".jsx", ".ts", ".tsx"],
+				"moduleDirectory": ["node_modules", "./"]
+			}
+		}
+	}
+}

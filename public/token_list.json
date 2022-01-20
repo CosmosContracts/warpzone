@@ -1,0 +1,128 @@
+{
+	"base_token": {
+		"id": "juno-network",
+		"chain_id": "uni",
+		"token_address": "",
+		"symbol": "JUNOX",
+		"name": "Junox",
+		"decimals": 6,
+		"logoURI": "https://junochain.com/assets/logos/logo_512x512.png",
+		"tags": ["native"],
+		"native": true,
+		"denom": "ujunox"
+	},
+	"tokens": [
+		{
+			"chain_id": "uni",
+			"symbol": "JUNOX",
+			"name": "Juno",
+			"ticker": "Juno",
+			"decimals": 6,
+			"logoURI": "https://junochain.com/assets/logos/logo_512x512.png",
+			"tags": ["native"],
+			"native": true,
+			"denom": "ujunox"
+		},
+		{
+			"chain_id": "uni",
+			"token_address": "juno13elkhml6hyggewjzh6nt5ljvh2cfssvk0fepsnurq42vucfxadhst5tz53",
+			"symbol": "test",
+			"name": "Warpzone Test",
+			"ticker": "WZT",
+			"decimals": 6,
+			"logoURI": "https://s3.amazonaws.com/cdn-origin-etr.akc.org/wp-content/uploads/2017/11/29231450/Poodle-Standard-Gray-On-White-Standing.jpg",
+			"tags": ["protocol"],
+			"native": false,
+			"denom": "utest"
+		},
+		{
+			"chain_id": "uni",
+			"token_address": "juno13elkhml6hyggewjzh6nt5ljvh2cfssvk0fepsnurq42vucfxadhst5tz53",
+			"symbol": "ccat",
+			"name": "CoolCat",
+			"ticker": "CCAT",
+			"decimals": 9,
+			"logoURI": "https://i.imgur.com/fjUPWYK.png",
+			"tags": ["coolcat"],
+			"native": false,
+			"denom": "uccat"
+		},
+		{
+			"chain_id": "uni",
+			"token_address": "juno13elkhml6hyggewjzh6nt5ljvh2cfssvk0fepsnurq42vucfxadhst5tz53",
+			"symbol": "awzt",
+			"name": "Another Warpzone Test",
+			"ticker": "aWZT",
+			"decimals": 1,
+			"logoURI": "https://i1.sndcdn.com/artworks-000650748820-jvupmz-t500x500.jpg",
+			"tags": ["protocol"],
+			"native": false,
+			"denom": "uawzt"
+		},
+		{
+			"chain_id": "uni",
+			"token_address": "juno13elkhml6hyggewjzh6nt5ljvh2cfssvk0fepsnurq42vucfxadhst5tz53",
+			"symbol": "jdoge",
+			"name": "Juno Doge",
+			"ticker": "jDOGE",
+			"decimals": 2,
+			"logoURI": "https://www.cointribune.com/app/uploads/2021/08/dogecoin.jpg",
+			"tags": ["memecoin"],
+			"native": false,
+			"denom": "ujdoge"
+		},
+		{
+			"chain_id": "uni",
+			"token_address": "juno13elkhml6hyggewjzh6nt5ljvh2cfssvk0fepsnurq42vucfxadhst5tz53",
+			"symbol": "neta",
+			"name": "Neta Money",
+			"ticker": "Neta",
+			"decimals": 6,
+			"logoURI": "https://pbs.twimg.com/profile_images/1465777324859826197/RUXx0equ_400x400.jpg",
+			"tags": ["sov"],
+			"native": false,
+			"denom": "uneta"
+		},
+		{
+			"chain_id": "uni",
+			"token_address": "juno13elkhml6hyggewjzh6nt5ljvh2cfssvk0fepsnurq42vucfxadhst5tz53",
+			"symbol": "mgc",
+			"name": "Me Gusta Coin",
+			"ticker": "MGC",
+			"decimals": 8,
+			"logoURI": "https://i.imgur.com/5VDqvND.png",
+			"tags": ["memecoin"],
+			"native": false,
+			"denom": "umgc"
+		},
+		{
+			"chain_id": "uni",
+			"token_address": "juno13elkhml6hyggewjzh6nt5ljvh2cfssvk0fepsnurq42vucfxadhst5tz53",
+			"symbol": "jva",
+			"name": "Jugendverzugsanstalt",
+			"ticker": "JVA",
+			"decimals": 2,
+			"logoURI": "https://t3.ftcdn.net/jpg/04/51/13/66/360_F_451136605_EFXJcOgdKJy9W8x6yViCO7GTrcgLNjxr.jpg",
+			"tags": ["memecoin"],
+			"native": false,
+			"denom": "ujva"
+		},
+		{
+			"chain_id": "uni",
+			"token_address": "juno1m32jup4uzu6jqhyvtsw3kgg7jnl52uj53mmf9ckjcuv8w29yaq3s6lqqff",
+			"symbol": "not",
+			"name": "Not Owned",
+			"ticker": "NOT",
+			"decimals": 1,
+			"logoURI": "https://s2.coinmarketcap.com/static/img/coins/200x200/3794.png",
+			"tags": ["memecoin"],
+			"native": false,
+			"denom": "unot"
+		}
+	],
+	"version": {
+		"major": 0,
+		"minor": 1,
+		"patch": 0
+	}
+}

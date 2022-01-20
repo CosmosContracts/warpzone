@@ -1,0 +1,21 @@
+{
+	"search.exclude": {
+		"**/.yarn": true,
+		"**/.pnp.*": true
+	},
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": true
+	},
+	"editor.tabSize": 3,
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"files.autoSave": "onWindowChange",
+	"editor.insertSpaces": false,
+	"editor.cursorBlinking": "phase",
+	"editor.cursorSmoothCaretAnimation": true,
+	"editor.smoothScrolling": true,
+	"workbench.list.smoothScrolling": true,
+	"smoothtype.duration": 60,
+	"smoothtype.autoReload": true,
+	"eslint.nodePath": ".yarn/sdks"
+}

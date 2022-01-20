@@ -1,0 +1,13 @@
+{
+	"recommendations": [
+		"arcanis.vscode-zipfs",
+		"dbaeumer.vscode-eslint",
+		"esbenp.prettier-vscode",
+		"formulahendry.auto-close-tag",
+		"formulahendry.auto-rename-tag",
+		"naumovs.color-highlight",
+		"mikestead.dotenv",
+		"eamodio.gitlens",
+		"vincaslt.highlight-matching-tag"
+	]
+}
