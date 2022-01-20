@@ -140,11 +140,8 @@ export const AssetCard = ({
 
 	useEffect(() => {
 		if (!isActive) {
-			const playRestAnimation = async () => {
-				addKeplrControls.start("exit")
-				plusIconControls.start("exit")
-			}
-			playRestAnimation()
+			addKeplrControls.start("exit")
+			plusIconControls.start("exit")
 			animate(
 				boxShadow,
 				"0 3px 10px 0 rgba(101, 246, 168, 0), 0 -3px 10px 0 rgba(0, 150, 250, 0),inset 0 0 0 2px  rgba(101, 246, 168, 0),inset -4px 0 7px -2px rgba(220,220,220,0)",
@@ -185,10 +182,8 @@ export const AssetCard = ({
 
 	return (
 		<Box
-			minW="6rem"
 			as={motion.div}
 			layout
-			initial={"hidden"}
 			h="4rem"
 			rounded="2xl"
 			style={{

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { AssetCard, AssetCardProps } from "./AssetCard"
 import {
 	Box,
@@ -24,6 +25,7 @@ type TokenGridItemProps = AssetCardProps & {
 	delayPerPixel: number
 	i: number
 	originIndex: number
+	activeIndex: number
 	originOffset: MutableRefObject<{
 		top: number
 		left: number
@@ -36,7 +38,8 @@ const TokenGridItem = ({
 	originOffset,
 	tokenSymbol,
 	balance,
-	i
+	i,
+	activeIndex
 }: TokenGridItemProps) => {
 	const offset = useRef({ top: 0, left: 0 })
 	const ref = useRef<HTMLDivElement>()
@@ -48,14 +51,27 @@ const TokenGridItem = ({
 		hidden: {
 			scale: 0.5,
 			opacity: 0,
+			width: "6rem",
 			transition: { duration: 0.25 }
 		},
 		reveal: (delayRef: MutableRefObject<number>) => ({
 			opacity: 1,
-			scale: 1,
+			scale: 1.0,
 			width: "8rem",
 			transition: { delay: delayRef.current, duration: 0.25 }
-		})
+		}),
+		active: {
+			opacity: 1,
+			scale: 1,
+			width: "12rem",
+			transition: { duration: 0.25 }
+		},
+		rest: {
+			opacity: 1,
+			scale: 1,
+			width: "10rem",
+			transition: { duration: 0.25 }
+		}
 	}
 
 	useLayoutEffect(() => {
@@ -71,10 +87,9 @@ const TokenGridItem = ({
 			// eslint-disable-next-line no-param-reassign
 			originOffset.current = offset.current
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [delayPerPixel])
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		const dx = Math.abs(offset.current.left - originOffset.current.left)
 		const dy = Math.abs(offset.current.top - originOffset.current.top)
 		const d = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2))
@@ -82,18 +97,30 @@ const TokenGridItem = ({
 	})
 
 	useEffect(() => {
+		console.log(delayRef.current)
+	}, [delayRef])
+
+	useEffect(() => {
 		if (isActive) {
-			console.log("Active")
+			tokenCardControls.start("active")
 		} else {
-			console.log("Not active")
+			tokenCardControls.start("reveal")
 		}
 	}, [isActive])
 
+	useEffect(() => {
+		if (i === activeIndex) {
+			setActive(true)
+		} else {
+			setActive(false)
+		}
+	}, [activeIndex])
+
 	return (
 		<Box
-			onClick={() => setActive(!isActive)}
 			as={motion.div}
 			ref={ref}
+			initial="hidden"
 			animate={tokenCardControls}
 			variants={tokenCardVariants}
 			custom={delayRef}
@@ -120,7 +147,7 @@ export const AssetsList = () => {
 	useEffect(() => setVisibility(true), [])
 
 	/* isLoading state is true if either we connect the wallet or loading balances */
-	// const isLoading = loadingBalances
+	const isLoading = loadingBalances
 	/* check if the user has any of the assets transferred on the chain */
 	const hasTransferredAssets = !loadingBalances && myTokens.length > 0
 
@@ -155,12 +182,17 @@ export const AssetsList = () => {
 				/>
 			</HStack>
 
-			<AnimatePresence>
-				{activeAccordionItem == 0 && sdk.initialized && (
+			<AnimatePresence exitBeforeEnter>
+				{activeAccordionItem == 0 && isLoading && (
+					<Text color="secondary" as="span">
+						Loading Token Balances...
+					</Text>
+				)}
+				{activeAccordionItem == 0 && sdk.initialized && !isLoading && (
 					<Grid
 						m={0}
 						p={0}
-						templateColumns="repeat(4, 1fr)"
+						templateColumns="repeat(4, fit-content(12rem))"
 						gap={1}
 						pos="relative"
 						bg="blackAlpha.400"
@@ -171,18 +203,23 @@ export const AssetsList = () => {
 						w="full"
 					>
 						{hasTransferredAssets &&
-							myTokens.map(({ tokenSymbol, balance }, index) => (
-								<TokenGridItem
+							//myTokens.map(({ tokenSymbol, balance }, index) => (
+							Array.from({ length: 20 }).map((_, index) => (
+								<Box
+									key={index}
 									onClick={() => selectToken(index, activeIndex)}
-									key={tokenSymbol}
-									tokenSymbol={tokenSymbol}
-									balance={balance}
-									delayPerPixel={0.0001}
-									originIndex={0}
-									originOffset={originOffset}
-									isActive={false}
-									i={index}
-								/>
+								>
+									<TokenGridItem
+										activeIndex={activeIndex}
+										tokenSymbol={"mock"}
+										balance={20}
+										delayPerPixel={0.002}
+										originIndex={0}
+										originOffset={originOffset}
+										isActive={false}
+										i={index}
+									/>
+								</Box>
 							))}
 						{sdk.initialized && !hasTransferredAssets && (
 							<Text color="secondary" as="span">
@@ -215,6 +252,7 @@ export const AssetsList = () => {
 										originOffset={originOffset}
 										isActive={false}
 										i={1}
+										activeIndex={activeIndex}
 									/>
 								)
 							})}
