@@ -25,6 +25,7 @@ const Step3 = () => {
 				border="2px double"
 				rounded="2xl"
 				borderColor="whiteAlpha.500"
+				spacing="0"
 			>
 				<Input
 					variant="glass"

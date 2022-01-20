@@ -1,14 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { AssetCard, AssetCardProps } from "./AssetCard"
-import {
-	Box,
-	Flex,
-	Grid,
-	HStack,
-	IconButton,
-	Text,
-	Wrap
-} from "@chakra-ui/react"
+import { Box, Flex, Grid, Text, useBoolean, Wrap } from "@chakra-ui/react"
 import { useGetSupportedAssetsBalancesOnChain } from "../hooks/useGetSupportedAssetsBalancesOnChain"
 import { useSdk } from "@services/client"
 import {
@@ -19,13 +11,14 @@ import {
 	useState
 } from "react"
 import { AnimatePresence, motion, useAnimation, Variants } from "framer-motion"
-import { ArrowCounterClockwise } from "phosphor-react"
+import AssetAccordion from "./AssetAccordion"
 
 type TokenGridItemProps = AssetCardProps & {
 	delayPerPixel: number
 	i: number
 	originIndex: number
 	activeIndex: number
+	isVisible: boolean
 	originOffset: MutableRefObject<{
 		top: number
 		left: number
@@ -45,15 +38,19 @@ const TokenGridItem = ({
 	const ref = useRef<HTMLDivElement>()
 	const delayRef = useRef<number>(0)
 	const tokenCardControls = useAnimation()
-	const [isActive, setActive] = useState(false)
+	const [isActive, setActive] = useBoolean(false)
 
 	const tokenCardVariants: Variants = {
-		hidden: {
+		hidden: (delayRef: MutableRefObject<number>) => ({
 			scale: 0.5,
 			opacity: 0,
-			width: "6rem",
-			transition: { duration: 0.25 }
-		},
+			transition: {
+				delay: delayRef.current,
+				duration: 0.25,
+				repeat: Infinity,
+				repeatType: "reverse"
+			}
+		}),
 		reveal: (delayRef: MutableRefObject<number>) => ({
 			opacity: 1,
 			scale: 1.0,
@@ -69,12 +66,10 @@ const TokenGridItem = ({
 		rest: {
 			opacity: 1,
 			scale: 1,
-			width: "10rem",
+			width: "8rem",
 			transition: { duration: 0.25 }
 		}
 	}
-
-	//TODO@vexxvakan
 
 	useLayoutEffect(() => {
 		const element = ref.current
@@ -99,22 +94,12 @@ const TokenGridItem = ({
 	})
 
 	useEffect(() => {
-		console.log(delayRef.current)
-	}, [delayRef])
-
-	useEffect(() => {
-		if (isActive) {
-			tokenCardControls.start("active")
-		} else {
-			tokenCardControls.start("reveal")
-		}
-	}, [isActive])
-
-	useEffect(() => {
 		if (i === activeIndex) {
-			setActive(true)
+			tokenCardControls.start("active")
+			setActive.on
 		} else {
-			setActive(false)
+			setActive.off
+			tokenCardControls.start("reveal")
 		}
 	}, [activeIndex])
 
@@ -123,6 +108,19 @@ const TokenGridItem = ({
 			as={motion.div}
 			ref={ref}
 			initial="hidden"
+			exit="hidden"
+			onAnimationComplete={(definition) => {
+				switch (definition) {
+					case "reveal":
+						console.log("reveal")
+						tokenCardControls.set("rest")
+						break
+
+					default:
+						console.log("else")
+						break
+				}
+			}}
 			animate={tokenCardControls}
 			variants={tokenCardVariants}
 			custom={delayRef}
@@ -142,11 +140,16 @@ export const AssetsList = () => {
 
 	const sdk = useSdk()
 	const [activeIndex, setActiveIndex] = useState<number>(undefined)
-	const [activeAccordionItem, setActiveAccordionItem] = useState<number>(0)
 	const originOffset = useRef({ top: 0, left: 0 })
-	const [isVisible, setVisibility] = useState(false)
+	const [isVisible, setVisibility] = useBoolean(false)
 
-	useEffect(() => setVisibility(true), [])
+	useLayoutEffect(() => {
+		const toggleVisibility = async () => {
+			setVisibility.on
+			console.log(isVisible)
+		}
+		toggleVisibility()
+	}, [])
 
 	/* isLoading state is true if either we connect the wallet or loading balances */
 	const isLoading = loadingBalances
@@ -167,105 +170,76 @@ export const AssetsList = () => {
 			h="full"
 			align="center"
 		>
-			<HStack placeSelf={"start"} flex="1">
-				<Text textAlign="left" pl={3} py={1}>
-					Available Tokens
-				</Text>
-				<IconButton
-					h="2.5rem"
-					w="2.5rem"
-					colorScheme="brand"
-					variant="outline"
-					rounded="full"
-					alignSelf={"start"}
-					aria-label="back to mode selection"
-					icon={<ArrowCounterClockwise size={24} weight="duotone" />}
-					onClick={() => setActiveAccordionItem(0)}
-				/>
-			</HStack>
-
-			<AnimatePresence exitBeforeEnter>
-				{activeAccordionItem == 0 && isLoading && (
-					<Text color="secondary" as="span">
-						Loading Token Balances...
-					</Text>
-				)}
-				{activeAccordionItem == 0 && sdk.initialized && !isLoading && (
-					<Grid
-						m={0}
-						p={0}
-						templateColumns="repeat(4, fit-content(12rem))"
-						gap={1}
-						pos="relative"
-						bg="blackAlpha.400"
-						as={motion.div}
-						layout
-						initial={false}
-						animate={isVisible ? "reveal" : "hidden"}
-						w="full"
-					>
-						{hasTransferredAssets &&
-							//myTokens.map(({ tokenSymbol, balance }, index) => (
-							Array.from({ length: 20 }).map((_, index) => (
-								<Box
-									key={index}
-									onClick={() => selectToken(index, activeIndex)}
-								>
-									<TokenGridItem
-										activeIndex={activeIndex}
-										tokenSymbol={"mock"}
-										balance={20}
-										delayPerPixel={0.002}
-										originIndex={0}
-										originOffset={originOffset}
-										isActive={false}
-										i={index}
-									/>
-								</Box>
-							))}
-						{sdk.initialized && !hasTransferredAssets && (
-							<Text color="secondary" as="span">
-								No compatible assets found
-							</Text>
-						)}
-					</Grid>
-				)}
-			</AnimatePresence>
-			<Box
-				flex="1"
-				textAlign="left"
-				onClick={() => setActiveAccordionItem(1)}
-			>
-				<Text pl={3} py={1}>
-					All Tokens
-				</Text>
-			</Box>
-			<AnimatePresence>
-				{activeAccordionItem == 1 && (
-					<Wrap as={motion.div} px={3} spacing={3} w="full" h="full">
-						{sdk.initialized &&
-							!hasTransferredAssets &&
-							allTokens.map(({ tokenSymbol }) => {
-								return (
-									<TokenGridItem
-										key={tokenSymbol}
-										delayPerPixel={0.004}
-										originIndex={0}
-										originOffset={originOffset}
-										isActive={false}
-										i={1}
-										activeIndex={activeIndex}
-									/>
-								)
-							})}
-						{sdk.initialized && hasTransferredAssets && (
-							<Text color="secondary" as="span">
-								You seem to own all the assets! Good job, cosmonaut!
-							</Text>
-						)}
-					</Wrap>
-				)}
-			</AnimatePresence>
+			<AssetAccordion title={"Available Tokens"}>
+				<AnimatePresence exitBeforeEnter>
+					{isLoading ? (
+						<Text color="secondary" as="span">
+							Loading Token Balances...
+						</Text>
+					) : (
+						<Grid
+							m={0}
+							p={0}
+							templateColumns="repeat(4, fit-content(12rem))"
+							gap={1}
+							pos="relative"
+							bg="blackAlpha.400"
+							as={motion.div}
+							layout
+							initial={"hidden"}
+							w="full"
+						>
+							{hasTransferredAssets &&
+								//myTokens.map(({ tokenSymbol, balance }, index) => (
+								Array.from({ length: 20 }).map((_, index) => (
+									<Box
+										key={index}
+										onClick={() => selectToken(index, activeIndex)}
+									>
+										<TokenGridItem
+											activeIndex={activeIndex}
+											tokenSymbol={"mock"}
+											balance={20}
+											delayPerPixel={0.001}
+											originIndex={0}
+											originOffset={originOffset}
+											isVisible={isVisible}
+											i={index}
+										/>
+									</Box>
+								))}
+							{sdk.initialized && !hasTransferredAssets && (
+								<Text>No compatible assets found.</Text>
+							)}
+						</Grid>
+					)}
+				</AnimatePresence>
+			</AssetAccordion>
+			<AssetAccordion title={"All Tokens"}>
+				<Wrap as={motion.div} px={3} spacing={3} w="full" h="full">
+					{sdk.initialized &&
+						!hasTransferredAssets &&
+						allTokens.map(({ tokenSymbol }) => {
+							return (
+								<TokenGridItem
+									key={tokenSymbol}
+									delayPerPixel={0.004}
+									originIndex={0}
+									originOffset={originOffset}
+									isActive={false}
+									i={1}
+									activeIndex={activeIndex}
+									isVisible={false}
+								/>
+							)
+						})}
+					{sdk.initialized && hasTransferredAssets && (
+						<Text color="secondary" as="span">
+							You seem to own all the assets! Good job, cosmonaut!
+						</Text>
+					)}
+				</Wrap>
+			</AssetAccordion>
 		</Flex>
 	)
 }

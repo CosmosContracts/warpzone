@@ -28,7 +28,7 @@ export type AssetCardProps = Exclude<
 > & {
 	tokenSymbol?: string
 	balance?: number
-	isActive: boolean
+	isActive?: boolean
 }
 
 export const AssetCard = ({
