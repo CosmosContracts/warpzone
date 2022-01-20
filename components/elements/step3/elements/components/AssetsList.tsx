@@ -74,6 +74,8 @@ const TokenGridItem = ({
 		}
 	}
 
+	//TODO@vexxvakan
+
 	useLayoutEffect(() => {
 		const element = ref.current
 		if (!element) return
@@ -223,7 +225,7 @@ export const AssetsList = () => {
 							))}
 						{sdk.initialized && !hasTransferredAssets && (
 							<Text color="secondary" as="span">
-								No compatible assets found.
+								No compatible assets found
 							</Text>
 						)}
 					</Grid>
