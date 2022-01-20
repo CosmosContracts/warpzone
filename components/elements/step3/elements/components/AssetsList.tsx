@@ -1,18 +1,101 @@
-import { AssetCard } from "./AssetCard"
+import { AssetCard, AssetCardProps } from "./AssetCard"
 import {
 	Box,
 	Flex,
+	Grid,
 	HStack,
 	IconButton,
 	Text,
-	UnorderedList,
 	Wrap
 } from "@chakra-ui/react"
 import { useGetSupportedAssetsBalancesOnChain } from "../hooks/useGetSupportedAssetsBalancesOnChain"
 import { useSdk } from "@services/client"
-import { useEffect, useRef, useState } from "react"
-import { AnimatePresence, motion } from "framer-motion"
+import {
+	MutableRefObject,
+	useEffect,
+	useLayoutEffect,
+	useRef,
+	useState
+} from "react"
+import { AnimatePresence, motion, Variants } from "framer-motion"
 import { ArrowCounterClockwise } from "phosphor-react"
+
+type TokenGridItemProps = AssetCardProps & {
+	delayPerPixel: number
+	i: number
+	originIndex: number
+	originOffset: MutableRefObject<{
+		top: number
+		left: number
+	}>
+}
+
+const TokenGridItem = ({
+	delayPerPixel,
+	i,
+	originIndex,
+	originOffset,
+	tokenSymbol,
+	balance,
+	activeIndex
+}: TokenGridItemProps) => {
+	const offset = useRef({ top: 0, left: 0 })
+	const ref = useRef<HTMLDivElement>()
+	const delayRef = useRef<number>(0)
+
+	const tokenCardVariants: Variants = {
+		hidden: {
+			scale: 0.5,
+			opacity: 0,
+			transition: { duration: 0.25 }
+		},
+		reveal: (delayRef: MutableRefObject<number>) => ({
+			opacity: 1,
+			scale: 1,
+			width: "8rem",
+			transition: { delay: delayRef.current, duration: 0.25 }
+		})
+	}
+
+	useLayoutEffect(() => {
+		const element = ref.current
+		if (!element) return
+
+		offset.current = {
+			top: element.offsetTop,
+			left: element.offsetLeft
+		}
+
+		if (i === originIndex) {
+			// eslint-disable-next-line no-param-reassign
+			originOffset.current = offset.current
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [delayPerPixel])
+
+	useEffect(() => {
+		const dx = Math.abs(offset.current.left - originOffset.current.left)
+		const dy = Math.abs(offset.current.top - originOffset.current.top)
+		const d = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2))
+		delayRef.current = d * delayPerPixel
+	})
+
+	return (
+		<Box
+			as={motion.div}
+			ref={ref}
+			variants={tokenCardVariants}
+			custom={delayRef}
+		>
+			<AssetCard
+				tokenSymbol={tokenSymbol}
+				balance={balance}
+				activeIndex={activeIndex}
+				assetId={i}
+			/>
+		</Box>
+	)
+}
 
 export const AssetsList = () => {
 	const [loadingBalances, [myTokens, allTokens]] =
@@ -63,48 +146,40 @@ export const AssetsList = () => {
 			</HStack>
 
 			<AnimatePresence>
-				{activeAccordionItem == 0 && (
-					<UnorderedList
-						listStyleType={"none"}
+				{activeAccordionItem == 0 && sdk.initialized && (
+					<Grid
 						m={0}
 						p={0}
+						templateColumns="repeat(4, 1fr)"
+						gap={1}
 						pos="relative"
-						flexWrap="wrap"
-						display="flex"
 						bg="blackAlpha.400"
-						as={motion.ul}
+						as={motion.div}
 						layout
 						initial={false}
-						animate={isVisible ? "visible" : "hidden"}
+						animate={isVisible ? "reveal" : "hidden"}
 						w="full"
 					>
-						{sdk.initialized &&
-							hasTransferredAssets &&
+						{hasTransferredAssets &&
 							myTokens.map(({ tokenSymbol, balance }, index) => (
-								<Box
-									as={motion.li}
-									layout
+								<TokenGridItem
 									onClick={() => selectToken(index, activeIndex)}
 									key={tokenSymbol}
-								>
-									<AssetCard
-										tokenSymbol={tokenSymbol}
-										balance={balance}
-										activeIndex={activeIndex}
-										assetId={index}
-										delayPerPixel={0.0012}
-										i={index}
-										originIndex={0}
-										originOffset={originOffset}
-									/>
-								</Box>
+									tokenSymbol={tokenSymbol}
+									balance={balance}
+									activeIndex={activeIndex}
+									i={index}
+									delayPerPixel={0.0001}
+									originIndex={0}
+									originOffset={undefined}
+								/>
 							))}
 						{sdk.initialized && !hasTransferredAssets && (
 							<Text color="secondary" as="span">
 								No compatible assets found.
 							</Text>
 						)}
-					</UnorderedList>
+					</Grid>
 				)}
 			</AnimatePresence>
 			<Box
@@ -123,13 +198,11 @@ export const AssetsList = () => {
 							!hasTransferredAssets &&
 							allTokens.map(({ tokenSymbol }) => {
 								return (
-									<AssetCard
+									<TokenGridItem
 										key={tokenSymbol}
-										tokenSymbol={tokenSymbol}
-										activeIndex={activeIndex + 50}
-										assetId={200}
-										delayPerPixel={0}
-										i={0}
+										activeIndex={activeIndex + 100}
+										i={200}
+										delayPerPixel={0.004}
 										originIndex={0}
 										originOffset={originOffset}
 									/>

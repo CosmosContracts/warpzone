@@ -2,22 +2,15 @@
 import {
 	Avatar,
 	Badge,
+	Box,
 	Flex,
 	Grid,
 	GridItem,
-	ListItem,
 	Text,
 	useBoolean,
 	VStack
 } from "@chakra-ui/react"
-import {
-	HTMLProps,
-	MutableRefObject,
-	useEffect,
-	useLayoutEffect,
-	useRef,
-	useState
-} from "react"
+import { HTMLProps, useEffect, useRef, useState } from "react"
 import { useTokenInfo } from "@hooks/useTokenInfo"
 import {
 	animate,
@@ -29,33 +22,21 @@ import {
 } from "framer-motion"
 import { Plus } from "phosphor-react"
 
-type AssetCardProps = Exclude<HTMLProps<HTMLDivElement>, "children"> & {
+export type AssetCardProps = Exclude<
+	HTMLProps<HTMLDivElement>,
+	"children, onClick"
+> & {
 	tokenSymbol?: string
-	onActionClick?: (args: {
-		tokenSymbol: string
-		actionType: "deposit" | "withdraw"
-	}) => void
 	balance?: number
 	activeIndex?: number
 	assetId?: number
-	delayPerPixel: number
-	i: number
-	originIndex: number
-	originOffset: MutableRefObject<{
-		top: number
-		left: number
-	}>
 }
 
 export const AssetCard = ({
 	tokenSymbol,
 	balance,
-	assetId,
 	activeIndex,
-	delayPerPixel,
-	i,
-	originIndex,
-	originOffset
+	assetId
 }: AssetCardProps) => {
 	const { ticker, logoURI } = useTokenInfo(tokenSymbol) || {}
 
@@ -77,7 +58,6 @@ export const AssetCard = ({
 	const [isActive, setActive] = useState(false)
 	const [isHover, setHover] = useBoolean()
 
-	const offset = useRef({ top: 0, left: 0 })
 	const ref = useRef<HTMLDivElement>()
 	const delayRef = useRef<number>(0)
 
@@ -139,16 +119,10 @@ export const AssetCard = ({
 			opacity: 0,
 			transition: { duration: 0.25 }
 		},
-		reveal: (delayRef: MutableRefObject<number>) => ({
-			opacity: 1,
-			scale: 1,
-			width: "100%",
-			transition: { delay: delayRef.current, duration: 0.25 }
-		}),
 		rest: {
 			opacity: 1,
 			scale: 1,
-			width: "4rem",
+			width: "8rem",
 			transition: { duration: 0.25 }
 		},
 		active: {
@@ -162,28 +136,6 @@ export const AssetCard = ({
 			scale: 0.5
 		}
 	}
-
-	useLayoutEffect(() => {
-		const element = ref.current
-		if (!element) return
-
-		offset.current = {
-			top: element.offsetTop,
-			left: element.offsetLeft
-		}
-
-		if (i === originIndex) {
-			// eslint-disable-next-line no-param-reassign
-			originOffset.current = offset.current
-		}
-	}, [delayPerPixel])
-
-	useEffect(() => {
-		const dx = Math.abs(offset.current.left - originOffset.current.left)
-		const dy = Math.abs(offset.current.top - originOffset.current.top)
-		const d = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2))
-		delayRef.current = d * delayPerPixel
-	})
 
 	useEffect(() => {
 		if (assetId === activeIndex) {
@@ -229,9 +181,8 @@ export const AssetCard = ({
 		if (!isActive) {
 			const playRestAnimation = async () => {
 				addKeplrControls.start("exit")
-				plusIconControls
-					.start("exit")
-					.then(() => tokenControls.start("reveal")) //  delayperpixel nur beim öffnen
+				plusIconControls.start("exit")
+				tokenControls.start("rest")
 			}
 			playRestAnimation()
 			animate(
@@ -274,13 +225,12 @@ export const AssetCard = ({
 	}, [isActive])
 
 	return (
-		<ListItem
+		<Box
 			minW="6rem"
 			animate={tokenControls}
-			as={motion.li}
+			as={motion.div}
 			layout
 			initial={"hidden"}
-			// @ts-expect-error
 			ref={ref}
 			custom={delayRef}
 			variants={tokenCardVariants}
@@ -345,7 +295,6 @@ export const AssetCard = ({
 								exit="exit"
 								onHoverStart={setHover.on}
 								onHoverEnd={setHover.off}
-								onClick={() => console.log("Keplr Klick<")}
 								variants={addKeplrVariants}
 								animate={addKeplrControls}
 								// @ts-expect-error
@@ -364,6 +313,6 @@ export const AssetCard = ({
 					)}
 				</AnimatePresence>
 			</Grid>
-		</ListItem>
+		</Box>
 	)
 }
