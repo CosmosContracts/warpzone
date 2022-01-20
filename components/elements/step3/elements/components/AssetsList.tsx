@@ -17,7 +17,7 @@ import {
 	useRef,
 	useState
 } from "react"
-import { AnimatePresence, motion, Variants } from "framer-motion"
+import { AnimatePresence, motion, useAnimation, Variants } from "framer-motion"
 import { ArrowCounterClockwise } from "phosphor-react"
 
 type TokenGridItemProps = AssetCardProps & {
@@ -32,16 +32,17 @@ type TokenGridItemProps = AssetCardProps & {
 
 const TokenGridItem = ({
 	delayPerPixel,
-	i,
 	originIndex,
 	originOffset,
 	tokenSymbol,
 	balance,
-	activeIndex
+	i
 }: TokenGridItemProps) => {
 	const offset = useRef({ top: 0, left: 0 })
 	const ref = useRef<HTMLDivElement>()
 	const delayRef = useRef<number>(0)
+	const tokenCardControls = useAnimation()
+	const [isActive, setActive] = useState(false)
 
 	const tokenCardVariants: Variants = {
 		hidden: {
@@ -80,18 +81,27 @@ const TokenGridItem = ({
 		delayRef.current = d * delayPerPixel
 	})
 
+	useEffect(() => {
+		if (isActive) {
+			console.log("Active")
+		} else {
+			console.log("Not active")
+		}
+	}, [isActive])
+
 	return (
 		<Box
+			onClick={() => setActive(!isActive)}
 			as={motion.div}
 			ref={ref}
+			animate={tokenCardControls}
 			variants={tokenCardVariants}
 			custom={delayRef}
 		>
 			<AssetCard
 				tokenSymbol={tokenSymbol}
 				balance={balance}
-				activeIndex={activeIndex}
-				assetId={i}
+				isActive={isActive}
 			/>
 		</Box>
 	)
@@ -167,11 +177,11 @@ export const AssetsList = () => {
 									key={tokenSymbol}
 									tokenSymbol={tokenSymbol}
 									balance={balance}
-									activeIndex={activeIndex}
-									i={index}
 									delayPerPixel={0.0001}
 									originIndex={0}
-									originOffset={undefined}
+									originOffset={originOffset}
+									isActive={false}
+									i={index}
 								/>
 							))}
 						{sdk.initialized && !hasTransferredAssets && (
@@ -200,11 +210,11 @@ export const AssetsList = () => {
 								return (
 									<TokenGridItem
 										key={tokenSymbol}
-										activeIndex={activeIndex + 100}
-										i={200}
 										delayPerPixel={0.004}
 										originIndex={0}
 										originOffset={originOffset}
+										isActive={false}
+										i={1}
 									/>
 								)
 							})}

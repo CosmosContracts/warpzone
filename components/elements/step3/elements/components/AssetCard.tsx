@@ -10,7 +10,7 @@ import {
 	useBoolean,
 	VStack
 } from "@chakra-ui/react"
-import { HTMLProps, useEffect, useRef, useState } from "react"
+import { HTMLProps, useEffect } from "react"
 import { useTokenInfo } from "@hooks/useTokenInfo"
 import {
 	animate,
@@ -28,21 +28,20 @@ export type AssetCardProps = Exclude<
 > & {
 	tokenSymbol?: string
 	balance?: number
-	activeIndex?: number
-	assetId?: number
+	isActive: boolean
 }
 
 export const AssetCard = ({
 	tokenSymbol,
 	balance,
-	activeIndex,
-	assetId
+	isActive
 }: AssetCardProps) => {
 	const { ticker, logoURI } = useTokenInfo(tokenSymbol) || {}
 
-	const tokenControls = useAnimation()
 	const addKeplrControls = useAnimation()
 	const plusIconControls = useAnimation()
+
+	const [isHover, setHover] = useBoolean()
 
 	const boxShadow = useMotionValue(
 		"0 3px 10px 0 rgba(101, 246, 168, 0), 0 -3px 10px 0 rgba(0, 150, 250, 0),inset 0 0 0 2px  rgba(101, 246, 168, 0),inset -4px 0 7px -2px rgba(220,220,220,0.35)"
@@ -54,12 +53,6 @@ export const AssetCard = ({
 	const backgroundImage = useMotionValue(
 		"radial-gradient(circle at 40% 91%, rgba(251, 251, 251,0.04) 0%, rgba(251, 251, 251,0.04) 50%,rgba(229, 229, 229,0.04) 50%, rgba(229, 229, 229,0.04) 100%),radial-gradient(circle at 66% 97%, rgba(36, 36, 36,0.04) 0%, rgba(36, 36, 36,0.04) 50%,rgba(46, 46, 46,0.04) 50%, rgba(46, 46, 46,0.04) 100%),radial-gradient(circle at 86% 7%, rgba(40, 40, 40,0.04) 0%, rgba(40, 40, 40,0.04) 50%,rgba(200, 200, 200,0.04) 50%, rgba(200, 200, 200,0.04) 100%),radial-gradient(circle at 15% 16%, rgba(99, 99, 99,0.04) 0%, rgba(99, 99, 99,0.04) 50%,rgba(45, 45, 45,0.04) 50%, rgba(45, 45, 45,0.04) 100%),radial-gradient(circle at 75% 99%, rgba(243, 243, 243,0.04) 0%, rgba(243, 243, 243,0.04) 50%,rgba(37, 37, 37,0.04) 50%, rgba(37, 37, 37,0.04) 100%),radial-gradient(circle at bottom left, rgb(34, 222, 237),rgb(135, 89, 215) 65%)"
 	)
-
-	const [isActive, setActive] = useState(false)
-	const [isHover, setHover] = useBoolean()
-
-	const ref = useRef<HTMLDivElement>()
-	const delayRef = useRef<number>(0)
 
 	const addKeplrVariants: Variants = {
 		hover: {
@@ -113,38 +106,6 @@ export const AssetCard = ({
 		}
 	}
 
-	const tokenCardVariants: Variants = {
-		hidden: {
-			scale: 0.5,
-			opacity: 0,
-			transition: { duration: 0.25 }
-		},
-		rest: {
-			opacity: 1,
-			scale: 1,
-			width: "8rem",
-			transition: { duration: 0.25 }
-		},
-		active: {
-			opacity: 1,
-			scale: 1,
-			width: "100%",
-			transition: { duration: 0.25 }
-		},
-		exit: {
-			opacity: 0,
-			scale: 0.5
-		}
-	}
-
-	useEffect(() => {
-		if (assetId === activeIndex) {
-			setActive(true)
-		} else {
-			setActive(false)
-		}
-	}, [activeIndex, assetId])
-
 	useEffect(() => {
 		if (isHover) {
 			const playHover = async () => {
@@ -182,7 +143,6 @@ export const AssetCard = ({
 			const playRestAnimation = async () => {
 				addKeplrControls.start("exit")
 				plusIconControls.start("exit")
-				tokenControls.start("rest")
 			}
 			playRestAnimation()
 			animate(
@@ -202,7 +162,6 @@ export const AssetCard = ({
 				}
 			)
 		} else {
-			tokenControls.start("active")
 			addKeplrControls.start("rest")
 			plusIconControls.start("rest")
 			animate(
@@ -227,13 +186,9 @@ export const AssetCard = ({
 	return (
 		<Box
 			minW="6rem"
-			animate={tokenControls}
 			as={motion.div}
 			layout
 			initial={"hidden"}
-			ref={ref}
-			custom={delayRef}
-			variants={tokenCardVariants}
 			h="4rem"
 			rounded="2xl"
 			style={{
