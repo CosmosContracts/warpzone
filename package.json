@@ -6,8 +6,7 @@
 		"build": "next build",
 		"start": "next start",
 		"type-check": "tsc",
-		"lint": "next lint",
-		"release": "standard-version release"
+		"lint": "next lint"
 	},
 	"dependencies": {
 		"@chakra-ui/react": "1.7.5",
