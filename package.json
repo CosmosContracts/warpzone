@@ -1,12 +1,13 @@
 {
 	"name": "warpzone",
-	"version": "0.1.5",
+	"version": "0.1.6",
 	"scripts": {
 		"dev": "next",
 		"build": "next build",
 		"start": "next start",
 		"type-check": "tsc",
-		"lint": "next lint"
+		"lint": "next lint",
+		"release": "standard-version release"
 	},
 	"dependencies": {
 		"@chakra-ui/react": "1.7.5",
