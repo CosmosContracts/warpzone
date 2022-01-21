@@ -139,26 +139,7 @@ export const AssetCard = ({
 	}, [isHover])
 
 	useEffect(() => {
-		if (!isActive) {
-			addKeplrControls.start("exit")
-			plusIconControls.start("exit")
-			animate(
-				boxShadow,
-				"0 3px 10px 0 rgba(101, 246, 168, 0), 0 -3px 10px 0 rgba(0, 150, 250, 0),inset 0 0 0 2px  rgba(101, 246, 168, 0),inset -4px 0 7px -2px rgba(220,220,220,0)",
-				{
-					damping: 20,
-					type: "spring"
-				}
-			)
-			animate(
-				tokenBackground,
-				"radial-gradient(circle at left, rgba(0, 0, 0, 0.3) 3%,rgba(0, 0, 0, 0.3) 10%, rgba(0, 0, 0, 0.3) 20%",
-				{
-					damping: 20,
-					type: "spring"
-				}
-			)
-		} else {
+		if (isActive) {
 			addKeplrControls.start("rest")
 			plusIconControls.start("rest")
 			animate(
@@ -177,33 +158,63 @@ export const AssetCard = ({
 					type: "spring"
 				}
 			)
+		} else {
+			addKeplrControls.start("exit")
+			plusIconControls.start("exit")
+
+			animate(
+				boxShadow,
+				"0 3px 10px 0 rgba(101, 246, 168, 0), 0 -3px 10px 0 rgba(0, 150, 250, 0),inset 0 0 0 2px  rgba(101, 246, 168, 0),inset -4px 0 7px -2px rgba(220,220,220,0)",
+				{
+					damping: 20,
+					type: "spring"
+				}
+			)
+			animate(
+				tokenBackground,
+				"radial-gradient(circle at left, rgba(0, 0, 0, 0.3) 3%,rgba(0, 0, 0, 0.3) 10%, rgba(0, 0, 0, 0.3) 20%",
+				{
+					damping: 20,
+					type: "spring"
+				}
+			)
 		}
+		// console.log(isActive)
 	}, [isActive])
 
 	return (
 		<Box
 			as={motion.div}
 			layout
-			h="4rem"
+			h="5rem"
 			rounded="2xl"
 			style={{
 				// @ts-expect-error
 				boxShadow,
 				// @ts-expect-error
-				backgroundImage: tokenBackground
+				backgroundImage: tokenBackground,
+				transformOrigin: "left"
 			}}
 		>
 			<Grid
-				w="full"
+				bg="blackAlpha.100"
 				h="full"
 				as={motion.div}
-				templateColumns="fit-content(100px) repeat(2, 1fr)"
-				templateRows="repeat(1, 1fr)"
+				templateColumns="4rem auto 3rem"
+				templateRows="1fr"
+				transformOrigin={"left"}
 			>
-				<GridItem as={Flex} w="full" px={2} align="center" rowSpan={2}>
-					<Avatar boxSize="3rem" src={logoURI} />
+				<GridItem
+					boxSize="4rem"
+					bg="whiteAlpha.500"
+					as={Flex}
+					px={2}
+					align="center"
+					rowSpan={2}
+				>
+					<Avatar src={logoURI} />
 				</GridItem>
-				<GridItem maxW="4.5rem" w="full" h="full">
+				<GridItem bg="whiteAlpha.600" maxW="4.5rem" w="full" h="full">
 					<VStack justify="center" align="start" h="full" spacing={0}>
 						<Text fontSize="sm">{balance}</Text>
 						<Badge

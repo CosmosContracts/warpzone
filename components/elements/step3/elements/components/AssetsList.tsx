@@ -1,6 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { AssetCard, AssetCardProps } from "./AssetCard"
-import { Box, Flex, Grid, Text, useBoolean, Wrap } from "@chakra-ui/react"
+import {
+	Box,
+	Flex,
+	Grid,
+	GridItem,
+	Text,
+	useBoolean,
+	Wrap
+} from "@chakra-ui/react"
 import { useGetSupportedAssetsBalancesOnChain } from "../hooks/useGetSupportedAssetsBalancesOnChain"
 import { useSdk } from "@services/client"
 import {
@@ -38,7 +46,7 @@ const TokenGridItem = ({
 	const ref = useRef<HTMLDivElement>()
 	const delayRef = useRef<number>(0)
 	const tokenCardControls = useAnimation()
-	const [isActive, setActive] = useBoolean(false)
+	const [isActive, setActive] = useState<boolean>(false)
 
 	const tokenCardVariants: Variants = {
 		hidden: (delayRef: MutableRefObject<number>) => ({
@@ -46,29 +54,14 @@ const TokenGridItem = ({
 			opacity: 0,
 			transition: {
 				delay: delayRef.current,
-				duration: 0.25,
-				repeat: Infinity,
-				repeatType: "reverse"
+				duration: 0.25
 			}
 		}),
 		reveal: (delayRef: MutableRefObject<number>) => ({
 			opacity: 1,
-			scale: 1.0,
-			width: "8rem",
+			scale: 1,
 			transition: { delay: delayRef.current, duration: 0.25 }
-		}),
-		active: {
-			opacity: 1,
-			scale: 1,
-			width: "12rem",
-			transition: { duration: 0.25 }
-		},
-		rest: {
-			opacity: 1,
-			scale: 1,
-			width: "8rem",
-			transition: { duration: 0.25 }
-		}
+		})
 	}
 
 	useLayoutEffect(() => {
@@ -96,12 +89,13 @@ const TokenGridItem = ({
 	useEffect(() => {
 		if (i === activeIndex) {
 			tokenCardControls.start("active")
-			setActive.on
+			setActive(true)
+			console.log(isActive)
 		} else {
-			setActive.off
+			setActive(false)
 			tokenCardControls.start("reveal")
 		}
-	}, [activeIndex])
+	}, [activeIndex, isActive])
 
 	return (
 		<Box
@@ -109,18 +103,6 @@ const TokenGridItem = ({
 			ref={ref}
 			initial="hidden"
 			exit="hidden"
-			onAnimationComplete={(definition) => {
-				switch (definition) {
-					case "reveal":
-						console.log("reveal")
-						tokenCardControls.set("rest")
-						break
-
-					default:
-						console.log("else")
-						break
-				}
-			}}
 			animate={tokenCardControls}
 			variants={tokenCardVariants}
 			custom={delayRef}
@@ -156,10 +138,13 @@ export const AssetsList = () => {
 	/* check if the user has any of the assets transferred on the chain */
 	const hasTransferredAssets = !loadingBalances && myTokens.length > 0
 
-	const selectToken = (tokenId: number, activeIndex: number) => {
+	const selectToken = (tokenId: number) => {
 		setActiveIndex(tokenId)
-		console.log("IDs:", tokenId, activeIndex)
+		// console.log("IDs:", tokenId, activeIndex)
 	}
+
+	//TODO
+	const [zoomValue, setZoomValue] = useState(3)
 
 	return (
 		<Flex
@@ -177,41 +162,58 @@ export const AssetsList = () => {
 							Loading Token Balances...
 						</Text>
 					) : (
-						<Grid
-							m={0}
-							p={0}
-							templateColumns="repeat(4, fit-content(12rem))"
-							gap={1}
-							pos="relative"
-							bg="blackAlpha.400"
-							as={motion.div}
-							layout
-							initial={"hidden"}
-							w="full"
-						>
-							{hasTransferredAssets &&
-								//myTokens.map(({ tokenSymbol, balance }, index) => (
-								Array.from({ length: 20 }).map((_, index) => (
-									<Box
-										key={index}
-										onClick={() => selectToken(index, activeIndex)}
-									>
-										<TokenGridItem
-											activeIndex={activeIndex}
-											tokenSymbol={"mock"}
-											balance={20}
-											delayPerPixel={0.001}
-											originIndex={0}
-											originOffset={originOffset}
-											isVisible={isVisible}
-											i={index}
-										/>
-									</Box>
-								))}
-							{sdk.initialized && !hasTransferredAssets && (
-								<Text>No compatible assets found.</Text>
-							)}
-						</Grid>
+						<>
+							<input
+								type="range"
+								min="2"
+								max="5"
+								value={zoomValue}
+								// @ts-expect-error
+								onChange={(e) => setZoomValue(e.target.value)}
+							/>
+							<Grid
+								autoFlow="row dense"
+								// style={{
+								// 	gridTemplateColumns:
+								// 		activeIndex === index
+								// 			? `repeat(${zoomValue - 1}, auto)`
+								// 			: `repeat(${zoomValue}, auto)`
+								// }}
+								style={{
+									gridTemplateColumns: `repeat(${zoomValue}, auto)`
+								}}
+								gap={1}
+								pos="relative"
+								bg="blackAlpha.400"
+								as={motion.div}
+								layout
+								w="full"
+							>
+								{hasTransferredAssets &&
+									//myTokens.map(({ tokenSymbol, balance }, index) => (
+									Array.from({ length: 14 }).map((_, index) => (
+										<GridItem
+											colSpan={activeIndex === index ? 2 : 1}
+											key={index}
+											onClick={() => selectToken(index)}
+										>
+											<TokenGridItem
+												activeIndex={activeIndex}
+												tokenSymbol={"ccat"}
+												balance={20}
+												delayPerPixel={0.001}
+												originIndex={0}
+												originOffset={originOffset}
+												isVisible={isVisible}
+												i={index}
+											/>
+										</GridItem>
+									))}
+								{sdk.initialized && !hasTransferredAssets && (
+									<Text>No compatible assets found.</Text>
+								)}
+							</Grid>
+						</>
 					)}
 				</AnimatePresence>
 			</AssetAccordion>
