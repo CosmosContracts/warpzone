@@ -1,6 +1,6 @@
 {
 	"name": "warpzone",
-	"version": "0.1.6",
+	"version": "0.1.7",
 	"scripts": {
 		"dev": "next",
 		"build": "next build",
