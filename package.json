@@ -36,7 +36,6 @@
 		"recoil": "^0.5.2"
 	},
 	"devDependencies": {
-		"release": "standard-version",
 		"@next/eslint-plugin-next": "12.0.8",
 		"@types/node": "16.11.12",
 		"@types/react": "17.0.37",
@@ -58,6 +57,7 @@
 		"lint-staged": "^12.1.2",
 		"lodash": "^4.17.21",
 		"prettier": "2.5.0",
+		"release": "standard-version",
 		"standard-version": "^9.3.2",
 		"typescript": "4.5.3"
 	},
