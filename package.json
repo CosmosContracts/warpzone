@@ -6,7 +6,7 @@
 		"build": "next build",
 		"start": "next start",
 		"type-check": "tsc",
-		"lint": "next lint"
+		"release": "release-it"
 	},
 	"dependencies": {
 		"@chakra-ui/react": "1.7.5",
@@ -25,14 +25,13 @@
 		"@fontsource/source-sans-pro": "^4.5.1",
 		"@keplr-wallet/types": "^0.9.10",
 		"@usedapp/core": "^0.9.0",
-		"framer-motion": "5.6.0",
+		"framer-motion": "6.2.1",
 		"next": "12.0.8",
 		"phosphor-react": "1.4.0",
 		"react": "^17.0.2",
 		"react-dom": "17.0.2",
 		"react-glitch-animation": "^1.0.0",
-		"react-query": "^3.34.8",
-		"react-redux": "^7.2.6",
+		"react-query": "3.34.11",
 		"recoil": "^0.5.2"
 	},
 	"devDependencies": {
@@ -40,30 +39,24 @@
 		"@types/node": "16.11.12",
 		"@types/react": "17.0.37",
 		"@types/react-dom": "17.0.11",
-		"@typescript-eslint/eslint-plugin": "5.6.0",
-		"@typescript-eslint/parser": "5.6.0",
+		"@typescript-eslint/eslint-plugin": "5.10.0",
+		"@typescript-eslint/parser": "5.10.0",
 		"eslint": "7.32.0",
-		"eslint-config-airbnb": "^19.0.2",
-		"eslint-config-airbnb-typescript": "^16.1.0",
-		"eslint-config-next": "12.0.7",
-		"eslint-config-prettier": "8.3.0",
-		"eslint-import-resolver-typescript": "^2.5.0",
-		"eslint-plugin-import": "^2.25.3",
-		"eslint-plugin-jsx-a11y": "^6.5.1",
+		"eslint-config-canonical": "^33.0.1",
+		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-prettier": "^4.0.0",
-		"eslint-plugin-react": "^7.27.1",
-		"eslint-plugin-react-hooks": "^4.3.0",
 		"husky": "^7.0.4",
-		"lint-staged": "^12.1.2",
+		"lint-staged": "12.2.2",
 		"lodash": "^4.17.21",
 		"prettier": "2.5.0",
-		"release": "standard-version",
-		"standard-version": "^9.3.2",
+		"release-it": "^14.12.3",
 		"typescript": "4.5.3"
 	},
 	"license": "MIT",
-	"packageManager": "yarn@3.1.1",
 	"resolutions": {
 		"webpack": "5.11.1"
-	}
+	},
+	"contributors": [
+		"vexxvakan <hiimvexx@gmail.com>"
+	]
 }

@@ -1,6 +1,6 @@
-import { useMemo } from "react"
 import { useMultipleTokenBalance } from "@hooks/useTokenBalance"
 import { useTokenList } from "@hooks/useTokenList"
+import { useMemo } from "react"
 
 export const useGetSupportedAssetsBalancesOnChain = () => {
 	const [tokenList] = useTokenList()

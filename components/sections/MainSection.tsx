@@ -4,245 +4,225 @@ import {
 	Button,
 	Stack,
 	ButtonGroup,
-	useBoolean,
 	VStack,
 	IconButton,
 	Flex,
 	HStack,
-	useBreakpointValue,
 	Box
 } from "@chakra-ui/react"
-import { Stepper } from "@components/elements"
-import { Step1 } from "@components/elements/Step1"
-import { Step2 } from "@components/elements/Step2"
-import { Step3 } from "@components/elements"
+import { Stepper, Step3 } from "@components/elements"
+import { Step1 } from "@components/elements/step1"
+import { Step2 } from "@components/elements/step2"
+import type { Variants } from "framer-motion"
 import {
 	AnimatePresence,
 	motion,
 	MotionConfig,
-	useAnimation,
-	Variants
+	useAnimation
 } from "framer-motion"
-
 import { ArrowFatLinesLeft, ArrowsClockwise, Parachute } from "phosphor-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { GlitchAnimation } from "react-glitch-animation"
 
 const MainSection = () => {
 	const stackControls = useAnimation()
-
-	const step3Width = useBreakpointValue({
-		base: "var(--chakra-sizes-sm)",
-		md: "var(--chakra-sizes-md)",
-		lg: "52rem"
-	})
-
-	const [isStep0, setStep0] = useBoolean(true)
-	const [isStep1, setStep1] = useBoolean(false)
-	const [isStep2, setStep2] = useBoolean(false)
-	const [isStep3, setStep3] = useBoolean(false)
-
+	const topBarControls = useAnimation()
 	const [activeStep, setActiveStep] = useState(0)
 
-	const goToStep0 = () => {
-		setStep1.off()
-		setStep2.off()
-		setStep3.off()
-		stackControls.start({
-			width: "25rem",
-			height: "10rem",
+	// TODO
+	// const step3Width = useBreakpointValue({
+	// 	base: "var(--chakra-sizes-sm)",
+	// 	lg: "52rem",
+	// 	md: "var(--chakra-sizes-md)"
+	// })
+
+	const toggleStepWidth = async (h: string, w: string) => {
+		await stackControls.start({
+			height: h,
 			transition: {
-				stiffness: 50,
-				damping: 15
-			}
+				damping: 15,
+				stiffness: 50
+			},
+			width: w
 		})
-		setActiveStep(0)
-		setStep0.on()
 	}
 
-	const goToStep1 = () => {
-		setStep0.off()
-		stackControls.start({
-			width: "35rem",
-			height: "12rem",
-			transition: {
-				stiffness: 50,
-				damping: 15
-			}
-		})
-		setActiveStep(1)
-		setStep1.on()
+	// 10,25 12,35 35,52
+
+	const goToStep = (step: number, h: string, w: string) => {
+		toggleStepWidth(h, w).catch(() => {})
+		if (step != 0) {
+			topBarControls.start("show")
+		} else {
+			topBarControls.start("show")
+		}
+
+		setActiveStep(step)
 	}
 
-	const goToStep2 = () => {
-		setStep1.off()
-		stackControls.start({
-			width: "35rem",
-			height: "12rem",
-			transition: {
-				stiffness: 50,
-				damping: 15
-			}
-		})
-		setActiveStep(2)
-		setStep2.on()
-	}
-
-	const goToStep3 = () => {
-		setStep2.off()
-		stackControls.start({
-			width: step3Width,
-			height: "35rem",
-			transition: {
-				stiffness: 50,
-				damping: 15
-			}
-		})
-		setActiveStep(3)
-		setStep3.on()
-	}
+	useEffect(() => {
+		console.log("active step:", activeStep)
+	}, [activeStep])
 
 	const step0Variants: Variants = {
 		hidden: {
-			y: 40,
 			opacity: 0,
 			transition: {
-				stiffness: 50,
-				damping: 15
-			}
+				damping: 15,
+				stiffness: 50
+			},
+			y: 40
 		},
 		show: {
-			y: 0,
 			opacity: 1,
 			transition: {
-				stiffness: 50,
-				damping: 15
-			}
+				damping: 15,
+				stiffness: 50
+			},
+			y: 0
 		}
 	}
 	const stepVariants: Variants = {
 		hidden: {
-			y: 100,
 			opacity: 0,
 			transition: {
-				stiffness: 10,
-				damping: 15
-			}
+				damping: 15,
+				stiffness: 10
+			},
+			y: 100
 		},
 		show: {
-			y: 0,
 			opacity: 1,
 			transition: {
-				stiffness: 50,
-				damping: 15
-			}
+				damping: 15,
+				stiffness: 50
+			},
+			y: 50
 		}
 	}
 	const headingVariants: Variants = {
 		hidden: {
-			y: -100,
 			transition: {
-				stiffness: 10,
-				damping: 15
-			}
+				damping: 15,
+				stiffness: 10
+			},
+			y: -100
 		},
 		show: {
-			y: 0,
 			transition: {
-				stiffness: 50,
-				damping: 15
-			}
+				damping: 15,
+				stiffness: 50
+			},
+			y: 0
 		}
 	}
 
 	return (
 		<MotionConfig transition={{ duration: 0.25 }}>
-			<Center as="section" w="full" h="100vh">
+			<Center as="section" h="100vh" w="full">
 				<Flex
-					as={motion.div}
-					initial="hidden"
-					animate="show"
-					variants={headingVariants}
-					justify="center"
 					align="center"
+					animate="show"
+					as={motion.div}
 					direction="column"
 					fontWeight={400}
+					initial="hidden"
+					inset="1rem 0 auto 0"
+					justify="center"
 					letterSpacing={5}
 					pos="absolute"
-					inset="1rem 0 auto 0"
+					variants={headingVariants}
 				>
-					<GlitchAnimation
-						isActive={true}
-						animationDurationMS={0}
-						text="WARPZONE"
-					/>
+					<GlitchAnimation animationDurationMS={0} isActive text="WARPZONE" />
 					<HStack
-						w="xs"
 						align="center"
-						pos="relative"
 						inset="-1.75rem auto auto 0"
+						pos="relative"
+						w="xs"
 					>
-						<Box rounded="sm" w="full" h="0.1rem" bg="whiteAlpha.800" />
+						<Box bg="whiteAlpha.800" h="0.1rem" rounded="sm" w="full" />
 						<Text align="center" fontFamily="heading">
 							Interface
 						</Text>
-						<Box rounded="sm" w="full" h="0.1rem" bg="whiteAlpha.800" />
+						<Box bg="whiteAlpha.800" h="0.1rem" rounded="sm" w="full" />
 					</HStack>
 				</Flex>
-				<VStack
-					w="full"
-					h="full"
-					pos="relative"
-					direction="column"
-					align="center"
-					justify="center"
-				>
+				<Center direction="column" h="full" pos="relative" w="full">
 					<Stack
-						justify="center"
+						align="center"
+						animate={stackControls}
 						as={motion.div}
+						backdropFilter="blur(6px)"
+						bg="blackAlpha.400"
+						boxShadow="sm"
+						direction="column"
 						initial={{
 							width: "20rem"
 						}}
-						animate={stackControls}
-						direction="row"
-						align="center"
-						bg="blackAlpha.400"
-						backdropFilter="blur(6px)"
-						boxShadow="inset -0.1rem -0.1rem 0 0 rgba(255,255,255,0.25)"
+						justify="center"
+						overflow="hidden"
+						pos="relative"
 						rounded="2xl"
-						overflow={"hidden"}
+						spacing={0}
 					>
 						<AnimatePresence exitBeforeEnter>
-							{isStep0 && (
-								<ButtonGroup
-									initial="hidden"
-									animate="show"
-									exit="hidden"
-									variants={step0Variants}
-									key="Step0"
-									spacing={6}
-									p={6}
-									colorScheme={"brand"}
-									variant="outline"
+							{activeStep !== 0 && (
+								<HStack
+									animate={topBarControls}
 									as={motion.div}
+									bg="whiteAlpha.200"
+									exit="hidden"
+									initial="show"
+									pos="absolute"
+									top="0"
+									variants={headingVariants}
+									w="full"
+								>
+									<IconButton
+										alignSelf="start"
+										aria-label="back to mode selection"
+										colorScheme="white"
+										h="2.5rem"
+										icon={<ArrowFatLinesLeft size={22} weight="duotone" />}
+										onClick={() => goToStep(0, "auto", "auto")}
+										rounded="sm"
+										variant="ghost"
+										w="2.5rem"
+									/>
+								</HStack>
+							)}
+						</AnimatePresence>
+						<AnimatePresence exitBeforeEnter>
+							{activeStep === 0 && (
+								<ButtonGroup
+									animate="show"
+									as={motion.div}
+									colorScheme="brand"
+									exit="hidden"
+									initial="hidden"
+									key="Step0"
+									p={6}
+									spacing={6}
+									variant="outline"
+									variants={step0Variants}
 								>
 									<Button
-										key="ConvertButton"
 										as={motion.button}
-										onClick={goToStep1}
 										h="full"
+										key="ConvertButton"
+										onClick={() => goToStep(1, "12rem", "35rem")}
 										rounded="xl"
 									>
 										<Stack align="center" direction="column" p={4}>
-											<ArrowsClockwise weight="duotone" size={42} />
+											<ArrowsClockwise size={42} weight="duotone" />
 											<Text>Convert</Text>
 										</Stack>
 									</Button>
 									<Button
-										key="AirdropButton"
 										as={motion.button}
 										disabled
 										h="full"
+										key="AirdropButton"
 										rounded="xl"
 									>
 										<Stack align="center" direction="column" p={4}>
@@ -252,58 +232,35 @@ const MainSection = () => {
 									</Button>
 								</ButtonGroup>
 							)}
-							{isStep1 && (
+							{activeStep === 1 && (
 								<Flex
-									pos="relative"
-									w="full"
-									h="full"
-									key="Step1"
-									initial="hidden"
-									exit="hidden"
-									variants={stepVariants}
+									animate="show"
 									as={motion.div}
-									animate={"show"}
 									direction="column"
+									exit="hidden"
+									h="full"
+									initial="hidden"
+									key="Step1"
+									pos="relative"
+									variants={stepVariants}
+									w="full"
 								>
-									<HStack align="center" w="full" h="3.5rem">
-										<IconButton
-											h="3.5rem"
-											w="3.5rem"
-											rounded="sm"
-											colorScheme="white"
-											variant="ghost"
-											alignSelf={"start"}
-											aria-label="back to mode selection"
-											icon={
-												<ArrowFatLinesLeft
-													size={24}
-													weight="duotone"
-												/>
-											}
-											onClick={goToStep0}
-										/>
-									</HStack>
 									<VStack
+										align="start"
+										h="full"
+										justify="start"
 										pt={2}
 										px={6}
 										w="full"
-										h="full"
-										justify="start"
-										align="start"
 									>
 										<Step1 />
-										<HStack
-											justify="end"
-											align="center"
-											w="full"
-											h="full"
-										>
+										<HStack align="center" h="full" justify="end" w="full">
 											<Button
-												rounded="xl"
-												colorScheme={"brand"}
-												variant="outline"
 												color="white"
-												onClick={goToStep2}
+												colorScheme="brand"
+												onClick={() => goToStep(2, "12rem", "35rem")}
+												rounded="xl"
+												variant="outline"
 											>
 												Next Step
 											</Button>
@@ -311,59 +268,35 @@ const MainSection = () => {
 									</VStack>
 								</Flex>
 							)}
-							{isStep2 && (
+							{activeStep === 2 && (
 								<Flex
-									pos="relative"
-									w="full"
-									h="full"
-									key="Step2"
-									initial="hidden"
-									exit="hidden"
-									variants={stepVariants}
+									animate="show"
 									as={motion.div}
-									animate={"show"}
 									direction="column"
+									exit="hidden"
+									h="full"
+									initial="hidden"
+									key="Step2"
+									pos="relative"
+									variants={stepVariants}
+									w="full"
 								>
-									<HStack w="full">
-										<IconButton
-											h="3.5rem"
-											w="3.5rem"
-											rounded="sm"
-											colorScheme="white"
-											variant="ghost"
-											alignSelf={"start"}
-											aria-label="back to mode selection"
-											icon={
-												<ArrowFatLinesLeft
-													size={24}
-													weight="duotone"
-												/>
-											}
-											onClick={goToStep0}
-										/>
-									</HStack>
-
 									<VStack
+										align="start"
+										h="full"
+										justify="start"
 										pt={2}
 										px={6}
 										w="full"
-										h="full"
-										justify="start"
-										align="start"
 									>
 										<Step2 />
-										<HStack
-											justify="end"
-											align="center"
-											w="full"
-											h="full"
-										>
+										<HStack align="center" h="full" justify="end" w="full">
 											<Button
-												rounded="xl"
-												colorScheme={"brand"}
-												variant="outline"
 												color="white"
-												onClick={goToStep3}
+												colorScheme="brand"
+												onClick={() => goToStep(3, "35rem", "52rem")}
+												rounded="xl"
+												variant="outline"
 											>
 												Next Step
 											</Button>
@@ -371,58 +304,34 @@ const MainSection = () => {
 									</VStack>
 								</Flex>
 							)}
-							{isStep3 && (
+							{activeStep === 3 && (
 								<Flex
-									pos="relative"
-									w="full"
-									h="full"
-									key="Step3"
-									initial="hidden"
-									exit="hidden"
-									variants={stepVariants}
+									animate="show"
 									as={motion.div}
-									animate={"show"}
 									direction="column"
+									exit="hidden"
+									h="full"
+									initial="hidden"
+									key="Step3"
+									pos="relative"
+									variants={stepVariants}
+									w="full"
 								>
-									<HStack w="full">
-										<IconButton
-											h="3.5rem"
-											w="3.5rem"
-											rounded="sm"
-											colorScheme="white"
-											variant="ghost"
-											alignSelf={"start"}
-											aria-label="back to mode selection"
-											icon={
-												<ArrowFatLinesLeft
-													size={24}
-													weight="duotone"
-												/>
-											}
-											onClick={goToStep0}
-										/>
-									</HStack>
-
 									<VStack
+										align="start"
+										h="full"
+										justify="start"
 										pt={2}
 										px={6}
 										w="full"
-										h="full"
-										justify="start"
-										align="start"
 									>
 										<Step3 />
-										<HStack
-											justify="end"
-											align="center"
-											w="full"
-											h="full"
-										>
+										<HStack align="center" h="full" justify="end" w="full">
 											<Button
-												rounded="xl"
-												colorScheme={"brand"}
-												variant="outline"
 												color="white"
+												colorScheme="brand"
+												rounded="xl"
+												variant="outline"
 											>
 												Next Step
 											</Button>
@@ -432,7 +341,7 @@ const MainSection = () => {
 							)}
 						</AnimatePresence>
 					</Stack>
-				</VStack>
+				</Center>
 				<Stepper activeStep={activeStep} />
 			</Center>
 		</MotionConfig>

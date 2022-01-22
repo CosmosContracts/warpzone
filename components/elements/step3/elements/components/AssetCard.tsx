@@ -10,25 +10,26 @@ import {
 	useBoolean,
 	VStack
 } from "@chakra-ui/react"
-import { HTMLProps, useEffect } from "react"
 import { useTokenInfo } from "@hooks/useTokenInfo"
+import type { Variants } from "framer-motion"
 import {
 	animate,
 	AnimatePresence,
 	motion,
 	useAnimation,
-	useMotionValue,
-	Variants
+	useMotionValue
 } from "framer-motion"
 import { Plus } from "phosphor-react"
+import { useEffect } from "react"
+import type { HTMLProps } from "react"
 
 export type AssetCardProps = Exclude<
 	HTMLProps<HTMLDivElement>,
 	"children, onClick"
 > & {
-	tokenSymbol?: string
 	balance?: number
 	isActive?: boolean
+	tokenSymbol?: string
 }
 
 export const AssetCard = ({
@@ -55,39 +56,39 @@ export const AssetCard = ({
 	)
 
 	const addKeplrVariants: Variants = {
+		exit: {
+			opacity: 0,
+			scale: 0.5,
+			transition: { duration: 0.25 }
+		},
 		hover: {
 			scale: 1.2
+		},
+		rest: {
+			opacity: 1,
+			scale: 1.1,
+			transition: {
+				type: "linear"
+			},
+			y: 0
 		},
 		tap: {
 			scale: 1.15,
 			transition: {
 				type: "linear"
 			}
-		},
-		rest: {
-			y: 0,
-			opacity: 1,
-			scale: 1.1,
-			transition: {
-				type: "linear"
-			}
-		},
-		exit: {
-			scale: 0.5,
-			opacity: 0,
-			transition: { duration: 0.25 }
 		}
 	}
 
 	const plusIconVariants: Variants = {
-		hover: {
-			scale: 1.5,
+		exit: {
+			scale: 0,
 			transition: {
-				type: "spring"
+				duration: 0.2
 			}
 		},
-		tap: {
-			scale: 1.3,
+		hover: {
+			scale: 1.5,
 			transition: {
 				type: "spring"
 			}
@@ -98,10 +99,10 @@ export const AssetCard = ({
 				type: "spring"
 			}
 		},
-		exit: {
-			scale: 0,
+		tap: {
+			scale: 1.3,
 			transition: {
-				duration: 0.2
+				type: "spring"
 			}
 		}
 	}
@@ -109,8 +110,8 @@ export const AssetCard = ({
 	useEffect(() => {
 		if (isHover) {
 			const playHover = async () => {
-				addKeplrControls.start("hover")
-				plusIconControls.start("hover")
+				await addKeplrControls.start("hover")
+				await plusIconControls.start("hover")
 				animate(
 					backgroundImage,
 					"radial-gradient(circle at 40% 91%, rgba(251, 251, 251,0.04) 0%, rgba(251, 251, 251,0.04) 50%,rgba(229, 229, 229,0.04) 50%, rgba(229, 229, 229,0.04) 100%),radial-gradient(circle at 66% 97%, rgba(36, 36, 36,0.04) 0%, rgba(36, 36, 36,0.04) 50%,rgba(46, 46, 46,0.04) 50%, rgba(46, 46, 46,0.04) 100%),radial-gradient(circle at 86% 7%, rgba(40, 40, 40,0.04) 0%, rgba(40, 40, 40,0.04) 50%,rgba(200, 200, 200,0.04) 50%, rgba(200, 200, 200,0.04) 100%),radial-gradient(circle at 15% 16%, rgba(99, 99, 99,0.04) 0%, rgba(99, 99, 99,0.04) 50%,rgba(45, 45, 45,0.04) 50%, rgba(45, 45, 45,0.04) 100%),radial-gradient(circle at 75% 99%, rgba(243, 243, 243,0.04) 0%, rgba(243, 243, 243,0.04) 50%,rgba(37, 37, 37,0.04) 50%, rgba(37, 37, 37,0.04) 100%),radial-gradient(circle at bottom left, rgb(34, 222, 237),rgb(135, 89, 215) 65%)",
@@ -120,11 +121,13 @@ export const AssetCard = ({
 					}
 				)
 			}
-			playHover()
+
+			// eslint-disable-next-line no-console
+			playHover().catch(() => console.log("Hover", isHover))
 		} else {
 			const endHover = async () => {
-				addKeplrControls.start("rest")
-				plusIconControls.start("rest")
+				await addKeplrControls.start("rest")
+				await plusIconControls.start("rest")
 				animate(
 					backgroundImage,
 					"radial-gradient(circle at 40% 91%, rgba(251, 251, 251,0.04) 0%, rgba(251, 251, 251,0.04) 50%,rgba(229, 229, 229,0.04) 50%, rgba(229, 229, 229,0.04) 100%),radial-gradient(circle at 66% 97%, rgba(36, 36, 36,0.04) 0%, rgba(36, 36, 36,0.04) 50%,rgba(46, 46, 46,0.04) 50%, rgba(46, 46, 46,0.04) 100%),radial-gradient(circle at 86% 7%, rgba(40, 40, 40,0.04) 0%, rgba(40, 40, 40,0.04) 50%,rgba(200, 200, 200,0.04) 50%, rgba(200, 200, 200,0.04) 100%),radial-gradient(circle at 15% 16%, rgba(99, 99, 99,0.04) 0%, rgba(99, 99, 99,0.04) 50%,rgba(45, 45, 45,0.04) 50%, rgba(45, 45, 45,0.04) 100%),radial-gradient(circle at 75% 99%, rgba(243, 243, 243,0.04) 0%, rgba(243, 243, 243,0.04) 50%,rgba(37, 37, 37,0.04) 50%, rgba(37, 37, 37,0.04) 100%),radial-gradient(circle at bottom left, rgb(34, 222, 237),rgb(135, 89, 215) 85%)",
@@ -134,14 +137,21 @@ export const AssetCard = ({
 					}
 				)
 			}
-			endHover()
+
+			// eslint-disable-next-line no-console
+			endHover().catch(() => console.log("Hover", isHover))
 		}
 	}, [isHover])
 
 	useEffect(() => {
 		if (isActive) {
-			addKeplrControls.start("rest")
-			plusIconControls.start("rest")
+			const PlayActiveAnimation = async () => {
+				await addKeplrControls.start("rest")
+				await plusIconControls.start("rest")
+			}
+
+			// eslint-disable-next-line no-console
+			PlayActiveAnimation().catch(() => console.log("test"))
 			animate(
 				boxShadow,
 				"0 3px 10px 0 rgba(101, 246, 168, 0.23), 0 -3px 10px 0 rgba(0, 150, 250, 0.19),inset 0 0 0 2px  rgba(101, 246, 168, 0.25),inset 6px 0 7px -2px rgba(101, 246, 168,0.5)",
@@ -159,25 +169,29 @@ export const AssetCard = ({
 				}
 			)
 		} else {
-			addKeplrControls.start("exit")
-			plusIconControls.start("exit")
+			const PlayExitAnimation = async () => {
+				await addKeplrControls.start("exit")
+				await plusIconControls.start("exit")
+				animate(
+					boxShadow,
+					"0 3px 10px 0 rgba(101, 246, 168, 0), 0 -3px 10px 0 rgba(0, 150, 250, 0),inset 0 0 0 2px  rgba(101, 246, 168, 0),inset -4px 0 7px -2px rgba(220,220,220,0)",
+					{
+						damping: 20,
+						type: "spring"
+					}
+				)
+				animate(
+					tokenBackground,
+					"radial-gradient(circle at left, rgba(0, 0, 0, 0.3) 3%,rgba(0, 0, 0, 0.3) 10%, rgba(0, 0, 0, 0.3) 20%",
+					{
+						damping: 20,
+						type: "spring"
+					}
+				)
+			}
 
-			animate(
-				boxShadow,
-				"0 3px 10px 0 rgba(101, 246, 168, 0), 0 -3px 10px 0 rgba(0, 150, 250, 0),inset 0 0 0 2px  rgba(101, 246, 168, 0),inset -4px 0 7px -2px rgba(220,220,220,0)",
-				{
-					damping: 20,
-					type: "spring"
-				}
-			)
-			animate(
-				tokenBackground,
-				"radial-gradient(circle at left, rgba(0, 0, 0, 0.3) 3%,rgba(0, 0, 0, 0.3) 10%, rgba(0, 0, 0, 0.3) 20%",
-				{
-					damping: 20,
-					type: "spring"
-				}
-			)
+			// eslint-disable-next-line no-console
+			PlayExitAnimation().catch(() => console.log("test"))
 		}
 		// console.log(isActive)
 	}, [isActive])
@@ -185,47 +199,48 @@ export const AssetCard = ({
 	return (
 		<Box
 			as={motion.div}
-			layout
 			h="5rem"
+			layout
 			rounded="2xl"
 			style={{
-				// @ts-expect-error
-				boxShadow,
-				// @ts-expect-error
+				// @ts-expect-error Chakra UI != Framer Motion typed
 				backgroundImage: tokenBackground,
+
+				// @ts-expect-error Chakra UI != Framer Motion typed
+				boxShadow,
 				transformOrigin: "left"
 			}}
 		>
 			<Grid
+				as={motion.div}
 				bg="blackAlpha.100"
 				h="full"
-				as={motion.div}
 				templateColumns="4rem auto 3rem"
 				templateRows="1fr"
-				transformOrigin={"left"}
+				transformOrigin="left"
 			>
 				<GridItem
-					boxSize="4rem"
-					bg="whiteAlpha.500"
-					as={Flex}
-					px={2}
 					align="center"
+					as={Flex}
+					bg="whiteAlpha.500"
+					boxSize="4rem"
+					px={2}
 					rowSpan={2}
 				>
 					<Avatar src={logoURI} />
 				</GridItem>
-				<GridItem bg="whiteAlpha.600" maxW="4.5rem" w="full" h="full">
-					<VStack justify="center" align="start" h="full" spacing={0}>
+				<GridItem bg="whiteAlpha.600" h="full" maxW="4.5rem" w="full">
+					<VStack align="start" h="full" justify="center" spacing={0}>
 						<Text fontSize="sm">{balance}</Text>
 						<Badge
-							variant="outline"
 							align="start"
-							rounded="lg"
 							colorScheme="brand"
 							fontSize="xs"
-							py={"0.05rem"}
-							px={"0.3rem"}
 							letterSpacing={1.3}
+							px="0.3rem"
+							py="0.05rem"
+							rounded="lg"
+							variant="outline"
 						>
 							{ticker}
 						</Badge>
@@ -234,40 +249,40 @@ export const AssetCard = ({
 				<AnimatePresence>
 					{isActive && (
 						<Flex
-							as={motion.div}
-							variants={addKeplrVariants}
-							exit="exit"
-							pr={3}
-							justify="end"
 							align="center"
-							w="full"
+							as={motion.div}
+							exit="exit"
 							h="full"
+							justify="end"
+							pr={3}
+							variants={addKeplrVariants}
+							w="full"
 						>
 							<Flex
-								zIndex="3"
-								w="2rem"
-								h="2rem"
-								p={0}
-								initial={{ scale: 0 }}
-								variant="keplrButton"
-								as={motion.button}
 								align="center"
-								justify="center"
-								exit="exit"
-								onHoverStart={setHover.on}
-								onHoverEnd={setHover.off}
-								variants={addKeplrVariants}
 								animate={addKeplrControls}
-								// @ts-expect-error
-								style={{ backgroundSize, backgroundImage }}
-								rounded="lg"
 								aria-label="Add to Keplr Wallet"
+								as={motion.button}
+								exit="exit"
+								h="2rem"
+								initial={{ scale: 0 }}
+								justify="center"
+								onHoverEnd={() => setHover.off}
+								onHoverStart={() => setHover.on}
+								p={0}
+								rounded="lg"
+								// @ts-expect-error Chakra UI != Framer Motion typed
+								style={{ backgroundImage, backgroundSize }}
+								variant="keplrButton"
+								variants={addKeplrVariants}
+								w="2rem"
+								zIndex="3"
 							>
 								<motion.div
-									variants={plusIconVariants}
 									animate={plusIconControls}
+									variants={plusIconVariants}
 								>
-									<Plus></Plus>
+									<Plus />
 								</motion.div>
 							</Flex>
 						</Flex>

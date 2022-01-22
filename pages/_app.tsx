@@ -9,6 +9,7 @@ import { queryClient } from "@services/client"
 import { RecoilRoot } from "recoil"
 
 import { ReactQueryDevtools } from "react-query/devtools"
+import { Background } from "@components/sections"
 
 const metamaskConfig: Config = {
 	readOnlyChainId: Mainnet.chainId,
@@ -43,10 +44,7 @@ const App = ({ Component, pageProps, router }: AppProps) => {
 				<link rel="manifest" href="/site.webmanifest" />
 				<link rel="mask-icon" href="/safari-pinned-tab.svg" color="" />
 				<meta name="theme-color" content="#ffffff" />
-				<meta
-					name="viewport"
-					content="initial-scale=1.0, width=device-width"
-				/>
+				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
 				<meta name="description" content="" />
 				<meta property="og:title" content="" />
 				<meta property="og:image" content="" />
@@ -70,6 +68,7 @@ const App = ({ Component, pageProps, router }: AppProps) => {
 									<Component key={router.route} {...pageProps} />
 									<ReactQueryDevtools initialIsOpen={false} />
 								</Flex>
+								<Background />
 							</QueryClientProvider>
 						</EVMProvider>
 					</KeplrProvider>

@@ -21,35 +21,35 @@ const Step3 = () => {
 	return (
 		<VStack align="center" w="full">
 			<VStack
-				w="full"
 				border="2px double"
-				rounded="2xl"
 				borderColor="whiteAlpha.500"
+				rounded="2xl"
 				spacing="0"
+				w="full"
 			>
 				<Input
-					variant="glass"
-					rounded="0"
 					border="0"
 					borderBottom="1px double"
-					colorScheme={"juno"}
-					h="3rem"
-					type="tel"
-					color={"juno.200"}
-					placeholder={junoAddress}
+					color="juno.200"
+					colorScheme="juno"
 					defaultValue={junoAddress}
+					h="3rem"
+					placeholder={junoAddress}
+					rounded="0"
+					type="tel"
+					variant="glass"
 				/>
 
 				<AssetsList />
 			</VStack>
 			<InputGroup variant="glass">
 				<Input
-					colorScheme={"blue"}
-					h="3rem"
-					type="tel"
-					color={"blue.200"}
-					placeholder={ethAddress}
+					color="blue.200"
+					colorScheme="blue"
 					defaultValue={ethAddress}
+					h="3rem"
+					placeholder={ethAddress}
+					type="tel"
 				/>
 			</InputGroup>
 		</VStack>

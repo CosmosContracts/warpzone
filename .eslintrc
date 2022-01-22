@@ -1,60 +1,71 @@
 {
-	"env": {
-		"browser": true,
-		"node": true,
-		"es2021": true
-	},
-	"parser": "@typescript-eslint/parser",
-	"parserOptions": {
-		"ecmaVersion": 2021,
-		"sourceType": "module",
-		"project": "./tsconfig.json",
-		"ecmaFeatures": {
-			"jsx": true
-		}
-	},
-	"plugins": ["@typescript-eslint"],
-	"extends": ["next", "prettier", "plugin:prettier/recommended"],
+	"extends": ["canonical", "prettier"],
 	"rules": {
-		"import/extensions": "off",
-		"import/prefer-default-export": "off",
-		"import/no-cycle": ["off", { "ignoreExternal": true }],
-		"import/no-unresolved": "error",
-		"react/prop-types": "off",
-		"react/function-component-definition": ["off"],
-		"react/react-in-jsx-scope": "off",
-		"react/jsx-props-no-spreading": ["error", { "custom": "ignore" }],
-		"react/jsx-filename-extension": [1, { "extensions": [".ts", ".tsx"] }],
-		"react/no-unescaped-entities": "off",
-		"react/require-default-props": "off",
-		"jsx-a11y/anchor-is-valid": "off",
-		"prettier/prettier": "error",
-		"no-use-before-define": "off",
-		"@typescript-eslint/no-use-before-define": [
-			"error",
-			{ "functions": false, "classes": false, "variables": true }
-		],
-		"@typescript-eslint/no-unused-vars": "error",
-		"@typescript-eslint/no-explicit-any": "error",
-		"@typescript-eslint/explicit-function-return-type": "off",
-		"@typescript-eslint/explicit-module-boundary-types": "off",
-		"no-param-reassign": [
-			"error",
-			{ "props": true, "ignorePropertyModificationsFor": ["state"] }
-		]
+		"no-warning-comments": "off",
+		"id-length": ["error", { "min": 1 }],
+		"import/no-unassigned-import": ["warn", { "allow": ["**/*.css"] }],
+		"react/jsx-first-prop-new-line": ["error", "always"],
+		"no-param-reassign": ["error", { "props": false }]
 	},
-	"settings": {
-		"import/parsers": {
-			"@typescript-eslint/parser": [".ts", ".tsx"]
-		},
-		"import/resolver": {
-			"typescript": {
-				"alwaysTryTypes": true
+	"overrides": [
+		{
+			"extends": ["canonical/typescript", "plugin:prettier/recommended"],
+			"files": "*.ts",
+			"rules": {
+				"canonical/destructuring-property-newline": "off",
+				"canonical/import-specifier-newline": "off"
 			},
-			"node": {
-				"extensions": [".js", ".jsx", ".ts", ".tsx"],
-				"moduleDirectory": ["node_modules", "./"]
+			"parserOptions": {
+				"project": "./tsconfig.json"
 			}
+		},
+		{
+			"extends": [
+				"canonical/react",
+				"canonical/jsx-a11y",
+				"canonical/typescript",
+				"canonical/next",
+				"plugin:prettier/recommended"
+			],
+			"rules": {
+				"canonical/destructuring-property-newline": "off",
+				"canonical/import-specifier-newline": "off",
+				"react/forbid-component-props": "off",
+				"canonical/filename-match-exported": "warn",
+				"semi-style": "off"
+			},
+			"files": "*.tsx",
+			"parserOptions": {
+				"project": "./tsconfig.json"
+			}
+		},
+		{
+			"extends": ["canonical/jest", "plugin:prettier/recommended"],
+			"files": "*.test.{ts,tsx}",
+			"parserOptions": {
+				"project": "./tsconfig.json"
+			}
+		},
+		{
+			"extends": ["canonical/json", "plugin:prettier/recommended"],
+			"rules": {
+				"jsonc/indent": "off",
+				"jsonc/object-curly-spacing": "off",
+				"jsonc/object-property-newline": "off",
+				"jsonc/array-bracket-newline": "off",
+				"jsonc/array-element-newline": "off",
+				"canonical/filename-match-regex": "off"
+			},
+			"files": "*.json"
+		},
+		{
+			"extends": ["canonical/yaml", "plugin:prettier/recommended"],
+			"files": "*.yaml"
+		},
+		{
+			"extends": ["canonical/graphql", "plugin:prettier/recommended"],
+			"files": "*.graphql"
 		}
-	}
+	],
+	"root": true
 }
