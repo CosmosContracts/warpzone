@@ -29,7 +29,6 @@ export const createClient = async (
 	config: AppConfig,
 	signer: OfflineSigner
 ): Promise<SigningCosmWasmClient> => {
-	console.log("Created Client")
 	return await SigningCosmWasmClient.connectWithSigner(config.rpcUrl, signer, {
 		prefix: config.addressPrefix
 	})
@@ -38,6 +37,5 @@ export const createClient = async (
 export const createSimpleClient = (
 	config: AppConfig
 ): Promise<CosmWasmClient> => {
-	console.log("Created Simple Client")
 	return CosmWasmClient.connect(config.rpcUrl)
 }

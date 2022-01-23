@@ -1,28 +1,29 @@
+/* eslint-disable consistent-return */
+import type { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate"
+import { CW20, useSdk } from "@services/client"
+import { convertMicroDenomToDenom } from "@utils/conversion"
+import { useMemo } from "react"
+import { useQuery } from "react-query"
 import { useRecoilValue } from "recoil"
 import { walletState, WalletStatusType } from "../state/atoms/wallet"
-import { CW20, useSdk } from "@services/client"
 import { unsafelyGetTokenInfo } from "./useTokenInfo"
-import { useQuery } from "react-query"
-import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate"
-import { useMemo } from "react"
-import { convertMicroDenomToDenom } from "@utils/conversion"
 
-const DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL = 10000
+const DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL = 10_000
 
-async function fetchTokenBalance({
+const fetchTokenBalance = async ({
 	client,
 	token: { denom, native, token_address, decimals },
 	address
 }: {
+	address: string
 	client: SigningCosmWasmClient
 	token: {
-		denom?: string
-		token_address?: string
-		native?: boolean
 		decimals?: number
+		denom?: string
+		native?: boolean
+		token_address?: string
 	}
-	address: string
-}) {
+}) => {
 	if (!denom && !token_address) {
 		throw new Error(
 			`No denom or token_address were provided to fetch the balance.`
@@ -56,24 +57,24 @@ export const useTokenBalance = (tokenSymbol: string) => {
 		async ({ queryKey: [, symbol] }) => {
 			if (symbol) {
 				return await fetchTokenBalance({
-					client,
 					address,
+					client,
 					token: unsafelyGetTokenInfo(symbol)
 				})
 			}
 		},
 		{
 			enabled: Boolean(tokenSymbol && status === WalletStatusType.connected),
-			refetchOnMount: "always",
 			refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
-			refetchIntervalInBackground: true
+			refetchIntervalInBackground: true,
+			refetchOnMount: "always"
 		}
 	)
 
 	return { balance, isLoading }
 }
 
-export const useMultipleTokenBalance = (tokenSymbols?: Array<string>) => {
+export const useMultipleTokenBalance = (tokenSymbols?: string[]) => {
 	const { address, getSignClient, initialized } = useSdk()
 
 	const queryKey = useMemo(
@@ -87,26 +88,26 @@ export const useMultipleTokenBalance = (tokenSymbols?: Array<string>) => {
 			const balances = await Promise.all(
 				tokenSymbols.map((tokenSymbol) =>
 					fetchTokenBalance({
-						client: getSignClient(),
 						address,
+						client: getSignClient(),
 						token: unsafelyGetTokenInfo(tokenSymbol) || {}
 					})
 				)
 			)
 			return tokenSymbols.map((tokenSymbol, index) => ({
-				tokenSymbol,
-				balance: balances[index]
+				balance: balances[index],
+				tokenSymbol
 			}))
 		},
 		{
 			enabled: initialized,
-			refetchOnMount: "always",
+			onError() {
+				throw new Error("Error fetching token balance")
+			},
 			refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
 			refetchIntervalInBackground: false,
 
-			onError(error) {
-				console.error("Cannot fetch token balance bc:", error)
-			}
+			refetchOnMount: "always"
 		}
 	)
 

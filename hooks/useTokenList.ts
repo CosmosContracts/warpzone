@@ -1,35 +1,35 @@
-import { useQuery } from "react-query"
 import { queryClient } from "@services/client"
-import { String } from "lodash"
+import type { String } from "lodash"
+import { useQuery } from "react-query"
 
 export type TokenInfo = {
-	id: string
 	chain_id: string
-	token_address: string
-	symbol: string
-	name: string
-	ticker: String
 	decimals: number
-	logoURI: string
-	tags: string[]
 	denom: string
+	id: string
+	logoURI: string
+	name: string
 	native: boolean
+	symbol: string
+	tags: string[]
+	ticker: String
+	token_address: string
 }
 
 export type TokenList = {
-	name: string
-	logoURI: string
-	keywords: Array<string>
-	timestamp: string
 	base_token: TokenInfo
-	tokens: Array<TokenInfo>
+	keywords: string[]
+	logoURI: string
+	name: string
 	tags: Record<
 		string,
 		{
-			name: string
 			description: string
+			name: string
 		}
 	>
+	timestamp: string
+	tokens: TokenInfo[]
 
 	version: {
 		major: number
@@ -51,12 +51,12 @@ export const useTokenList = () => {
 			return await response.json()
 		},
 		{
-			onError(e) {
-				console.error("Error loading token list:", e)
+			onError() {
+				throw new Error("Error fetching token list")
 			},
-			refetchOnMount: false,
+			refetchInterval: 1_000 * 60,
 			refetchIntervalInBackground: true,
-			refetchInterval: 1000 * 60
+			refetchOnMount: false
 		}
 	)
 

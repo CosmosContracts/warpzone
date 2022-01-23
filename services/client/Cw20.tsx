@@ -1,34 +1,37 @@
-import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate"
-import { Coin } from "@cosmjs/stargate"
+// eslint-disable-next-line canonical/filename-match-regex
+import type { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate"
+import type { Coin } from "@cosmjs/stargate"
 
 export type Expiration =
 	| { readonly at_height: number }
 	| { readonly at_time: number }
 	| { readonly never: unknown }
 
-export interface AllowanceResponse {
-	readonly allowance: string // integer as string
+export type AllowanceResponse = {
+	readonly allowance: string
 	readonly expires: Expiration
 }
 
-export interface AllowanceInfo {
-	readonly allowance: string // integer as string
-	readonly spender: string // bech32 address
+export type AllowanceInfo = {
+	readonly allowance: string
+	// bech32 address
 	readonly expires: Expiration
+	// integer as string
+	readonly spender: string
 }
 
-export interface AllAllowancesResponse {
+export type AllAllowancesResponse = {
 	readonly allowances: readonly AllowanceInfo[]
 }
 
-export interface TokenInfo {
+export type TokenInfo = {
+	readonly decimals: number
 	readonly name: string
 	readonly symbol: string
-	readonly decimals: number
 	readonly total_supply: string
 }
 
-export interface Investment {
+export type Investment = {
 	readonly exit_tax: string
 	readonly min_withdrawal: string
 	readonly nominal_value: string
@@ -38,54 +41,56 @@ export interface Investment {
 	readonly validator: string
 }
 
-export interface Claim {
+export type Claim = {
 	readonly amount: string
 	readonly release_at: { readonly at_time: number }
 }
 
-export interface Claims {
+export type Claims = {
 	readonly claims: readonly Claim[]
 }
 
-export interface AllAccountsResponse {
+export type AllAccountsResponse = {
 	// list of bech32 address that have a balance
 	readonly accounts: readonly string[]
 }
 
-export interface CW20Instance {
-	readonly contractAddress: string
+export type CW20Instance = {
+	allAccounts: (
+		startAfter?: string,
+		limit?: number
+	) => Promise<readonly string[]>
 
-	// queries
-	balance: (address: string) => Promise<string>
-	allowance: (owner: string, spender: string) => Promise<AllowanceResponse>
 	allAllowances: (
 		owner: string,
 		startAfter?: string,
 		limit?: number
 	) => Promise<AllAllowancesResponse>
-	allAccounts: (
-		startAfter?: string,
-		limit?: number
-	) => Promise<readonly string[]>
-	tokenInfo: () => Promise<TokenInfo>
-	investment: () => Promise<Investment>
+	allowance: (owner: string, spender: string) => Promise<AllowanceResponse>
+	// queries
+	balance: (address: string) => Promise<string>
+	bond: (sender: string, coin: Coin) => Promise<string>
+	burn: (sender: string, amount: string) => Promise<string>
+	claim: (sender: string) => Promise<string>
 	claims: (address: string) => Promise<Claims>
-	minter: (sender: string) => Promise<unknown>
+	readonly contractAddress: string
 
-	// actions
-	mint: (sender: string, recipient: string, amount: string) => Promise<string>
-	transfer: (
+	decreaseAllowance: (
 		sender: string,
 		recipient: string,
 		amount: string
 	) => Promise<string>
-	burn: (sender: string, amount: string) => Promise<string>
 	increaseAllowance: (
 		sender: string,
 		recipient: string,
 		amount: string
 	) => Promise<string>
-	decreaseAllowance: (
+	investment: () => Promise<Investment>
+	// actions
+	mint: (sender: string, recipient: string, amount: string) => Promise<string>
+	minter: (sender: string) => Promise<unknown>
+	tokenInfo: () => Promise<TokenInfo>
+	transfer: (
 		sender: string,
 		recipient: string,
 		amount: string
@@ -96,12 +101,10 @@ export interface CW20Instance {
 		recipient: string,
 		amount: string
 	) => Promise<string>
-	bond: (sender: string, coin: Coin) => Promise<string>
 	unbond: (sender: string, amount: string) => Promise<string>
-	claim: (sender: string) => Promise<string>
 }
 
-export interface CW20Contract {
+export type CW20Contract = {
 	use: (contractAddress: string) => CW20Instance
 }
 
@@ -118,7 +121,7 @@ export const CW20 = (client: SigningCosmWasmClient): CW20Contract => {
 			owner: string,
 			spender: string
 		): Promise<AllowanceResponse> => {
-			return client.queryContractSmart(contractAddress, {
+			return await client.queryContractSmart(contractAddress, {
 				allowance: { owner, spender }
 			})
 		}
@@ -128,8 +131,8 @@ export const CW20 = (client: SigningCosmWasmClient): CW20Contract => {
 			startAfter?: string,
 			limit?: number
 		): Promise<AllAllowancesResponse> => {
-			return client.queryContractSmart(contractAddress, {
-				all_allowances: { owner, start_after: startAfter, limit }
+			return await client.queryContractSmart(contractAddress, {
+				all_allowances: { limit, owner, start_after: startAfter }
 			})
 		}
 
@@ -140,28 +143,32 @@ export const CW20 = (client: SigningCosmWasmClient): CW20Contract => {
 			const accounts: AllAccountsResponse = await client.queryContractSmart(
 				contractAddress,
 				{
-					all_accounts: { start_after: startAfter, limit }
+					all_accounts: { limit, start_after: startAfter }
 				}
 			)
 			return accounts.accounts
 		}
 
 		const tokenInfo = async (): Promise<TokenInfo> => {
-			return client.queryContractSmart(contractAddress, { token_info: {} })
+			return await client.queryContractSmart(contractAddress, {
+				token_info: {}
+			})
 		}
 
 		const investment = async (): Promise<Investment> => {
-			return client.queryContractSmart(contractAddress, { investment: {} })
+			return await client.queryContractSmart(contractAddress, {
+				investment: {}
+			})
 		}
 
 		const claims = async (address: string): Promise<Claims> => {
-			return client.queryContractSmart(contractAddress, {
+			return await client.queryContractSmart(contractAddress, {
 				claims: { address }
 			})
 		}
 
 		const minter = async (): Promise<unknown> => {
-			return client.queryContractSmart(contractAddress, { minter: {} })
+			return await client.queryContractSmart(contractAddress, { minter: {} })
 		}
 
 		// mints tokens, returns transactionHash
@@ -174,7 +181,7 @@ export const CW20 = (client: SigningCosmWasmClient): CW20Contract => {
 				sender,
 				contractAddress,
 				{
-					mint: { recipient, amount }
+					mint: { amount, recipient }
 				},
 				"auto"
 			)
@@ -191,7 +198,7 @@ export const CW20 = (client: SigningCosmWasmClient): CW20Contract => {
 				sender,
 				contractAddress,
 				{
-					transfer: { recipient, amount }
+					transfer: { amount, recipient }
 				},
 				"auto"
 			)
@@ -220,7 +227,7 @@ export const CW20 = (client: SigningCosmWasmClient): CW20Contract => {
 				sender,
 				contractAddress,
 				{
-					increase_allowance: { spender, amount }
+					increase_allowance: { amount, spender }
 				},
 				"auto"
 			)
@@ -236,7 +243,7 @@ export const CW20 = (client: SigningCosmWasmClient): CW20Contract => {
 				sender,
 				contractAddress,
 				{
-					decrease_allowance: { spender, amount }
+					decrease_allowance: { amount, spender }
 				},
 				"auto"
 			)
@@ -253,7 +260,7 @@ export const CW20 = (client: SigningCosmWasmClient): CW20Contract => {
 				sender,
 				contractAddress,
 				{
-					transfer_from: { owner, recipient, amount }
+					transfer_from: { amount, owner, recipient }
 				},
 				"auto"
 			)
@@ -272,10 +279,7 @@ export const CW20 = (client: SigningCosmWasmClient): CW20Contract => {
 			return result.transactionHash
 		}
 
-		const unbond = async (
-			sender: string,
-			amount: string
-		): Promise<string> => {
+		const unbond = async (sender: string, amount: string): Promise<string> => {
 			const result = await client.execute(
 				sender,
 				contractAddress,
@@ -300,25 +304,26 @@ export const CW20 = (client: SigningCosmWasmClient): CW20Contract => {
 		}
 
 		return {
-			contractAddress,
-			balance,
-			allowance,
-			allAllowances,
 			allAccounts,
-			tokenInfo,
-			investment,
-			claims,
-			minter,
-			mint,
-			transfer,
-			burn,
-			increaseAllowance,
-			decreaseAllowance,
-			transferFrom,
+			allAllowances,
+			allowance,
+			balance,
 			bond,
-			unbond,
-			claim
+			burn,
+			claim,
+			claims,
+			contractAddress,
+			decreaseAllowance,
+			increaseAllowance,
+			investment,
+			mint,
+			minter,
+			tokenInfo,
+			transfer,
+			transferFrom,
+			unbond
 		}
 	}
+
 	return { use }
 }

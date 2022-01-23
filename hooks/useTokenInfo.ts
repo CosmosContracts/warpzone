@@ -1,5 +1,6 @@
 import { useMemo } from "react"
-import { useTokenList, getCachedTokenList, TokenInfo } from "./useTokenList"
+import type { TokenInfo } from "./useTokenList"
+import { useTokenList, getCachedTokenList } from "./useTokenList"
 
 /* token selector functions */
 export const unsafelyGetBaseToken = (

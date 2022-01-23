@@ -1,23 +1,25 @@
+// eslint-disable-next-line canonical/filename-match-exported
 import { Flex } from "@chakra-ui/react"
-import { motion, Variants } from "framer-motion"
+import type { Variants } from "framer-motion"
+import { motion } from "framer-motion"
 import { MainSection } from "../components/sections"
 
 const variants: Variants = {
-	hidden: { opacity: 0, transition: { duration: 0.5, staggerChildren: 0.2 } },
-	enter: { opacity: 1, transition: { duration: 0.5, staggerChildren: 0.2 } }
+	enter: { opacity: 1, transition: { duration: 0.5, staggerChildren: 0.2 } },
+	hidden: { opacity: 0, transition: { duration: 0.5, staggerChildren: 0.2 } }
 }
 
 export const IndexPage = () => {
 	return (
 		<Flex
-			as={motion.main}
-			initial="hidden"
+			align="center"
 			animate="enter"
+			as={motion.main}
+			direction="column"
+			initial="hidden"
+			justifyContent="center"
 			variants={variants}
 			w="full"
-			direction="column"
-			align="center"
-			justifyContent="center"
 		>
 			<MainSection />
 		</Flex>

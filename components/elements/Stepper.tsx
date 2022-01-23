@@ -1,57 +1,57 @@
+/* eslint-disable react/no-unused-prop-types */
 import { Center } from "@chakra-ui/react"
+import type { AnimationControls, Variants } from "framer-motion"
 import {
 	animate,
-	AnimationControls,
 	AnimatePresence,
 	motion,
 	useAnimation,
-	useMotionValue,
-	Variants
+	useMotionValue
 } from "framer-motion"
 import { useEffect, useState } from "react"
 
-interface CircleProps {
+type ItemProps = {
+	active?: boolean
 	controls: AnimationControls
-	done: boolean
-	active: boolean
+	done?: boolean
 }
 
-interface StepperProps {
+type StepperProps = {
 	activeStep: number
 }
 
-const Line = ({ controls }) => {
+const Line = ({ controls }: ItemProps) => {
 	const style = {
 		backgroundImage:
 			"linear-gradient(to right,rgba(180, 189, 199,0.35), rgba(172, 184, 197,0.65))",
-		width: "80px",
-		height: "0.2rem"
+		height: "0.2rem",
+		width: "80px"
 	}
 
 	const variants: Variants = {
+		initial: { width: 0 },
 		start: {
-			width: "80px",
-			height: "0.2rem",
 			backgroundImage:
 				"linear-gradient(to right,rgba(152, 222, 91,0.65), rgba(8, 225, 174,0.65))",
-			transition: { duration: 0.75, ease: "linear" }
-		},
-		initial: { width: 0 }
+			height: "0.2rem",
+			transition: { damping: 20, type: "spring" },
+			width: "80px"
+		}
 	}
 
 	return (
 		<div style={style}>
 			<motion.div
-				style={style}
-				initial={"initial"}
-				variants={variants}
 				animate={controls}
-			></motion.div>
+				initial="initial"
+				style={style}
+				variants={variants}
+			/>
 		</div>
 	)
 }
 
-const Circle = ({ controls, done, active }: CircleProps) => {
+const Circle = ({ controls, done, active }: ItemProps) => {
 	const [isComplete, setIsComplete] = useState(false)
 	const stepBackground = useMotionValue(
 		"radial-gradient(circle at left bottom,rgba(40, 49, 59,0.15) 40%, rgba(72, 84, 97,0.65))"
@@ -138,110 +138,110 @@ const Circle = ({ controls, done, active }: CircleProps) => {
 
 	return (
 		<Center
+			animate={isComplete ? "start" : controls}
+			as={motion.div}
 			boxSize="2rem"
 			rounded="xl"
-			as={motion.div}
-			// @ts-expect-error
+			// @ts-expect-error "Chakra style props don't support MotionValue in type but it works for now"
 			style={{ backgroundImage: stepBackground }}
-			animate={isComplete ? "start" : controls}
 		>
 			<AnimatePresence exitBeforeEnter>
 				{done && (
 					<motion.svg viewBox="0 0 60 60">
 						<motion.circle
+							animate={controls}
 							cx="30"
 							cy="30"
-							r="20"
 							fill="none"
-							animate={controls}
-							style={{
-								pathLength: circlePathLength,
-								scale: 1
-							}}
-							strokeWidth="5"
+							r="20"
 							stroke="white"
 							strokeDasharray="0 1"
 							strokeLinecap="round"
 							strokeLinejoin="round"
+							strokeWidth="5"
+							style={{
+								pathLength: circlePathLength,
+								scale: 1
+							}}
 						/>
 						<motion.path
-							fill="none"
-							strokeWidth="5"
-							stroke="white"
-							d="M14,26 L 22,33 L 35,16"
-							strokeDasharray="0 1"
 							animate={controls}
+							d="M14,26 L 22,33 L 35,16"
+							fill="none"
+							stroke="white"
+							strokeDasharray="0 1"
+							strokeWidth="5"
 							style={{
 								pathLength: checkPathLength,
+								scale: 1,
 								translateX: 6,
-								translateY: 6,
-								scale: 1
+								translateY: 6
 							}}
 						/>
 					</motion.svg>
 				)}
 				{active && (
 					<motion.svg
-						style={{ padding: "2px" }}
 						animate={controls}
+						style={{ padding: "2px" }}
 						viewBox="0 0 256 256"
 					>
 						<motion.path
+							animate={controls}
 							d="M94.1,184.6c-11.4,33.9-56.6,33.9-56.6,33.9s0-45.2,33.9-56.6"
 							fill="none"
-							animate={controls}
-							style={{
-								pathLength: activePathLength,
-								scale: 1
-							}}
-							strokeWidth="16"
 							stroke="white"
 							strokeDasharray="0 1"
 							strokeLinecap="round"
 							strokeLinejoin="round"
-						></motion.path>
+							strokeWidth="16"
+							style={{
+								pathLength: activePathLength,
+								scale: 1
+							}}
+						/>
 						<motion.path
+							animate={controls}
 							d="M195.9,105.4,128,173.3,82.7,128l67.9-67.9C176.3,34.4,202,34.7,213,36.3a7.8,7.8,0,0,1,6.7,6.7C221.3,54,221.6,79.7,195.9,105.4Z"
 							fill="none"
-							animate={controls}
-							style={{
-								pathLength: activePathLength,
-								scale: 1
-							}}
-							strokeWidth="16"
 							stroke="white"
 							strokeDasharray="0 1"
 							strokeLinecap="round"
 							strokeLinejoin="round"
-						></motion.path>
+							strokeWidth="16"
+							style={{
+								pathLength: activePathLength,
+								scale: 1
+							}}
+						/>
 						<motion.path
+							animate={controls}
 							d="M184.6,116.7v64.6a8,8,0,0,1-2.4,5.6l-32.3,32.4a8,8,0,0,1-13.5-4.1L128,173.3"
 							fill="none"
-							animate={controls}
-							style={{
-								pathLength: activePathLength,
-								scale: 1
-							}}
-							strokeWidth="16"
 							stroke="white"
 							strokeDasharray="0 1"
 							strokeLinecap="round"
 							strokeLinejoin="round"
-						></motion.path>
+							strokeWidth="16"
+							style={{
+								pathLength: activePathLength,
+								scale: 1
+							}}
+						/>
 						<motion.path
+							animate={controls}
 							d="M139.3,71.4H74.7a8,8,0,0,0-5.6,2.4L36.7,106.1a8,8,0,0,0,4.1,13.5L82.7,128"
 							fill="none"
-							animate={controls}
-							style={{
-								pathLength: activePathLength,
-								scale: 1
-							}}
-							strokeWidth="16"
 							stroke="white"
 							strokeDasharray="0 1"
 							strokeLinecap="round"
 							strokeLinejoin="round"
-						></motion.path>
+							strokeWidth="16"
+							style={{
+								pathLength: activePathLength,
+								scale: 1
+							}}
+						/>
 					</motion.svg>
 				)}
 			</AnimatePresence>
@@ -262,18 +262,18 @@ const Stepper = ({ activeStep }: StepperProps) => {
 
 	const stepperVariants: Variants = {
 		hidden: {
-			y: 100,
 			transition: {
-				stiffness: 10,
-				damping: 15
-			}
+				damping: 15,
+				stiffness: 10
+			},
+			y: 100
 		},
 		show: {
-			y: 0,
 			transition: {
-				stiffness: 50,
-				damping: 15
-			}
+				damping: 15,
+				stiffness: 50
+			},
+			y: 0
 		}
 	}
 
@@ -285,68 +285,75 @@ const Stepper = ({ activeStep }: StepperProps) => {
 		if (active === 0) {
 			const sequence = async () => {
 				await firstCircle.start("initial")
+				await secondCircle.start("initial")
 				await thirdCircle.start("initial")
 				await line2.start("initial")
-				await secondCircle.start("initial")
 				await line1.start("initial")
 			}
-			sequence()
+
+			sequence().finally(() => {})
 		}
+
 		if (active === 1) {
 			const sequence = async () => {
 				await line1.start("start")
 				await secondCircle.start("start")
 			}
-			sequence()
+
+			sequence().finally(() => {})
 		}
+
 		if (active === 2) {
 			const sequence = async () => {
 				await line2.start("start")
 				await thirdCircle.start("start")
 			}
-			sequence()
+
+			sequence().finally(() => {})
 		}
+
 		if (active === 3) {
 			const sequence = async () => {
 				await line3.start("start")
 				await fourthCircle.start("start")
 			}
-			sequence()
+
+			sequence().finally(() => {})
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [active])
 
 	return (
 		<Center
-			as={motion.div}
-			variants={stepperVariants}
-			initial="hidden"
 			animate="show"
-			pos={"absolute"}
+			as={motion.div}
+			initial="hidden"
 			inset="auto auto 2rem auto"
+			pos="absolute"
+			variants={stepperVariants}
 		>
 			<Circle
-				active={active === 0 ? true : false}
-				done={active - 1 >= 0 ? true : false}
+				active={active === 0}
 				controls={firstCircle}
+				done={active - 1 >= 0}
 			/>
-			<Line controls={line1} />
+			<Line active={false} controls={line1} done={false} />
 			<Circle
-				active={active === 1 ? true : false}
-				done={active - 1 >= 1 ? true : false}
+				active={active === 1}
 				controls={secondCircle}
+				done={active - 1 >= 1}
 			/>
-			<Line controls={line2} />
+			<Line active={false} controls={line2} done={false} />
 			<Circle
-				active={active === 2 ? true : false}
-				done={active - 1 >= 2 ? true : false}
+				active={active === 2}
 				controls={thirdCircle}
+				done={active - 1 >= 2}
 			/>
-			<Line controls={line3} />
+			<Line active={false} controls={line3} done={false} />
 			<Circle
-				active={active === 3 ? true : false}
-				done={active - 1 >= 3 ? true : false}
+				active={active === 3}
 				controls={fourthCircle}
+				done={active - 1 >= 3}
 			/>
 		</Center>
 	)

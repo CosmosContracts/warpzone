@@ -1,34 +1,34 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate"
+import type { SigningStargateClient } from "@cosmjs/stargate"
+import type { Key } from "@keplr-wallet/types"
 import { atom } from "recoil"
-import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate"
-import { SigningStargateClient } from "@cosmjs/stargate"
-import { Key } from "@keplr-wallet/types"
 
 export enum WalletStatusType {
-	/* nothing happens to the wallet */
-	idle = "@wallet-state/idle",
-	/* restored wallets state from the cache */
-	restored = "@wallet-state/restored",
 	/* the wallet is fully connected */
 	connected = "@wallet-state/connected",
 	/* connecting to the wallet */
 	connecting = "@wallet-state/connecting",
 	/* error when tried to connect */
-	error = "@wallet-state/error"
+	error = "@wallet-state/error",
+	/* nothing happens to the wallet */
+	idle = "@wallet-state/idle",
+	/* restored wallets state from the cache */
+	restored = "@wallet-state/restored"
 }
 
 type GeneratedWalletState<
-	TClient extends any,
+	TClient,
 	TStateExtension extends {}
 > = TStateExtension & {
+	address: string
 	client: TClient | null
 	status: WalletStatusType
-	address: string
 }
 
 type CreateWalletStateArgs<TState = {}> = {
-	key: string
 	default: TState
+	key: string
 }
 
 function createWalletState<TClient = any, TState = {}>({
@@ -36,14 +36,13 @@ function createWalletState<TClient = any, TState = {}>({
 	default: defaultState
 }: CreateWalletStateArgs<TState>) {
 	return atom<GeneratedWalletState<TClient, TState>>({
-		key,
+		dangerouslyAllowMutability: true,
 		default: {
-			status: WalletStatusType.idle,
-			client: null,
 			address: "",
+			client: null,
+			status: WalletStatusType.idle,
 			...defaultState
 		},
-		dangerouslyAllowMutability: true,
 		effects_UNSTABLE: [
 			({ onSet, setSelf }) => {
 				const CACHE_KEY = `@junoswap/wallet-state/type-${key}`
@@ -60,7 +59,9 @@ function createWalletState<TClient = any, TState = {}>({
 								status: WalletStatusType.restored
 							})
 						}
-					} catch (e) {}
+					} catch {
+						throw new Error("No wallet could be fetched from cache.")
+					}
 				}
 
 				onSet((newValue, oldValue) => {
@@ -77,7 +78,8 @@ function createWalletState<TClient = any, TState = {}>({
 					}
 				})
 			}
-		]
+		],
+		key
 	})
 }
 
@@ -85,10 +87,10 @@ export const walletState = createWalletState<
 	SigningCosmWasmClient,
 	{ key?: Key }
 >({
-	key: "internal-wallet",
 	default: {
 		key: null
-	}
+	},
+	key: "internal-wallet"
 })
 
 export const ibcWalletState = createWalletState<
@@ -98,8 +100,8 @@ export const ibcWalletState = createWalletState<
 		tokenSymbol?: string
 	}
 >({
-	key: "ibc-wallet",
 	default: {
 		tokenSymbol: null
-	}
+	},
+	key: "ibc-wallet"
 })

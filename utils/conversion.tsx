@@ -1,4 +1,5 @@
-export const protectAgainstNaN = (value: number) => (isNaN(value) ? 0 : value)
+export const protectAgainstNaN = (value: number) =>
+	Number.isNaN(value) ? 0 : value
 
 export function convertMicroDenomToDenom(
 	value: number | string,
@@ -6,7 +7,7 @@ export function convertMicroDenomToDenom(
 ): number {
 	if (decimals === 0) return Number(value)
 
-	return protectAgainstNaN(Number(value) / Math.pow(10, decimals))
+	return protectAgainstNaN(Number(value) / 10 ** decimals)
 }
 
 export function convertDenomToMicroDenom(
@@ -16,12 +17,12 @@ export function convertDenomToMicroDenom(
 	if (decimals === 0) return Number(value)
 
 	return protectAgainstNaN(
-		parseInt(String(Number(value) * Math.pow(10, decimals)), 10)
+		Number.parseInt(String(Number(value) * 10 ** decimals), 10)
 	)
 }
 
 export function convertFromMicroDenom(denom: string) {
-	return denom?.substring(1).toUpperCase()
+	return denom?.slice(1).toUpperCase()
 }
 
 export function convertToFixedDecimals(value: number | string): string {
@@ -33,6 +34,7 @@ export const formatTokenName = (name: string) => {
 	if (name) {
 		return name.slice(0, 1).toUpperCase() + name.slice(1).toLowerCase()
 	}
+
 	return ""
 }
 
@@ -41,29 +43,27 @@ export const createBalanceFormatter = ({
 	...options
 }: Omit<
 	Parameters<typeof Intl.NumberFormat>[1],
-	"style" | "currency"
+	"currency" | "style"
 > = {}) => {
 	const formatter = new Intl.NumberFormat("en-US", {
-		minimumFractionDigits: 0,
 		maximumFractionDigits,
+		minimumFractionDigits: 0,
 		...options,
-		style: "currency",
-		currency: "USD"
+		currency: "USD",
+		style: "currency"
 	})
 
 	return (
-		value: string | number,
+		value: number | string,
 		{ includeCommaSeparation = false, applyNumberConversion = true } = {}
 	) => {
-		const formattedValue = formatter
-			.format(value as number)
-			.replace(/\$/g, "")
+		const formattedValue = formatter.format(value as number).replaceAll("$", "")
 
 		if (includeCommaSeparation) {
 			return formattedValue
 		}
 
-		const rawValue = formattedValue.replace(/\,/g, "")
+		const rawValue = formattedValue.replaceAll(",", "")
 		if (applyNumberConversion) {
 			return Number(rawValue)
 		}

@@ -1,15 +1,15 @@
 import type { ChainInfo, Currency } from "@keplr-wallet/types"
 
-export interface AppConfig {
+export type AppConfig = {
+	readonly addressPrefix: string
 	readonly chainId: string
 	readonly chainName: string
-	readonly contract: string
-	readonly addressPrefix: string
-	readonly rpcUrl: string
-	readonly httpUrl: string
-	readonly token: Currency
-	readonly gasPrice: number
 	readonly codeId?: number
+	readonly contract: string
+	readonly gasPrice: number
+	readonly httpUrl: string
+	readonly rpcUrl: string
+	readonly token: Currency
 }
 
 export type NetworkConfigs = {

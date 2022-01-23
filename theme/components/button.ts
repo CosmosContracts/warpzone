@@ -4,27 +4,27 @@ import { mode, transparentize } from "@chakra-ui/theme-tools"
 type Dict = Record<string, any>
 
 const baseStyle = {
-	overflow: "hidden",
-	lineHeight: "1.2",
-	borderRadius: "full",
-	fontWeight: "bold",
-	fontFamily: "heading",
-	transition: "all 0.2s ease-in-out",
-	transitionProperty: "common",
-	transitionDuration: "normal",
+	_disabled: {
+		boxShadow: "none",
+		cursor: "not-allowed",
+		opacity: 0.4
+	},
 	_focus: {
 		boxShadow: "#000 0 0 0 0"
-	},
-	_disabled: {
-		opacity: 0.4,
-		cursor: "not-allowed",
-		boxShadow: "none"
 	},
 	_hover: {
 		_disabled: {
 			bg: "initial"
 		}
-	}
+	},
+	borderRadius: "full",
+	fontFamily: "heading",
+	fontWeight: "bold",
+	lineHeight: "1.2",
+	overflow: "hidden",
+	transition: "all 0.2s ease-in-out",
+	transitionDuration: "normal",
+	transitionProperty: "common"
 }
 
 function variantGhost(props: Dict) {
@@ -36,83 +36,83 @@ function variantGhost(props: Dict) {
 
 	if (c === "gray") {
 		return {
-			color: mode(`inherit`, `whiteAlpha.900`)(props),
+			_active: { bg: mode(`gray.200`, `whiteAlpha.300`)(props) },
 			_hover: {
 				bg: mode(`gray.100`, `whiteAlpha.200`)(props)
 			},
-			_active: { bg: mode(`gray.200`, `whiteAlpha.300`)(props) }
+			color: mode(`inherit`, `whiteAlpha.900`)(props)
 		}
 	}
 
 	if (c === "white") {
 		return {
-			color: mode(`inherit`, `whiteAlpha.900`)(props),
+			_active: { bg: mode(`gray.200`, `whiteAlpha.300`)(props) },
 			_hover: {
 				bg: mode(`gray.100`, `whiteAlpha.200`)(props)
 			},
-			_active: { bg: mode(`gray.200`, `whiteAlpha.300`)(props) }
+			color: mode(`inherit`, `whiteAlpha.900`)(props)
 		}
 	}
 
 	if (c === "brand") {
 		return {
-			color: mode(`inherit`, `white`)(props),
-			border: "solid 2px",
-			borderColor: darkBeforeBgEnd,
+			_active: { bg: mode(`gray.200`, darkBeforeBgEnd)(props) },
 			_before: {
-				content: '""',
 				backgroundColor: darkBeforeBgStart,
-				height: "100%",
-				width: "2em",
+				borderLeft: `15px solid ${darkBeforeBgEnd}`,
+				content: '""',
 				display: "block",
+				filter: "blur(3px)",
+				height: "100%",
+				left: "-5rem",
 				position: "absolute",
 				top: 0,
-				left: "-5rem",
 				transform: "skewX(315deg) translateX(0)",
 				transition: "none",
-				borderLeft: `15px solid ${darkBeforeBgEnd}`,
-				filter: "blur(3px)"
+				width: "2em"
 			},
 			_hover: {
-				transition: "all 0.5 cubic-bezier(.41,.60,.70,.15)",
 				_before: {
 					transform: "skewX(315deg) translateX(18rem)",
 					transition: "all 0.5s cubic-bezier(.41,.60,.70,.15)"
 				},
-				bg: darkHoverBg
+				bg: darkHoverBg,
+				transition: "all 0.5 cubic-bezier(.41,.60,.70,.15)"
 			},
-			_active: { bg: mode(`gray.200`, darkBeforeBgEnd)(props) }
+			border: "solid 2px",
+			borderColor: darkBeforeBgEnd,
+			color: mode(`inherit`, `white`)(props)
 		}
 	}
 
 	return {
-		color: mode(`${c}.600`, `${c}.200`)(props),
-		bg: "transparent",
+		_active: {
+			bg: mode(`${c}.100`, darkActiveBg)(props)
+		},
 		_before: {
-			content: '""',
 			backgroundColor: darkBeforeBgStart,
-			height: "100%",
-			width: "2.5em",
+			borderLeft: `15px solid ${darkBeforeBgEnd}`,
+			content: '""',
 			display: "block",
+			filter: "blur(3px)",
+			height: "100%",
+			left: "-5rem",
 			position: "absolute",
 			top: 0,
-			left: "-5rem",
 			transform: "skewX(315deg) translateX(0)",
 			transition: "none",
-			borderLeft: `15px solid ${darkBeforeBgEnd}`,
-			filter: "blur(3px)"
+			width: "2.5em"
 		},
 		_hover: {
-			transition: "all 0.5 cubic-bezier(.41,.60,.70,.15)",
 			_before: {
 				transform: "skewX(315deg) translateX(18rem)",
 				transition: "all 0.5s cubic-bezier(.41,.60,.70,.15)"
 			},
-			bg: darkHoverBg
+			bg: darkHoverBg,
+			transition: "all 0.5 cubic-bezier(.41,.60,.70,.15)"
 		},
-		_active: {
-			bg: mode(`${c}.100`, darkActiveBg)(props)
-		}
+		bg: "transparent",
+		color: mode(`${c}.600`, `${c}.200`)(props)
 	}
 }
 
@@ -127,25 +127,27 @@ function variantOutline(props: Dict) {
 }
 
 type AccessibleColor = {
+	activeBg?: string
 	bg?: string
 	color?: string
 	hoverBg?: string
-	activeBg?: string
 }
 
-/** Accessible color overrides for less accessible colors. */
+/**
+ * Accessible color overrides for less accessible colors.
+ */
 const accessibleColorMap: { [key: string]: AccessibleColor } = {
-	yellow: {
-		bg: "yellow.400",
-		color: "black",
-		hoverBg: "yellow.500",
-		activeBg: "yellow.600"
-	},
 	cyan: {
+		activeBg: "cyan.600",
 		bg: "cyan.400",
 		color: "black",
-		hoverBg: "cyan.500",
-		activeBg: "cyan.600"
+		hoverBg: "cyan.500"
+	},
+	yellow: {
+		activeBg: "yellow.600",
+		bg: "yellow.400",
+		color: "black",
+		hoverBg: "yellow.500"
 	}
 }
 
@@ -153,17 +155,17 @@ function variantSolid(props: Dict) {
 	const { colorScheme: c } = props
 
 	if (c === "gray") {
-		const bg = mode(`gray.100`, `whiteAlpha.200`)(props)
+		const bgGray = mode(`gray.100`, `whiteAlpha.200`)(props)
 
 		return {
-			bg,
+			_active: { bg: mode(`gray.300`, `whiteAlpha.400`)(props) },
 			_hover: {
-				bg: mode(`gray.200`, `whiteAlpha.300`)(props),
 				_disabled: {
-					bg
-				}
+					bgGray
+				},
+				bg: mode(`gray.200`, `whiteAlpha.300`)(props)
 			},
-			_active: { bg: mode(`gray.300`, `whiteAlpha.400`)(props) }
+			bgGray
 		}
 	}
 
@@ -177,67 +179,67 @@ function variantSolid(props: Dict) {
 	const background = mode(bg, `${c}.500`)(props)
 
 	return {
-		color: mode(color, `gray.800`)(props),
 		_active: {
 			bg: mode(activeBg, `${c}.400`)(props)
 		},
 		_before: {
-			content: '""',
 			backgroundColor: "rgba(255,255,255,0.5)",
-			height: "100%",
-			width: "2.5em",
+			borderLeft: "15px solid rgba(255,255,255,0.4)",
+			content: '""',
 			display: "block",
+			filter: "blur(3px)",
+			height: "100%",
+			left: "-4.5em",
 			position: "absolute",
 			top: 0,
-			left: "-4.5em",
 			transform: "skewX(-45deg) translateX(0)",
 			transition: "none",
-			borderLeft: "15px solid rgba(255,255,255,0.4)",
-			filter: "blur(3px)"
-		},
-		_hover: {
-			color: "pink.200",
-			transition: "all 0.5 cubic-bezier(.41,.60,.70,.15)",
-			bg: mode(hoverBg, `${c}.400`)(props),
-			_disabled: {
-				bg: background
-			},
-			_before: {
-				transform: "skewX(-45deg) translateX(16em)",
-				transition: "all 0.5s cubic-bezier(.41,.60,.70,.15)"
-			}
+			width: "2.5em"
 		},
 		_focus: {
-			color: "pink.200",
-			bg: mode(hoverBg, `${c}.400`)(props),
-			_disabled: {
-				bg: background
-			},
 			_before: {
 				transform: "skewX(-45deg) translateX(16em)",
 				transition: "all 0.5s cubic-bezier(.41,.60,.70,.15)"
-			}
-		}
+			},
+			_disabled: {
+				bg: background
+			},
+			bg: mode(hoverBg, `${c}.400`)(props),
+			color: "pink.200"
+		},
+		_hover: {
+			_before: {
+				transform: "skewX(-45deg) translateX(16em)",
+				transition: "all 0.5s cubic-bezier(.41,.60,.70,.15)"
+			},
+			_disabled: {
+				bg: background
+			},
+			bg: mode(hoverBg, `${c}.400`)(props),
+			color: "pink.200",
+			transition: "all 0.5 cubic-bezier(.41,.60,.70,.15)"
+		},
+		color: mode(color, `gray.800`)(props)
 	}
 }
 
 function variantLink(props: Dict) {
 	const { colorScheme: c } = props
 	return {
-		padding: 0,
-		height: "auto",
-		lineHeight: "normal",
-		verticalAlign: "baseline",
-		color: mode(`${c}.500`, `${c}.200`)(props),
-		_hover: {
-			textDecoration: "underline",
-			_disabled: {
-				textDecoration: "none"
-			}
-		},
 		_active: {
 			color: mode(`${c}.700`, `${c}.500`)(props)
-		}
+		},
+		_hover: {
+			_disabled: {
+				textDecoration: "none"
+			},
+			textDecoration: "underline"
+		},
+		color: mode(`${c}.500`, `${c}.200`)(props),
+		height: "auto",
+		lineHeight: "normal",
+		padding: 0,
+		verticalAlign: "baseline"
 	}
 }
 
@@ -252,49 +254,49 @@ const variantUnstyled = {
 
 const variants = {
 	ghost: variantGhost,
+	link: variantLink,
 	outline: variantOutline,
 	solid: variantSolid,
-	link: variantLink,
 	unstyled: variantUnstyled
 }
 
 const sizes = {
 	lg: {
+		fontSize: "lg",
 		h: 12,
 		minW: 12,
-		fontSize: "lg",
 		px: 6
 	},
 	md: {
+		fontSize: "md",
 		h: 10,
 		minW: 10,
-		fontSize: "md",
 		px: 4
 	},
 	sm: {
+		fontSize: "sm",
 		h: 8,
 		minW: 8,
-		fontSize: "sm",
 		px: 3
 	},
 	xs: {
+		fontSize: "xs",
 		h: 6,
 		minW: 6,
-		fontSize: "xs",
 		px: 2
 	}
 }
 
 const defaultProps = {
-	variant: "solid",
+	colorScheme: "gray",
 	size: "md",
-	colorScheme: "gray"
+	variant: "solid"
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
 	baseStyle,
-	variants,
+	defaultProps,
 	sizes,
-	defaultProps
+	variants
 }

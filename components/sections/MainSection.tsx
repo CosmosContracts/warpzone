@@ -21,7 +21,7 @@ import {
 	useAnimation
 } from "framer-motion"
 import { ArrowFatLinesLeft, ArrowsClockwise, Parachute } from "phosphor-react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { GlitchAnimation } from "react-glitch-animation"
 
 const MainSection = () => {
@@ -51,37 +51,20 @@ const MainSection = () => {
 
 	const goToStep = (step: number, h: string, w: string) => {
 		toggleStepWidth(h, w).catch(() => {})
-		if (step != 0) {
-			topBarControls.start("show")
+		if (step === 0) {
+			// TODO fill finally with something as EsLint depends their life on it
+			topBarControls.start("hide").finally(() => {})
 		} else {
-			topBarControls.start("show")
+			topBarControls.start("show").finally(() => {})
 		}
 
 		setActiveStep(step)
 	}
 
-	useEffect(() => {
-		console.log("active step:", activeStep)
-	}, [activeStep])
+	// useEffect(() => {
+	// 	console.log("active step:", activeStep)
+	// }, [activeStep])
 
-	const step0Variants: Variants = {
-		hidden: {
-			opacity: 0,
-			transition: {
-				damping: 15,
-				stiffness: 50
-			},
-			y: 40
-		},
-		show: {
-			opacity: 1,
-			transition: {
-				damping: 15,
-				stiffness: 50
-			},
-			y: 0
-		}
-	}
 	const stepVariants: Variants = {
 		hidden: {
 			opacity: 0,
@@ -204,7 +187,7 @@ const MainSection = () => {
 									p={6}
 									spacing={6}
 									variant="outline"
-									variants={step0Variants}
+									variants={stepVariants}
 								>
 									<Button
 										as={motion.button}
