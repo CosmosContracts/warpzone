@@ -82,8 +82,6 @@ export const Background = () => {
 		const sin = Math.sin(angle)
 		const nx = cos * (x - cx) + sin * (y - cy) + cx
 		const ny = cos * (y - cy) - sin * (x - cx) + cy
-		// console.log(cos * 3)
-		// console.log("x", x, "cx", cx)
 
 		return [nx, ny]
 	}
@@ -115,7 +113,7 @@ export const Background = () => {
 
 		this.id = stars.length
 
-		this.color = "rgba(101, 246, 168," + (1 - this.gravity / 255) + ")"
+		this.color = "rgba(13, 214, 158," + (1 - this.gravity / 255) + ")"
 
 		this.previousRotation = this.startRotation
 		this.previousX = this.x
@@ -137,6 +135,8 @@ export const Background = () => {
 		context.save()
 		context.fillStyle = this.color
 		context.strokeStyle = this.color
+		context.shadowColor = "rgb(13, 214, 158)"
+		context.shadowBlur = 10
 		context.lineWidth = 3
 		context.lineCap = "round"
 		context.beginPath()
@@ -191,13 +191,13 @@ export const Background = () => {
 			fadeOut()
 		}
 
-		context.fillStyle = "rgba(17,49,56,1)"
+		context.fillStyle = "rgba(50, 82, 82,1)"
 		context.fillRect(0, 0, canvas.width, canvas.height)
 		context.globalCompositeOperation = "multiply"
 
 		handleResize()
 
-		for (let index = 0; index < 500; index++) {
+		for (let index = 0; index < 250; index++) {
 			new star()
 		}
 

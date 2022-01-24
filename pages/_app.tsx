@@ -7,7 +7,7 @@ import { Mainnet, DAppProvider as EVMProvider } from "@usedapp/core"
 import type { AppProps } from "next/app"
 import Head from "next/head"
 import { QueryClientProvider } from "react-query"
-import { ReactQueryDevtools } from "react-query/devtools"
+// import { ReactQueryDevtools } from "react-query/devtools"
 import { RecoilRoot } from "recoil"
 import { config, SdkProvider as KeplrProvider } from "../services"
 import theme from "../theme"
@@ -67,7 +67,7 @@ const App = ({ Component, pageProps, router }: AppProps) => {
 							<QueryClientProvider client={queryClient}>
 								<Flex direction="column" flex={1} h="100vh">
 									<Component key={router.route} {...pageProps} />
-									<ReactQueryDevtools initialIsOpen={false} />
+									{/* <ReactQueryDevtools initialIsOpen={false} /> */}
 								</Flex>
 								<Background />
 							</QueryClientProvider>

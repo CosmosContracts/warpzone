@@ -93,12 +93,12 @@ const Step1 = () => {
 			>
 				<Button
 					colorScheme="brand"
-					isLoading={loading}
-					onClick={handleConnect}
-					px={4}
+					fontSize="xs"
+					letterSpacing={0.2}
+					onClick={() => handleConnect()}
 					rounded="xl"
-					size="sm"
 					variant="outline"
+					w="auto"
 				>
 					Connect Keplr
 				</Button>

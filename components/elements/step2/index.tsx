@@ -32,11 +32,12 @@ const Step2 = () => {
 			>
 				<Button
 					colorScheme="brand"
+					fontSize="xs"
+					letterSpacing={0.2}
 					onClick={() => activateBrowserWallet()}
-					px={4}
 					rounded="xl"
-					size="sm"
 					variant="outline"
+					w="auto"
 				>
 					Connect MetaMask
 				</Button>

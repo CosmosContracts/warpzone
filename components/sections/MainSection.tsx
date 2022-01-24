@@ -4,17 +4,21 @@ import {
 	Button,
 	Stack,
 	ButtonGroup,
-	VStack,
 	IconButton,
 	Flex,
 	HStack,
-	Box
+	Box,
+	useUpdateEffect,
+	Heading
 } from "@chakra-ui/react"
 import { Stepper, Step3 } from "@components/elements"
 import { Step1 } from "@components/elements/step1"
 import { Step2 } from "@components/elements/step2"
+import { useMount } from "ahooks"
 import type { Variants } from "framer-motion"
 import {
+	animate,
+	useMotionValue,
 	AnimatePresence,
 	motion,
 	MotionConfig,
@@ -22,86 +26,193 @@ import {
 } from "framer-motion"
 import { ArrowFatLinesLeft, ArrowsClockwise, Parachute } from "phosphor-react"
 import { useState } from "react"
-import { GlitchAnimation } from "react-glitch-animation"
+
+// Animation settings
+const stackVariants: Variants = {
+	hidden: {
+		backdropFilter: "blur(16px)",
+		filter: "blur(20px)",
+		height: "0px",
+		opacity: 1,
+		transition: { duration: 3, type: "tween" },
+		width: "0px"
+	},
+	step0: {
+		filter: "blur(0px)",
+		height: "10rem",
+		opacity: 1,
+		width: "22rem"
+	},
+	step1: {
+		height: "14rem",
+		opacity: 1,
+		width: "35rem"
+	},
+	step2: {
+		height: "14rem",
+		opacity: 1,
+		width: "35rem"
+	},
+	step3: {
+		height: "14rem",
+		opacity: 1,
+		width: "32rem"
+	}
+}
+const stepVariants: Variants = {
+	center: {
+		opacity: 1,
+		x: 0,
+		zIndex: 1
+	},
+	enter: (direction: number) => {
+		return {
+			opacity: 0,
+			x: direction > 0 ? 200 : -200
+		}
+	},
+	exit: (direction: number) => {
+		return {
+			opacity: 0,
+			x: direction < 0 ? 200 : -200,
+			zIndex: 0
+		}
+	}
+}
+const headingVariants: Variants = {
+	glow: {
+		opacity: 1,
+		textShadow: "0 0 30px #0DD69E, 0 0 10px #4dbbc7"
+	},
+	hidden: {
+		opacity: 1,
+		y: 0
+	},
+	show: {
+		opacity: 1,
+		y: 0
+	}
+}
+const stackHeaderVariants: Variants = {
+	hidden: {
+		opacity: 0,
+		x: -100
+	},
+	show: {
+		opacity: 1,
+		x: 0
+	}
+}
+const stackFooterVariants: Variants = {
+	hidden: {
+		opacity: 0,
+		x: 200
+	},
+	show: {
+		opacity: 1,
+		x: 0
+	}
+}
+const backIconVariants: Variants = {
+	hover: {
+		color: "#F8FAFA",
+		x: -3
+	},
+	rest: {
+		color: "rgba(248, 250, 250, 0.45)",
+		x: 0
+	}
+}
 
 const MainSection = () => {
 	const stackControls = useAnimation()
-	const topBarControls = useAnimation()
-	const [activeStep, setActiveStep] = useState(0)
+	const stepControls = useAnimation()
+	const stackHeaderControls = useAnimation()
+	const stackFooterControls = useAnimation()
+	const backIconControls = useAnimation()
+	const [[activeStep, direction], setActiveStep] = useState([0, 0])
+	const [isHover, setHover] = useState(false)
+	const [isDisabled, setDisabled] = useState(false)
 
-	// TODO
-	// const step3Width = useBreakpointValue({
-	// 	base: "var(--chakra-sizes-sm)",
-	// 	lg: "52rem",
-	// 	md: "var(--chakra-sizes-md)"
-	// })
+	// Easier to understand because the array starts at 0
+	const stepCount = 4 - 1
 
-	const toggleStepWidth = async (h: string, w: string) => {
-		await stackControls.start({
-			height: h,
-			transition: {
-				damping: 15,
-				stiffness: 50
-			},
-			width: w
-		})
-	}
+	const backButtonBg = useMotionValue(
+		"radial-gradient(circle at top left, rgba(13,214,158,0.0), rgba(0,0,0,0) 60%)"
+	)
 
-	// 10,25 12,35 35,52
-
-	const goToStep = (step: number, h: string, w: string) => {
-		toggleStepWidth(h, w).catch(() => {})
-		if (step === 0) {
-			// TODO fill finally with something as EsLint depends their life on it
-			topBarControls.start("hide").finally(() => {})
+	// When back or next button was clicked
+	const paginate = (newDirection: number) => {
+		setActiveStep([activeStep + newDirection, newDirection])
+		if (activeStep + newDirection >= stepCount) {
+			setDisabled(true)
 		} else {
-			topBarControls.start("show").finally(() => {})
-		}
-
-		setActiveStep(step)
-	}
-
-	// useEffect(() => {
-	// 	console.log("active step:", activeStep)
-	// }, [activeStep])
-
-	const stepVariants: Variants = {
-		hidden: {
-			opacity: 0,
-			transition: {
-				damping: 15,
-				stiffness: 10
-			},
-			y: 100
-		},
-		show: {
-			opacity: 1,
-			transition: {
-				damping: 15,
-				stiffness: 50
-			},
-			y: 50
+			setDisabled(false)
 		}
 	}
-	const headingVariants: Variants = {
-		hidden: {
-			transition: {
-				damping: 15,
-				stiffness: 10
-			},
-			y: -100
-		},
-		show: {
-			transition: {
-				damping: 15,
-				stiffness: 50
-			},
-			y: 0
+
+	// Show/hide back/next button + bars
+	useUpdateEffect(() => {
+		stackControls.start(`step${activeStep}`).finally(() => {
+			switch (activeStep) {
+				case 0:
+					stackHeaderControls.start("hidden").finally(() => {})
+					// step variant is propagated from stack controls
+					stackFooterControls.start("hidden").finally(() => {})
+					break
+				default:
+					stackHeaderControls.start("show").finally(() => {})
+					// step variant is propagated from stack controls
+					stackFooterControls.start("show").finally(() => {})
+					break
+			}
+		})
+	}, [activeStep, stackControls, stackHeaderControls, direction])
+
+	// Previous step button hover transitions
+	useUpdateEffect(() => {
+		if (isHover) {
+			const playHover = async () => {
+				animate(
+					backButtonBg,
+					"radial-gradient(ellipse at top left, rgba(13,214,158,0.25), rgba(0,0,0,0) 70%)"
+				)
+				await backIconControls.start("hover")
+			}
+
+			// eslint-disable-next-line no-console
+			playHover().catch(() => console.log("Hover", isHover))
+		} else {
+			const endHover = async () => {
+				animate(
+					backButtonBg,
+					"radial-gradient(circle at top left, rgba(13,214,158,0.0), rgba(0,0,0,0) 70%)"
+				)
+				await backIconControls.start("rest")
+			}
+
+			endHover().finally(() => {})
 		}
-	}
+	}, [backButtonBg, backIconControls, isHover])
+
+	// Intro animation on first mount
+	useMount(() => {
+		stackControls
+			.start("step0", { duration: 1.25, ease: "easeInOut", type: "tween" })
+			.finally(() => {})
+		stepControls
+			.start("enter", {
+				duration: 1.25,
+				ease: "easeInOut",
+				type: "tween"
+			})
+			.finally(() => {})
+	})
 
 	return (
-		<MotionConfig transition={{ duration: 0.25 }}>
+		<MotionConfig
+			transition={{ duration: 0.25, ease: "easeInOut", type: "tween" }}
+		>
 			<Center as="section" h="100vh" w="full">
 				<Flex
 					align="center"
@@ -112,22 +223,68 @@ const MainSection = () => {
 					initial="hidden"
 					inset="1rem 0 auto 0"
 					justify="center"
-					letterSpacing={5}
+					letterSpacing={15}
 					pos="absolute"
 					variants={headingVariants}
 				>
-					<GlitchAnimation animationDurationMS={0} isActive text="WARPZONE" />
 					<HStack
 						align="center"
-						inset="-1.75rem auto auto 0"
+						color="brand.1"
+						inset=".75rem auto auto 0"
+						letterSpacing={3}
 						pos="relative"
-						w="xs"
+						spacing={0}
+						w="20rem"
 					>
-						<Box bg="whiteAlpha.800" h="0.1rem" rounded="sm" w="full" />
-						<Text align="center" fontFamily="heading">
+						<Text
+							align="center"
+							color="offwhite"
+							flex={1}
+							fontFamily="heading"
+							fontSize="14"
+							fontWeight="100"
+							px={3}
+						>
+							Juno x Ethereum
+						</Text>
+					</HStack>
+					<Heading
+						animate="glow"
+						as={motion.h1}
+						fontSize="52"
+						initial="hidden"
+						variants={headingVariants}
+					>
+						WARPZONE
+					</Heading>
+					<HStack
+						align="center"
+						color="brand.1"
+						inset="-0.75rem auto auto 0"
+						letterSpacing={3}
+						pos="relative"
+						spacing={0}
+						w="20rem"
+					>
+						<Box
+							bg="brand.200"
+							display="inline-flex"
+							flex={1}
+							flexGrow={2}
+							h="0.1rem"
+							rounded="sm"
+						/>
+						<Text
+							align="center"
+							color="offwhite"
+							flex={1}
+							flexGrow={1}
+							fontFamily="heading"
+							px={3}
+						>
 							Interface
 						</Text>
-						<Box bg="whiteAlpha.800" h="0.1rem" rounded="sm" w="full" />
+						<Box bg="brand.200" flex={1} flexGrow={2} h="0.1rem" rounded="sm" />
 					</HStack>
 				</Flex>
 				<Center direction="column" h="full" pos="relative" w="full">
@@ -135,54 +292,76 @@ const MainSection = () => {
 						align="center"
 						animate={stackControls}
 						as={motion.div}
-						backdropFilter="blur(6px)"
-						bg="blackAlpha.400"
-						boxShadow="sm"
+						border="1px solid rgba(255, 255, 255, 0.125)"
 						direction="column"
-						initial={{
-							width: "20rem"
-						}}
+						initial="hidden"
 						justify="center"
+						layout
 						overflow="hidden"
 						pos="relative"
+						px={2}
 						rounded="2xl"
 						spacing={0}
+						sx={{
+							backgroundImage:
+								"linear-gradient(325deg,hsl(163deg 89% 45% / 0.15) 0%,hsl(163deg 84% 42% / 0.15) 2%,hsl(163deg 81% 40% / 0.15) 4%,hsl(163deg 78% 37% / 0.15) 5%,hsl(164deg 76% 34% / 0.15) 7%,hsl(164deg 73% 31% / 0.15) 10%,hsl(165deg 71% 29% / 0.15) 13%,hsl(165deg 69% 26% / 0.15) 16%,hsl(165deg 61% 24% / 0.15) 20%,hsl(164deg 51% 23% / 0.15) 25%,hsl(163deg 43% 21% / 0.15) 31%,hsl(162deg 35% 20% / 0.15) 39%,hsl(161deg 27% 18% / 0.15) 48%,hsl(160deg 19% 16% / 0.15) 60%,hsl(159deg 11% 14% / 0.15) 76%,hsl(0deg 0% 11% / 0.15) 100%)"
+						}}
+						variants={stackVariants}
 					>
-						<AnimatePresence exitBeforeEnter>
+						<AnimatePresence custom={direction}>
 							{activeStep !== 0 && (
 								<HStack
-									animate={topBarControls}
+									animate={stackHeaderControls}
 									as={motion.div}
-									bg="whiteAlpha.200"
+									custom={direction}
 									exit="hidden"
-									initial="show"
+									initial="hidden"
 									pos="absolute"
 									top="0"
-									variants={headingVariants}
+									variants={stackHeaderVariants}
 									w="full"
+									zIndex="20"
 								>
 									<IconButton
+										_active={{ bg: "none" }}
+										_hover={{ bg: "none" }}
 										alignSelf="start"
-										aria-label="back to mode selection"
+										aria-label="go back one step"
+										as={motion.button}
 										colorScheme="white"
 										h="2.5rem"
-										icon={<ArrowFatLinesLeft size={22} weight="duotone" />}
-										onClick={() => goToStep(0, "auto", "auto")}
+										icon={
+											<motion.div
+												animate={backIconControls}
+												exit="hidden"
+												initial="hidden"
+												variants={backIconVariants}
+											>
+												<ArrowFatLinesLeft size={22} weight="duotone" />
+											</motion.div>
+										}
+										onClick={() => paginate(-1)}
+										onHoverEnd={() => setHover(false)}
+										onHoverStart={() => setHover(true)}
 										rounded="sm"
+										// @ts-expect-error Chakra style is not supporting MotionValue type from framer motion but it works anyway
+										style={{ backgroundImage: backButtonBg }}
 										variant="ghost"
 										w="2.5rem"
 									/>
 								</HStack>
 							)}
 						</AnimatePresence>
-						<AnimatePresence exitBeforeEnter>
+						<AnimatePresence custom={direction} exitBeforeEnter>
 							{activeStep === 0 && (
 								<ButtonGroup
-									animate="show"
+									animate="center"
 									as={motion.div}
 									colorScheme="brand"
-									exit="hidden"
-									initial="hidden"
+									custom={direction}
+									exit="exit"
+									h={200}
+									initial="enter"
 									key="Step0"
 									p={6}
 									spacing={6}
@@ -193,7 +372,7 @@ const MainSection = () => {
 										as={motion.button}
 										h="full"
 										key="ConvertButton"
-										onClick={() => goToStep(1, "12rem", "35rem")}
+										onClick={() => paginate(1)}
 										rounded="xl"
 									>
 										<Stack align="center" direction="column" p={4}>
@@ -217,110 +396,91 @@ const MainSection = () => {
 							)}
 							{activeStep === 1 && (
 								<Flex
-									animate="show"
+									align="center"
+									animate="center"
 									as={motion.div}
+									custom={direction}
 									direction="column"
-									exit="hidden"
+									exit="exit"
 									h="full"
-									initial="hidden"
+									initial="enter"
+									justify="center"
 									key="Step1"
 									pos="relative"
 									variants={stepVariants}
 									w="full"
 								>
-									<VStack
-										align="start"
-										h="full"
-										justify="start"
-										pt={2}
-										px={6}
-										w="full"
-									>
-										<Step1 />
-										<HStack align="center" h="full" justify="end" w="full">
-											<Button
-												color="white"
-												colorScheme="brand"
-												onClick={() => goToStep(2, "12rem", "35rem")}
-												rounded="xl"
-												variant="outline"
-											>
-												Next Step
-											</Button>
-										</HStack>
-									</VStack>
+									<Step1 />
 								</Flex>
 							)}
 							{activeStep === 2 && (
 								<Flex
-									animate="show"
+									align="center"
+									animate="center"
 									as={motion.div}
+									custom={direction}
 									direction="column"
-									exit="hidden"
+									exit="exit"
 									h="full"
-									initial="hidden"
+									initial="enter"
+									justify="center"
 									key="Step2"
 									pos="relative"
 									variants={stepVariants}
 									w="full"
 								>
-									<VStack
-										align="start"
-										h="full"
-										justify="start"
-										pt={2}
-										px={6}
-										w="full"
-									>
-										<Step2 />
-										<HStack align="center" h="full" justify="end" w="full">
-											<Button
-												color="white"
-												colorScheme="brand"
-												onClick={() => goToStep(3, "35rem", "52rem")}
-												rounded="xl"
-												variant="outline"
-											>
-												Next Step
-											</Button>
-										</HStack>
-									</VStack>
+									<Step2 />
 								</Flex>
 							)}
 							{activeStep === 3 && (
 								<Flex
-									animate="show"
+									align="center"
+									animate="center"
 									as={motion.div}
+									custom={direction}
 									direction="column"
-									exit="hidden"
+									exit="exit"
 									h="full"
-									initial="hidden"
+									initial="enter"
+									justify="center"
 									key="Step3"
 									pos="relative"
 									variants={stepVariants}
 									w="full"
 								>
-									<VStack
-										align="start"
-										h="full"
-										justify="start"
-										pt={2}
-										px={6}
-										w="full"
-									>
-										<Step3 />
-										<HStack align="center" h="full" justify="end" w="full">
-											<Button
-												color="white"
-												colorScheme="brand"
-												rounded="xl"
-												variant="outline"
-											>
-												Next Step
-											</Button>
-										</HStack>
-									</VStack>
+									<Step3 />
 								</Flex>
+							)}
+						</AnimatePresence>
+
+						<AnimatePresence custom={direction} exitBeforeEnter>
+							{activeStep !== 0 && (
+								<HStack
+									align="center"
+									animate={stackFooterControls}
+									as={motion.div}
+									bottom="0"
+									custom={direction}
+									exit="hidden"
+									initial="hidden"
+									justify="end"
+									p={2}
+									pos="absolute"
+									variants={stackFooterVariants}
+									w="full"
+									zIndex="20"
+								>
+									<Button
+										color="white"
+										colorScheme="brand"
+										disabled={isDisabled}
+										onClick={() => paginate(1)}
+										rounded="2xl"
+										variant="outline"
+									>
+										Next Step
+									</Button>
+								</HStack>
 							)}
 						</AnimatePresence>
 					</Stack>
