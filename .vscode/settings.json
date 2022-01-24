@@ -17,5 +17,8 @@
 	"workbench.list.smoothScrolling": true,
 	"smoothtype.duration": 60,
 	"smoothtype.autoReload": true,
-	"eslint.nodePath": ".yarn/sdks"
+	"eslint.nodePath": ".yarn/sdks",
+	"files.exclude": {
+		"**/.git": false
+	}
 }
