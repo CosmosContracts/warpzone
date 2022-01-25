@@ -7,7 +7,7 @@
 		"react/jsx-first-prop-new-line": ["error", "always"],
 		"no-param-reassign": ["error", { "props": false }],
 		"func-style": "off",
-		"react-hooks/exhaustive-deps": "off"
+		"react-hooks/exhaustive-deps": "warn"
 	},
 	"overrides": [
 		{

@@ -1,5 +1,3 @@
-export * from "./sdk"
-export * from "./Wallet"
 export * from "./Cw20"
 export * from "./Contracts"
 export * from "./queryClient"

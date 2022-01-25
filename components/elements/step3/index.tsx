@@ -1,12 +1,10 @@
 import { InputGroup, Input, VStack } from "@chakra-ui/react"
 import { useEthers } from "@usedapp/core"
 import { useEffect, useState } from "react"
-import { useSdk } from "services"
 import { AssetsList } from "./elements/components/AssetsList"
 
 const Step3 = () => {
 	const { account } = useEthers()
-	const sdk = useSdk()
 	const [junoAddress, setJunoAddress] = useState("")
 	const [ethAddress, setEthAddress] = useState("")
 
