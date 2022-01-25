@@ -9,10 +9,10 @@ import { configKeplr, testnet } from "services"
 export const useConnectWallet = (
 	mutationOptions?: Parameters<typeof useMutation>[2]
 ) => {
+	const anyWindow = window as KeplrWindow
 	const [{ status }, setWalletState] = useRecoilState(walletState)
 
 	const mutation = useMutation(async () => {
-		const anyWindow = window as KeplrWindow
 		if (anyWindow && !anyWindow?.keplr) {
 			// eslint-disable-next-line no-alert
 			alert("Please install Keplr extension and refresh the page.")
@@ -29,17 +29,22 @@ export const useConnectWallet = (
 		try {
 			await anyWindow.keplr?.experimentalSuggestChain(configKeplr(testnet))
 			await anyWindow.keplr?.enable(testnet.chainId)
+			console.log("Suggested Chain")
 
 			const offlineSigner = await anyWindow.getOfflineSignerAuto(
 				testnet.chainId
 			)
+			console.log("Fetched OfflineSigner")
 
 			const wasmChainClient = await SigningCosmWasmClient.connectWithSigner(
 				testnet.rpcUrl,
 				offlineSigner
 			)
+			console.log("Created SigningCosmWasmClient")
 
 			const [{ address }] = await offlineSigner.getAccounts()
+			console.log("Fetched Address from Offline Signer")
+
 			const key = await anyWindow.keplr?.getKey(testnet.chainId)
 
 			/* successfully update the wallet state */
@@ -49,17 +54,18 @@ export const useConnectWallet = (
 				key,
 				status: WalletStatusType.connected
 			})
-		} catch (error) {
+			console.log("Current Wallet:", address, status)
+		} catch {
 			/* set the error state */
 			setWalletState({
-				address: "juno",
+				address: "",
 				client: null,
 				key: null,
 				status: WalletStatusType.error
 			})
 
 			/* throw the error for the UI */
-			throw error
+			throw new Error("Error while connecting wallet")
 		}
 	}, mutationOptions)
 
@@ -68,20 +74,8 @@ export const useConnectWallet = (
 		if (testnet?.rpcUrl && status === WalletStatusType.restored) {
 			mutation.mutate(null)
 		}
-	}, [status, mutation])
-
-	useEffect(() => {
-		function reconnectWallet() {
-			if (status === WalletStatusType.connected) {
-				mutation.mutate(null)
-			}
-		}
-
-		window.addEventListener("keplr_keystorechange", reconnectWallet)
-		return () => {
-			window.removeEventListener("keplr_keystorechange", reconnectWallet)
-		}
-	}, [mutation, status])
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [status])
 
 	return mutation
 }

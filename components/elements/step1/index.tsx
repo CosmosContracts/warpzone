@@ -6,12 +6,12 @@ import {
 	useBoolean
 } from "@chakra-ui/react"
 import { useConnectWallet } from "@hooks/useConnectWallet"
-import { walletState } from "@state/atoms/wallet"
+import { walletState, WalletStatusType } from "@state/atoms/wallet"
 import { useRecoilState } from "recoil"
 
 const Step1 = () => {
 	const [loading, setLoading] = useBoolean()
-	const [{ key }, setWalletState] = useRecoilState(walletState)
+	const [{ status }, setWalletState] = useRecoilState(walletState)
 	const { mutate: connectWallet } = useConnectWallet()
 
 	/* fetch token */
@@ -28,7 +28,12 @@ const Step1 = () => {
 				placeholder="Your Juno Address"
 				type="tel"
 			/>
-			<InputRightElement display="flex" h="full" px={2} w="9rem">
+			<InputRightElement
+				display={status === WalletStatusType.connected ? "flex" : "none"}
+				h="full"
+				px={2}
+				w="9rem"
+			>
 				<Button
 					colorScheme="brand"
 					fontSize="xs"

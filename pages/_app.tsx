@@ -2,7 +2,6 @@
 import { ChakraProvider, Flex } from "@chakra-ui/react"
 import { Background } from "@components/sections"
 import { queryClient } from "@services/client"
-import { RecoilDevtools } from "@state/RecoilDevtools"
 import type { Config } from "@usedapp/core"
 import { Mainnet, DAppProvider as EVMProvider } from "@usedapp/core"
 import type { AppProps } from "next/app"
@@ -63,7 +62,6 @@ const App = ({ Component, pageProps, router }: AppProps) => {
 			<ChakraProvider theme={theme}>
 				<RecoilRoot>
 					<EVMProvider config={metamaskConfig}>
-						<RecoilDevtools />
 						<QueryClientProvider client={queryClient}>
 							<Flex direction="column" flex={1} h="100vh">
 								<Component key={router.route} {...pageProps} />

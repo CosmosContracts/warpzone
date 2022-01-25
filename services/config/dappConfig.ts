@@ -26,8 +26,8 @@ export type Token = {
 export const coins: Token[] = [
 	{
 		decimals: 6,
-		denom: "uccat",
-		name: "CCAT"
+		denom: "ujunox",
+		name: "Juno"
 	}
 ]
 
