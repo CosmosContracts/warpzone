@@ -7,8 +7,8 @@ export const testnet: AppConfig = {
 	chainName: "UNI TESTNET",
 	contract: "",
 	gasPrice: 0.025,
-	httpUrl: "https://lcd.uni.juno.deuslabs.fi",
-	rpcUrl: "https://rpc.uni.juno.deuslabs.fi",
+	httpUrl: "https://api.uni.junomint.com",
+	rpcUrl: "https://rpc.uni.junomint.com",
 	token: {
 		coinDecimals: 6,
 		coinDenom: "Juno",
