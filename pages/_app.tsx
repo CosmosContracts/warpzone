@@ -65,9 +65,9 @@ const App = ({ Component, pageProps, router }: AppProps) => {
 						<QueryClientProvider client={queryClient}>
 							<Flex direction="column" flex={1} h="100vh">
 								<Component key={router.route} {...pageProps} />
+								<Canvas />
 								{/* <ReactQueryDevtools initialIsOpen={false} /> */}
 							</Flex>
-							<Canvas />
 						</QueryClientProvider>
 					</EVMProvider>
 				</RecoilRoot>

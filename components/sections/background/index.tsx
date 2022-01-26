@@ -92,6 +92,7 @@ export const Background = () => {
 
 	const star = function () {
 		this.canvas = context.canvas
+
 		const randomWeights: number[] = []
 		randomWeights.push(Math.random() * (maxOrbit / 2) + 1)
 		randomWeights.push(Math.random() * (maxOrbit / 2) + maxOrbit)
