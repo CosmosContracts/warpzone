@@ -14,6 +14,7 @@ import {
 import { Stepper, Step3 } from "@components/elements"
 import { Step1 } from "@components/elements/step1"
 import { Step2 } from "@components/elements/step2"
+import { UIState } from "@state/atoms/ui"
 import { useMount } from "ahooks"
 import type { Variants } from "framer-motion"
 import {
@@ -26,6 +27,7 @@ import {
 } from "framer-motion"
 import { ArrowFatLinesLeft, ArrowsClockwise, Parachute } from "phosphor-react"
 import { useState } from "react"
+import { useRecoilState } from "recoil"
 
 // Animation settings
 const stackVariants: Variants = {
@@ -167,7 +169,7 @@ const MainSection = () => {
 					break
 			}
 		})
-	}, [activeStep, stackControls, stackHeaderControls, direction])
+	}, [activeStep])
 
 	// Previous step button hover transitions
 	useUpdateEffect(() => {
@@ -193,7 +195,9 @@ const MainSection = () => {
 
 			endHover().finally(() => {})
 		}
-	}, [backButtonBg, backIconControls, isHover])
+	}, [isHover])
+
+	const [hover, setIsHover] = useRecoilState(UIState)
 
 	// Intro animation on first mount
 	useMount(() => {
@@ -373,6 +377,8 @@ const MainSection = () => {
 										h="full"
 										key="ConvertButton"
 										onClick={() => paginate(1)}
+										onHoverEnd={() => setIsHover(false)}
+										onHoverStart={() => setIsHover(true)}
 										rounded="xl"
 									>
 										<Stack align="center" direction="column" p={4}>
@@ -471,6 +477,7 @@ const MainSection = () => {
 									zIndex="20"
 								>
 									<Button
+										as={motion.button}
 										color="white"
 										colorScheme="brand"
 										disabled={isDisabled}

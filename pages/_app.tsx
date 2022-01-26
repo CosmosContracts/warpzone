@@ -1,6 +1,6 @@
 // eslint-disable-next-line canonical/filename-match-exported
 import { ChakraProvider, Flex } from "@chakra-ui/react"
-import { Background } from "@components/sections"
+import { Background, Canvas } from "@components/sections"
 import { queryClient } from "@services/client"
 import type { Config } from "@usedapp/core"
 import { Mainnet, DAppProvider as EVMProvider } from "@usedapp/core"
@@ -67,7 +67,7 @@ const App = ({ Component, pageProps, router }: AppProps) => {
 								<Component key={router.route} {...pageProps} />
 								{/* <ReactQueryDevtools initialIsOpen={false} /> */}
 							</Flex>
-							<Background />
+							<Canvas />
 						</QueryClientProvider>
 					</EVMProvider>
 				</RecoilRoot>

@@ -1,2 +1,3 @@
 export { MainSection } from "./MainSection"
-export { Background } from "./Background"
+export { Background } from "./background"
+export { Canvas } from "./background/Canvas"

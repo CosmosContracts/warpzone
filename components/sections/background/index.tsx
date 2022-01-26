@@ -16,14 +16,16 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-negated-condition */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Box } from "@chakra-ui/react"
+import { Box, useUpdateEffect } from "@chakra-ui/react"
+import { UIState } from "@state/atoms/ui"
 import { motion } from "framer-motion"
-import { forwardRef, useEffect, useRef } from "react"
+import { forwardRef, useEffect, useRef, useState } from "react"
+import { useRecoilState } from "recoil"
 
 type StarProps = {
 	collapseBonus: number
 	color: string
-	draw?: () => void
+	draw?: (hover: boolean) => void
 	gravity: number
 	id: number
 	previousRotation: number
@@ -37,15 +39,17 @@ type StarProps = {
 	yOrigin: number
 }
 
-const PureCanvas = forwardRef<HTMLCanvasElement>((props, ref) => (
-	<canvas
-		style={{
-			position: "relative"
-		}}
-		{...props}
-		ref={ref}
-	/>
-))
+const PureCanvas = forwardRef<HTMLCanvasElement>((props, ref) => {
+	return (
+		<canvas
+			style={{
+				position: "absolute"
+			}}
+			{...props}
+			ref={ref}
+		/>
+	)
+})
 
 export const Background = () => {
 	const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -56,7 +60,7 @@ export const Background = () => {
 	let h: number
 	let cw: number
 	let ch: number
-	const maxOrbit = 255
+	let maxOrbit = 270
 	let centery: number
 	let centerx: number
 
@@ -68,7 +72,7 @@ export const Background = () => {
 	function fadeOut() {
 		context.fillStyle = "rgba(17,49,56,0.2)"
 		context.fillRect(0, 0, context.canvas.width, context.canvas.height)
-		setTimeout(fadeOut, 1_000 / 60)
+		setTimeout(fadeOut, 1_000 / 30)
 	}
 
 	function rotate(
@@ -115,6 +119,10 @@ export const Background = () => {
 
 		this.color = "rgba(13, 214, 158," + (1 - this.gravity / 255) + ")"
 
+		this.hoverPos = centery + maxOrbit / 2 + this.collapseBonus
+		this.expansePos =
+			centery + (this.id % 100) * -10 + (Math.floor(Math.random() * 20) + 1)
+
 		this.previousRotation = this.startRotation
 		this.previousX = this.x
 		this.previousY = this.y
@@ -123,13 +131,18 @@ export const Background = () => {
 	}
 
 	star.prototype.draw = function () {
-		this.rotation = this.startRotation + currentTime * this.speed
+		this.rotation = this.startRotation + currentTime * this.speed * 2
+
 		if (this.y > this.yOrigin) {
-			this.y -= 2.5
+			this.y -= 3.5
 		}
 
 		if (this.y < this.yOrigin - 4) {
-			this.y += (this.yOrigin - this.y) / 100
+			this.y += (this.yOrigin - this.y) / 10
+		}
+
+		if (this.y > this.expansePos) {
+			this.y -= Math.floor(this.expansePos - this.y) / -900
 		}
 
 		context.save()
@@ -165,10 +178,12 @@ export const Background = () => {
 		currentTime = (now - startTime) / 50
 
 		for (const index of stars) {
-			index.draw()
+			index.draw(hover)
 		}
 
-		requestAnimationFrame(() => drawStars())
+		requestAnimationFrame(() => {
+			drawStars()
+		})
 	}
 
 	useEffect(() => {
@@ -191,21 +206,27 @@ export const Background = () => {
 			fadeOut()
 		}
 
-		context.fillStyle = "rgba(50, 82, 82,1)"
+		context.fillStyle = "rgba(40, 72, 72,1)"
 		context.fillRect(0, 0, canvas.width, canvas.height)
 		context.globalCompositeOperation = "multiply"
 
 		handleResize()
 
-		for (let index = 0; index < 250; index++) {
+		for (let index = 0; index < 10; index++) {
 			new star()
 		}
 
 		requestAnimationFrame(() => startAnimation())
 
 		window.addEventListener("resize", handleResize)
-		return () => window.removeEventListener("resize", handleResize)
+		return () => {
+			window.removeEventListener("resize", handleResize)
+		}
 	}, [])
+
+	useUpdateEffect(() => {
+		console.log(hover)
+	}, [hover])
 
 	return (
 		<Box

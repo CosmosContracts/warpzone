@@ -1,50 +1,71 @@
-import {
-	InputGroup,
-	Input,
-	InputRightElement,
-	Button,
-	useBoolean
-} from "@chakra-ui/react"
+import { InputGroup, Input, InputRightElement, Button } from "@chakra-ui/react"
 import { useConnectWallet } from "@hooks/useConnectWallet"
 import { walletState, WalletStatusType } from "@state/atoms/wallet"
+import { AnimatePresence, motion } from "framer-motion"
 import { useRecoilState } from "recoil"
 
 const Step1 = () => {
-	const [loading, setLoading] = useBoolean()
-	const [{ status }, setWalletState] = useRecoilState(walletState)
+	const [{ status, address }, setWalletState] = useRecoilState(walletState)
 	const { mutate: connectWallet } = useConnectWallet()
 
-	/* fetch token */
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	// const [tokenList] = useTokenList()
 
+	function resetWalletConnection() {
+		setWalletState({
+			address: "",
+			client: null,
+			key: null,
+			status: WalletStatusType.idle
+		})
+	}
+
 	return (
-		<InputGroup variant="glass">
+		<InputGroup overflow="hidden" variant="glass">
 			<Input
 				color="juno.200"
 				colorScheme="juno"
-				defaultValue="Juno Address"
 				h="3rem"
-				placeholder="Your Juno Address"
+				readOnly
+				rounded="2xl"
 				type="tel"
+				value={
+					status === WalletStatusType.connected
+						? address
+						: "Your Juno Address ..."
+				}
 			/>
-			<InputRightElement
-				display={status === WalletStatusType.connected ? "flex" : "none"}
-				h="full"
-				px={2}
-				w="9rem"
-			>
-				<Button
-					colorScheme="brand"
-					fontSize="xs"
-					letterSpacing={0.2}
-					onClick={() => connectWallet(null)}
-					rounded="xl"
-					variant="outline"
-					w="auto"
-				>
-					Connect Keplr
-				</Button>
+			<InputRightElement as={motion.div} h="full" layout w="8rem">
+				<AnimatePresence exitBeforeEnter presenceAffectsLayout>
+					{status !== WalletStatusType.connected && (
+						<Button
+							colorScheme="brand"
+							fontSize="xs"
+							key="2"
+							letterSpacing={0.5}
+							onClick={() => connectWallet(null)}
+							rounded="2xl"
+							variant="outline"
+							w="full"
+						>
+							Connect Keplr
+						</Button>
+					)}
+					{status === WalletStatusType.connected && (
+						<Button
+							colorScheme="brand"
+							fontSize="xs"
+							key="1"
+							letterSpacing={0.5}
+							onClick={() => resetWalletConnection()}
+							rounded="2xl"
+							variant="outline"
+							w="full"
+						>
+							Disconnect Keplr
+						</Button>
+					)}
+				</AnimatePresence>
 			</InputRightElement>
 		</InputGroup>
 	)
