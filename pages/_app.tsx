@@ -1,6 +1,6 @@
 // eslint-disable-next-line canonical/filename-match-exported
 import { ChakraProvider, Flex } from "@chakra-ui/react"
-import { Background, Canvas } from "@components/sections"
+import { Canvas } from "@components/sections"
 import { queryClient } from "@services/client"
 import type { Config } from "@usedapp/core"
 import { Mainnet, DAppProvider as EVMProvider } from "@usedapp/core"

@@ -91,42 +91,43 @@ export const Background = () => {
 	}
 
 	const star = function () {
-		this.canvas = context.canvas
+		// this.canvas = context.canvas
 
-		const randomWeights: number[] = []
-		randomWeights.push(Math.random() * (maxOrbit / 2) + 1)
-		randomWeights.push(Math.random() * (maxOrbit / 2) + maxOrbit)
+		// const randomWeights: number[] = []
+		// randomWeights.push(Math.random() * (maxOrbit / 2) + 1)
+		// randomWeights.push(Math.random() * (maxOrbit / 2) + maxOrbit)
 
-		this.gravity =
-			randomWeights.reduce(function (p, c) {
-				return p + c
-			}, 0) / randomWeights.length
+		// this.gravity =
+		// 	randomWeights.reduce(function (p, c) {
+		// 		return p + c
+		// 	}, 0) / randomWeights.length
 
-		this.x = centerx
+		// this.x = centerx
 
-		this.y = centery + this.gravity
-		this.yOrigin = centery + this.gravity
+		// this.y = centery + this.gravity
 
-		this.speed = ((Math.floor(Math.random() * 2.5) + 1.5) * Math.PI) / 180
-		this.rotation = 0
-		this.startRotation = ((Math.floor(Math.random() * 360) + 1) * Math.PI) / 180
+		// this.yOrigin = centery + this.gravity
 
-		this.collapseBonus = this.gravity - maxOrbit * 0.7
-		if (this.collapseBonus < 0) {
-			this.collapseBonus = 0
-		}
+		// this.speed = ((Math.floor(Math.random() * 2.5) + 1.5) * Math.PI) / 180
+		// this.rotation = 0
+		// this.startRotation = ((Math.floor(Math.random() * 360) + 1) * Math.PI) / 180
 
-		this.id = stars.length
+		// this.collapseBonus = this.gravity - maxOrbit * 0.7
+		// if (this.collapseBonus < 0) {
+		// 	this.collapseBonus = 0
+		// }
 
-		this.color = "rgba(13, 214, 158," + (1 - this.gravity / 255) + ")"
+		// this.id = stars.length
 
-		this.hoverPos = centery + maxOrbit / 2 + this.collapseBonus
-		this.expansePos =
-			centery + (this.id % 100) * -10 + (Math.floor(Math.random() * 20) + 1)
+		// this.color = "rgba(13, 214, 158," + (1 - this.gravity / 255) + ")"
 
-		this.previousRotation = this.startRotation
-		this.previousX = this.x
-		this.previousY = this.y
+		// this.hoverPos = centery + maxOrbit / 2 + this.collapseBonus
+		// this.expansePos =
+		// 	centery + (this.id % 100) * -10 + (Math.floor(Math.random() * 20) + 1)
+
+		// this.previousRotation = this.startRotation
+		// this.previousX = this.x
+		// this.previousY = this.y
 
 		stars.push(this)
 	}
@@ -151,7 +152,7 @@ export const Background = () => {
 		context.strokeStyle = this.color
 		context.shadowColor = "rgb(13, 214, 158)"
 		context.shadowBlur = 10
-		context.lineWidth = 3
+		context.lineWidth = 20
 		context.lineCap = "round"
 		context.beginPath()
 		var oldPos = rotate(

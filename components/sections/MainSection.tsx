@@ -14,8 +14,8 @@ import {
 import { Stepper, Step3 } from "@components/elements"
 import { Step1 } from "@components/elements/step1"
 import { Step2 } from "@components/elements/step2"
-import { UIState } from "@state/atoms/ui"
-import { useMount } from "ahooks"
+import { HoverState, ExpandState } from "@state/atoms/ui"
+import { useDebounceEffect, useMount } from "ahooks"
 import type { Variants } from "framer-motion"
 import {
 	animate,
@@ -43,7 +43,7 @@ const stackVariants: Variants = {
 		filter: "blur(0px)",
 		height: "10rem",
 		opacity: 1,
-		width: "22rem"
+		width: "auto"
 	},
 	step1: {
 		height: "14rem",
@@ -128,16 +128,17 @@ const backIconVariants: Variants = {
 
 const MainSection = () => {
 	const stackControls = useAnimation()
-	const stepControls = useAnimation()
 	const stackHeaderControls = useAnimation()
 	const stackFooterControls = useAnimation()
 	const backIconControls = useAnimation()
 	const [[activeStep, direction], setActiveStep] = useState([0, 0])
 	const [isHover, setHover] = useState(false)
-	const [isDisabled, setDisabled] = useState(false)
+	const [isDisabled, setDisabled] = useState(true)
+	const [, setIsHover] = useRecoilState(HoverState)
+	const [, setIsExpanded] = useRecoilState(ExpandState)
 
 	// Easier to understand because the array starts at 0
-	const stepCount = 4 - 1
+	const stepCount = 3 - 1
 
 	const backButtonBg = useMotionValue(
 		"radial-gradient(circle at top left, rgba(13,214,158,0.0), rgba(0,0,0,0) 60%)"
@@ -197,19 +198,19 @@ const MainSection = () => {
 		}
 	}, [isHover])
 
-	const [hover, setIsHover] = useRecoilState(UIState)
+	// Wait until enabling convert button
+	useDebounceEffect(
+		() => {
+			setDisabled(false)
+		},
+		[isDisabled],
+		{ wait: 4_000 }
+	)
 
 	// Intro animation on first mount
 	useMount(() => {
 		stackControls
-			.start("step0", { duration: 1.25, ease: "easeInOut", type: "tween" })
-			.finally(() => {})
-		stepControls
-			.start("enter", {
-				duration: 1.25,
-				ease: "easeInOut",
-				type: "tween"
-			})
+			.start("step0", { duration: 1.25, ease: "easeOut", type: "tween" })
 			.finally(() => {})
 	})
 
@@ -303,7 +304,6 @@ const MainSection = () => {
 						layout
 						overflow="hidden"
 						pos="relative"
-						px={2}
 						rounded="2xl"
 						spacing={0}
 						sx={{
@@ -312,6 +312,7 @@ const MainSection = () => {
 						}}
 						variants={stackVariants}
 					>
+						{/* Back button bar */}
 						<AnimatePresence custom={direction}>
 							{activeStep !== 0 && (
 								<HStack
@@ -344,7 +345,10 @@ const MainSection = () => {
 												<ArrowFatLinesLeft size={22} weight="duotone" />
 											</motion.div>
 										}
-										onClick={() => paginate(-1)}
+										onClick={() => {
+											if (activeStep === 1) setIsExpanded(false)
+											paginate(-1)
+										}}
 										onHoverEnd={() => setHover(false)}
 										onHoverStart={() => setHover(true)}
 										rounded="sm"
@@ -356,6 +360,7 @@ const MainSection = () => {
 								</HStack>
 							)}
 						</AnimatePresence>
+						{/* Step */}
 						<AnimatePresence custom={direction} exitBeforeEnter>
 							{activeStep === 0 && (
 								<ButtonGroup
@@ -364,19 +369,24 @@ const MainSection = () => {
 									colorScheme="brand"
 									custom={direction}
 									exit="exit"
-									h={200}
+									h="20rem"
 									initial="enter"
 									key="Step0"
 									p={6}
 									spacing={6}
 									variant="outline"
 									variants={stepVariants}
+									w="20rem"
 								>
 									<Button
 										as={motion.button}
+										disabled={isDisabled}
 										h="full"
 										key="ConvertButton"
-										onClick={() => paginate(1)}
+										onClick={() => {
+											setIsExpanded(true)
+											paginate(1)
+										}}
 										onHoverEnd={() => setIsHover(false)}
 										onHoverStart={() => setIsHover(true)}
 										rounded="xl"
@@ -458,7 +468,7 @@ const MainSection = () => {
 								</Flex>
 							)}
 						</AnimatePresence>
-
+						{/* Next step button bar */}
 						<AnimatePresence custom={direction} exitBeforeEnter>
 							{activeStep !== 0 && (
 								<HStack
