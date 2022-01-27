@@ -1,11 +1,14 @@
 /* eslint-disable consistent-return */
 import type { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate"
-import { CW20, useSdk } from "@services/client"
+import { CW20 } from "@services/client"
 import { convertMicroDenomToDenom } from "@utils/conversion"
 import { useMemo } from "react"
 import { useQuery } from "react-query"
 import { useRecoilValue } from "recoil"
-import { walletState, WalletStatusType } from "../state/atoms/wallet"
+import {
+	cosmosWalletState,
+	WalletStatusType
+} from "../state/atoms/cosmosWallet"
 import { unsafelyGetTokenInfo } from "./useTokenInfo"
 
 const DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL = 10_000
@@ -51,7 +54,7 @@ const fetchTokenBalance = async ({
 }
 
 export const useTokenBalance = (tokenSymbol: string) => {
-	const { address, status, client } = useRecoilValue(walletState)
+	const { address, status, client } = useRecoilValue(cosmosWalletState)
 	const { data: balance = 0, isLoading } = useQuery(
 		[`tokenBalance`, tokenSymbol, address],
 		async ({ queryKey: [, symbol] }) => {
@@ -75,7 +78,7 @@ export const useTokenBalance = (tokenSymbol: string) => {
 }
 
 export const useMultipleTokenBalance = (tokenSymbols?: string[]) => {
-	const { address, getSignClient, initialized } = useSdk()
+	const { address, client, status } = useRecoilValue(cosmosWalletState)
 
 	const queryKey = useMemo(
 		() => `multipleTokenBalances/${tokenSymbols?.join("+")}`,
@@ -89,18 +92,21 @@ export const useMultipleTokenBalance = (tokenSymbols?: string[]) => {
 				tokenSymbols.map((tokenSymbol) =>
 					fetchTokenBalance({
 						address,
-						client: getSignClient(),
+						client,
 						token: unsafelyGetTokenInfo(tokenSymbol) || {}
 					})
 				)
 			)
+
+			console.log(balances)
+
 			return tokenSymbols.map((tokenSymbol, index) => ({
 				balance: balances[index],
 				tokenSymbol
 			}))
 		},
 		{
-			enabled: initialized,
+			enabled: status === WalletStatusType.connected,
 			onError() {
 				throw new Error("Error fetching token balance")
 			},

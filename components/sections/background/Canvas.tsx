@@ -1,7 +1,7 @@
 /* eslint-disable no-negated-condition */
 /* eslint-disable react/no-this-in-sfc */
 /* eslint-disable @babel/no-invalid-this */
-import { ExpandState, HoverState } from "@state/atoms/ui"
+import { expandState, hoverState } from "@state/atoms/ui"
 import { useMount, useUpdateEffect } from "ahooks"
 import { useRef } from "react"
 import { useRecoilValue } from "recoil"
@@ -31,8 +31,8 @@ export type StarProps = {
 }
 
 export const Canvas = (props) => {
-	const hover = useRecoilValue(HoverState)
-	const expand = useRecoilValue(ExpandState)
+	const hover = useRecoilValue(hoverState)
+	const expand = useRecoilValue(expandState)
 	let w: number
 	let h: number
 	let cw: number

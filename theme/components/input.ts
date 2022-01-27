@@ -201,6 +201,7 @@ const variantGlass: PartsStyleFunction<typeof parts> = (props) => {
 			},
 			_focus: {
 				borderColor: darkHoverBg,
+				boxShadow: "0 1px 12px juno.200",
 				zIndex: 1
 			},
 			_hover: {
@@ -211,7 +212,7 @@ const variantGlass: PartsStyleFunction<typeof parts> = (props) => {
 				boxShadow: `0 0 0 1px ${getColor(theme, ec)}`
 			},
 			_readOnly: {
-				boxShadow: "none !important",
+				boxShadow: `inset 0 -10px 18px -10px ${getColor(theme, "juno.200")}`,
 				userSelect: "all"
 			},
 			backdropBlur: "12px",

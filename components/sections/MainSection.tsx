@@ -14,7 +14,7 @@ import {
 import { Stepper, Step3 } from "@components/elements"
 import { Step1 } from "@components/elements/step1"
 import { Step2 } from "@components/elements/step2"
-import { HoverState, ExpandState } from "@state/atoms/ui"
+import { hoverState, expandState } from "@state/atoms/ui"
 import { useDebounceEffect, useMount } from "ahooks"
 import type { Variants } from "framer-motion"
 import {
@@ -56,9 +56,9 @@ const stackVariants: Variants = {
 		width: "35rem"
 	},
 	step3: {
-		height: "14rem",
+		height: "25rem",
 		opacity: 1,
-		width: "32rem"
+		width: "45rem"
 	}
 }
 const stepVariants: Variants = {
@@ -134,11 +134,11 @@ const MainSection = () => {
 	const [[activeStep, direction], setActiveStep] = useState([0, 0])
 	const [isHover, setHover] = useState(false)
 	const [isDisabled, setDisabled] = useState(true)
-	const [, setIsHover] = useRecoilState(HoverState)
-	const [, setIsExpanded] = useRecoilState(ExpandState)
+	const [, setIsHover] = useRecoilState(hoverState)
+	const [, setIsExpanded] = useRecoilState(expandState)
 
 	// Easier to understand because the array starts at 0
-	const stepCount = 3 - 1
+	const stepCount = 4 - 1
 
 	const backButtonBg = useMotionValue(
 		"radial-gradient(circle at top left, rgba(13,214,158,0.0), rgba(0,0,0,0) 60%)"
@@ -204,7 +204,7 @@ const MainSection = () => {
 			setDisabled(false)
 		},
 		[isDisabled],
-		{ wait: 4_000 }
+		{ wait: 0 }
 	)
 
 	// Intro animation on first mount
@@ -458,9 +458,11 @@ const MainSection = () => {
 									exit="exit"
 									h="full"
 									initial="enter"
-									justify="center"
+									justify="start"
 									key="Step3"
 									pos="relative"
+									px={4}
+									py={10}
 									variants={stepVariants}
 									w="full"
 								>

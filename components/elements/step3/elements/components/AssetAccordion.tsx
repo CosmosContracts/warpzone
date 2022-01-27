@@ -12,22 +12,22 @@ const AssetAccordion: FC<AssetAccordionProps> = ({ title, children }) => {
 	const [isOpen, setIsOpen] = useState(false)
 
 	return (
-		<Box w="full">
+		<Box maxH="25rem" w="full">
+			<HStack as={motion.div} flex="1" placeSelf="start">
+				<Text pl={2} py={1} textAlign="left">
+					{title}
+				</Text>
+				<IconButton
+					alignSelf="start"
+					aria-label="back to mode selection"
+					colorScheme="brand"
+					icon={<ArrowCounterClockwise size={24} weight="duotone" />}
+					onClick={() => setIsOpen(!isOpen)}
+					rounded="full"
+					variant="outline"
+				/>
+			</HStack>
 			<AnimatePresence>
-				<HStack as={motion.div} flex="1" placeSelf="start">
-					<Text pl={3} py={1} textAlign="left">
-						{title}
-					</Text>
-					<IconButton
-						alignSelf="start"
-						aria-label="back to mode selection"
-						colorScheme="brand"
-						icon={<ArrowCounterClockwise size={24} weight="duotone" />}
-						onClick={() => setIsOpen(!isOpen)}
-						rounded="full"
-						variant="outline"
-					/>
-				</HStack>
 				{isOpen && (
 					<motion.div
 						animate={{
@@ -47,7 +47,7 @@ const AssetAccordion: FC<AssetAccordionProps> = ({ title, children }) => {
 						initial={{ height: 0, opacity: 0 }}
 						key="tokenList"
 						layout
-						style={{ overflow: "hidden" }}
+						style={{ maxHeight: "10rem", overflow: "hidden" }}
 					>
 						{children}
 					</motion.div>

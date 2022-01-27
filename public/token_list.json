@@ -42,7 +42,7 @@
 			"name": "CoolCat",
 			"ticker": "CCAT",
 			"decimals": 9,
-			"logoURI": "https://i.imgur.com/fjUPWYK.png",
+			"logoURI": "https://gateway.pinata.cloud/ipfs/QmYUmYVh2rXHnNfdUxDisGr19kh2f7cyXZRUx96bL3K5p4",
 			"tags": ["coolcat"],
 			"native": false,
 			"denom": "uccat"

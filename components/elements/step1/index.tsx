@@ -1,15 +1,16 @@
 import { InputGroup, Input, InputRightElement, Button } from "@chakra-ui/react"
 import { useConnectWallet } from "@hooks/useConnectWallet"
-import { walletState, WalletStatusType } from "@state/atoms/wallet"
+import { cosmosWalletState, WalletStatusType } from "@state/atoms/cosmosWallet"
 import { AnimatePresence, motion } from "framer-motion"
 import { useRecoilState } from "recoil"
 
 const Step1 = () => {
-	const [{ status, address }, setWalletState] = useRecoilState(walletState)
+	const [{ status, address }, setWalletState] =
+		useRecoilState(cosmosWalletState)
 	const { mutate: connectWallet } = useConnectWallet()
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	// const [tokenList] = useTokenList()
+	// const [tokenList] = <useTokenLis></useTokenLis>t()
 
 	function resetWalletConnection() {
 		setWalletState({

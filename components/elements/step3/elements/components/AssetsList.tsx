@@ -2,24 +2,32 @@
 import {
 	Box,
 	Flex,
-	Grid,
 	GridItem,
 	Text,
-	useBoolean,
-	Wrap
+	useUpdateEffect,
+	Wrap,
+	WrapItem
 } from "@chakra-ui/react"
-import { useSdk } from "@services/client"
+import { cosmosWalletState, WalletStatusType } from "@state/atoms/cosmosWallet"
+import { activeTokenState } from "@state/atoms/ui"
+import { useMount } from "ahooks"
 import type { Variants } from "framer-motion"
-import { AnimatePresence, motion, useAnimation } from "framer-motion"
+import {
+	useUnmountEffect,
+	AnimatePresence,
+	motion,
+	useAnimation
+} from "framer-motion"
+import { nanoid } from "nanoid"
 import type { MutableRefObject } from "react"
-import { useEffect, useLayoutEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import { useRecoilState, useRecoilValue } from "recoil"
 import { useGetSupportedAssetsBalancesOnChain } from "../hooks/useGetSupportedAssetsBalancesOnChain"
 import AssetAccordion from "./AssetAccordion"
 import { AssetCard } from "./AssetCard"
 import type { AssetCardProps } from "./AssetCard"
 
 type TokenGridItemProps = AssetCardProps & {
-	activeIndex: number
 	delayPerPixel: number
 	i: number
 	originIndex: number
@@ -35,14 +43,14 @@ const TokenGridItem = ({
 	originOffset,
 	tokenSymbol,
 	balance,
-	i,
-	activeIndex
+	i
 }: TokenGridItemProps) => {
 	const offset = useRef({ left: 0, top: 0 })
 	const ref = useRef<HTMLDivElement>()
 	const delayRef = useRef<number>(0)
 	const tokenCardControls = useAnimation()
-	const [isActive, setActive] = useState<boolean>(false)
+	const [activeToken] = useRecoilState(activeTokenState)
+	const [isActive, setIsActive] = useState(false)
 
 	const tokenCardVariants: Variants = {
 		hidden: () => ({
@@ -60,7 +68,7 @@ const TokenGridItem = ({
 		})
 	}
 
-	useLayoutEffect(() => {
+	useMount(() => {
 		const element = ref.current
 		if (!element) return
 
@@ -73,16 +81,20 @@ const TokenGridItem = ({
 			// eslint-disable-next-line no-param-reassign
 			originOffset.current = offset.current
 		}
-	}, [delayPerPixel])
 
-	useLayoutEffect(() => {
 		const dx = Math.abs(offset.current.left - originOffset.current.left)
 		const dy = Math.abs(offset.current.top - originOffset.current.top)
 		const d = Math.sqrt(dx ** 2 + dy ** 2)
 		delayRef.current = d * delayPerPixel
+
+		void tokenCardControls.start("reveal")
 	})
 
-	useEffect(() => {
+	useUnmountEffect(() => {
+		void tokenCardControls.start("hidden")
+	})
+
+	useUpdateEffect(() => {
 		const playActiveAnimation = async () => {
 			await tokenCardControls.start("active")
 		}
@@ -91,15 +103,22 @@ const TokenGridItem = ({
 			await tokenCardControls.start("reveal")
 		}
 
-		if (i === activeIndex) {
-			setActive(true)
+		if (i === activeToken) {
 			// eslint-disable-next-line no-console
-			playActiveAnimation().catch(() => console.log(isActive))
+			playActiveAnimation().catch(() => console.log(activeToken))
 		} else {
 			// eslint-disable-next-line no-console
-			playRevealAnimation().catch(() => console.log(isActive))
+			playRevealAnimation().catch(() => console.log(activeToken))
 		}
-	}, [activeIndex, isActive])
+	}, [isActive])
+
+	useUpdateEffect(() => {
+		if (i === activeToken) {
+			setIsActive(true)
+		} else {
+			setIsActive(false)
+		}
+	}, [activeToken])
 
 	return (
 		<Box
@@ -124,21 +143,9 @@ export const AssetsList = () => {
 	const [loadingBalances, [myTokens, allTokens]] =
 		useGetSupportedAssetsBalancesOnChain()
 
-	const sdk = useSdk()
-	const [activeIndex, setActiveIndex] = useState<number>(undefined)
 	const originOffset = useRef({ left: 0, top: 0 })
-	const [isVisible, setVisibility] = useBoolean(false)
-
-	useLayoutEffect(() => {
-		const toggleVisibility = async () => {
-			setVisibility.on()
-		}
-
-		toggleVisibility().catch(() => {
-			// eslint-disable-next-line no-console
-			console.log(isVisible)
-		})
-	}, [])
+	const { status } = useRecoilValue(cosmosWalletState)
+	const [, setActiveToken] = useRecoilState(activeTokenState)
 
 	/* isLoading state is true if either we connect the wallet or loading balances */
 	const isLoading = loadingBalances
@@ -146,12 +153,9 @@ export const AssetsList = () => {
 	const hasTransferredAssets = !loadingBalances && myTokens.length > 0
 
 	const selectToken = (tokenId: number) => {
-		setActiveIndex(tokenId)
+		setActiveToken(tokenId)
 		// console.log("IDs:", tokenId, activeIndex)
 	}
-
-	// TODO
-	const [zoomValue, setZoomValue] = useState(3)
 
 	return (
 		<Flex
@@ -159,7 +163,6 @@ export const AssetsList = () => {
 			bg="whiteAlpha.100"
 			direction="column"
 			h="full"
-			mt="0px !important"
 			w="full"
 		>
 			<AssetAccordion title="Available Tokens">
@@ -169,69 +172,42 @@ export const AssetsList = () => {
 							Loading Token Balances...
 						</Text>
 					) : (
-						<>
-							<input
-								max="5"
-								min="2"
-								onChange={(event) =>
-									setZoomValue(Number.parseInt(event.target.value, 10))
-								}
-								type="range"
-								value={zoomValue}
-							/>
-							<Grid
-								as={motion.div}
-								// style={{
-								// 	gridTemplateColumns:
-								// 		activeIndex === index
-								// 			? `repeat(${zoomValue - 1}, auto)`
-								// 			: `repeat(${zoomValue}, auto)`
-								// }}
-								autoFlow="row dense"
-								bg="blackAlpha.400"
-								gap={1}
-								layout
-								pos="relative"
-								style={{
-									gridTemplateColumns: `repeat(${zoomValue}, auto)`
-								}}
-								w="full"
-							>
-								{hasTransferredAssets &&
-									// myTokens.map(({ tokenSymbol, balance }, index) => (
-									Array.from({ length: 14 }).map((_, index) => (
-										<GridItem
-											colSpan={activeIndex === index ? 2 : 1}
-											key={length}
-											onClick={() => selectToken(index)}
-										>
-											<TokenGridItem
-												activeIndex={activeIndex}
-												balance={20}
-												delayPerPixel={0.001}
-												i={index}
-												originIndex={0}
-												originOffset={originOffset}
-												tokenSymbol="ccat"
-											/>
-										</GridItem>
-									))}
-								{sdk.initialized && !hasTransferredAssets && (
-									<Text>No compatible assets found.</Text>
+						<Wrap as={motion.div} bg="blackAlpha.400" gap={1} layout w="full">
+							{hasTransferredAssets &&
+								// myTokens.map(({ tokenSymbol, balance }, index) => (
+								Array.from({ length: 14 }).map((_, index) => (
+									<WrapItem
+										key={nanoid()}
+										onClick={(event) => {
+											event.preventDefault()
+											selectToken(index)
+										}}
+									>
+										<TokenGridItem
+											balance={2_000}
+											delayPerPixel={0.001}
+											i={index}
+											originIndex={0}
+											originOffset={originOffset}
+											tokenSymbol="ccat"
+										/>
+									</WrapItem>
+								))}
+							{status === WalletStatusType.connected &&
+								!hasTransferredAssets && (
+									<Text>You don't own any listed tokens</Text>
 								)}
-							</Grid>
-						</>
+						</Wrap>
 					)}
 				</AnimatePresence>
 			</AssetAccordion>
 			<AssetAccordion title="All Tokens">
 				<Wrap as={motion.div} h="full" px={3} spacing={3} w="full">
-					{sdk.initialized &&
+					{status === WalletStatusType.connected &&
 						!hasTransferredAssets &&
 						allTokens.map(({ tokenSymbol }) => {
 							return (
 								<TokenGridItem
-									activeIndex={activeIndex}
 									delayPerPixel={0.004}
 									i={1}
 									isActive={false}
@@ -241,7 +217,7 @@ export const AssetsList = () => {
 								/>
 							)
 						})}
-					{sdk.initialized && hasTransferredAssets && (
+					{status === WalletStatusType.connected && hasTransferredAssets && (
 						<Text as="span" color="secondary">
 							You seem to own all the assets! Good job, cosmonaut!
 						</Text>

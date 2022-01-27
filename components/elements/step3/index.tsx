@@ -1,26 +1,19 @@
 import { InputGroup, Input, VStack } from "@chakra-ui/react"
+import { cosmosWalletState } from "@state/atoms/cosmosWallet"
 import { useEthers } from "@usedapp/core"
-import { useEffect, useState } from "react"
+import { useRecoilValue } from "recoil"
 import { AssetsList } from "./elements/components/AssetsList"
 
 const Step3 = () => {
 	const { account } = useEthers()
-	const [junoAddress, setJunoAddress] = useState("")
-	const [ethAddress, setEthAddress] = useState("")
-
-	useEffect(() => {
-		setEthAddress(account)
-	}, [account])
-
-	useEffect(() => {
-		setJunoAddress(sdk.address)
-	}, [sdk.address])
+	const { address } = useRecoilValue(cosmosWalletState)
 
 	return (
 		<VStack align="center" w="full">
 			<VStack
 				border="2px double"
 				borderColor="whiteAlpha.500"
+				overflow="hidden"
 				rounded="2xl"
 				spacing="0"
 				w="full"
@@ -30,9 +23,11 @@ const Step3 = () => {
 					borderBottom="1px double"
 					color="juno.200"
 					colorScheme="juno"
-					defaultValue={junoAddress}
-					h="3rem"
-					placeholder={junoAddress}
+					defaultValue={address}
+					maxH="1rem"
+					px={2}
+					py={5}
+					readOnly
 					rounded="0"
 					type="tel"
 					variant="glass"
@@ -44,9 +39,8 @@ const Step3 = () => {
 				<Input
 					color="blue.200"
 					colorScheme="blue"
-					defaultValue={ethAddress}
+					defaultValue={account}
 					h="3rem"
-					placeholder={ethAddress}
 					type="tel"
 				/>
 			</InputGroup>

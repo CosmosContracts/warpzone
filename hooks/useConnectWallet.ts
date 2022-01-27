@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate"
 import type { Window as KeplrWindow } from "@keplr-wallet/types"
-import { walletState, WalletStatusType } from "@state/atoms/wallet"
+import { cosmosWalletState, WalletStatusType } from "@state/atoms/cosmosWallet"
 import { useEffect } from "react"
 import { useMutation } from "react-query"
 import { useRecoilState } from "recoil"
@@ -11,7 +11,7 @@ export const useConnectWallet = (
 	mutationOptions?: Parameters<typeof useMutation>[2]
 ) => {
 	const anyWindow = window as KeplrWindow
-	const [{ status }, setWalletState] = useRecoilState(walletState)
+	const [{ status }, setWalletState] = useRecoilState(cosmosWalletState)
 
 	const mutation = useMutation(async () => {
 		if (anyWindow && !anyWindow?.keplr) {

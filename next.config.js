@@ -5,6 +5,7 @@ module.exports = {
 	},
 	swcMinify: true,
 	images: {
-		formats: ["image/avif", "image/webp"]
+		formats: ["image/avif", "image/webp"],
+		domains: ["gateway.pinata.cloud"]
 	}
 }
