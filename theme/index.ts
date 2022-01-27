@@ -16,6 +16,9 @@ const theme = extendTheme({
 			a: {
 				color: props.colorMode === "dark" ? "teal.300" : "teal.500"
 			},
+			canvas: {
+				opacity: 0.4
+			},
 			"html, body": {
 				color: props.colorMode === "dark" ? "white" : "gray.600",
 				fontSize: "lg",

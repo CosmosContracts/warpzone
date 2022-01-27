@@ -7,5 +7,8 @@ module.exports = {
 	images: {
 		formats: ["image/avif", "image/webp"],
 		domains: ["gateway.pinata.cloud"]
-	}
+	},
+	experimental: {
+    concurrentFeatures: true,
+  },
 }
