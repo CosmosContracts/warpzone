@@ -1,13 +1,15 @@
 // eslint-disable-next-line canonical/filename-match-exported
 import { ChakraProvider, Flex } from "@chakra-ui/react"
+import { Background } from "@components/sections/background"
 import { queryClient } from "@services/client"
+import { activePlanetState } from "@state/atoms/ui"
 import type { Config } from "@usedapp/core"
 import { Mainnet, DAppProvider as EVMProvider } from "@usedapp/core"
 import type { AppProps } from "next/app"
 import Head from "next/head"
 import { QueryClientProvider } from "react-query"
 // import { ReactQueryDevtools } from "react-query/devtools"
-import { RecoilRoot } from "recoil"
+import { RecoilRoot, useRecoilValue } from "recoil"
 import theme from "../theme"
 
 const metamaskConfig: Config = {
@@ -64,6 +66,7 @@ const App = ({ Component, pageProps, router }: AppProps) => {
 						<QueryClientProvider client={queryClient}>
 							<Flex direction="column" flex={1} h="100vh">
 								<Component key={router.route} {...pageProps} />
+								<Background />
 								{/* <ReactQueryDevtools initialIsOpen={false} /> */}
 							</Flex>
 						</QueryClientProvider>

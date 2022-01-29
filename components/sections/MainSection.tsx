@@ -14,7 +14,7 @@ import {
 import { Stepper, Step3 } from "@components/elements"
 import { Step1 } from "@components/elements/step1"
 import { Step2 } from "@components/elements/step2"
-import { hoverState, expandState } from "@state/atoms/ui"
+import { activePlanetState, expandState } from "@state/atoms/ui"
 import { useDebounceEffect, useMount } from "ahooks"
 import type { Variants } from "framer-motion"
 import {
@@ -134,11 +134,10 @@ const MainSection = () => {
 	const [[activeStep, direction], setActiveStep] = useState([0, 0])
 	const [isHover, setHover] = useState(false)
 	const [isDisabled, setDisabled] = useState(true)
-	const [, setIsHover] = useRecoilState(hoverState)
+	const [, setActivePlanet] = useRecoilState(activePlanetState)
 	const [, setIsExpanded] = useRecoilState(expandState)
 
-	// Easier to understand because the array starts at 0
-	const stepCount = 4 - 1
+	const stepCount = 3
 
 	const backButtonBg = useMotionValue(
 		"radial-gradient(circle at top left, rgba(13,214,158,0.0), rgba(0,0,0,0) 60%)"
@@ -147,6 +146,19 @@ const MainSection = () => {
 	// When back or next button was clicked
 	const paginate = (newDirection: number) => {
 		setActiveStep([activeStep + newDirection, newDirection])
+
+		switch (activeStep + newDirection) {
+			case 1:
+				setActivePlanet("juno")
+				break
+			case 2:
+				setActivePlanet("ethereum")
+				break
+			default:
+				setActivePlanet("warp")
+				break
+		}
+
 		if (activeStep + newDirection >= stepCount) {
 			setDisabled(true)
 		} else {
@@ -346,7 +358,6 @@ const MainSection = () => {
 											</motion.div>
 										}
 										onClick={() => {
-											if (activeStep === 1) setIsExpanded(false)
 											paginate(-1)
 										}}
 										onHoverEnd={() => setHover(false)}
@@ -384,11 +395,9 @@ const MainSection = () => {
 										h="full"
 										key="ConvertButton"
 										onClick={() => {
-											setIsExpanded(true)
+											setActivePlanet("juno")
 											paginate(1)
 										}}
-										onHoverEnd={() => setIsHover(false)}
-										onHoverStart={() => setIsHover(true)}
 										rounded="xl"
 									>
 										<Stack align="center" direction="column" p={4}>

@@ -1,8 +1,8 @@
 import { atom } from "recoil"
 
-export const hoverState = atom<boolean>({
-	default: false,
-	key: "hoverState"
+export const activePlanetState = atom<string>({
+	default: "warp",
+	key: "activePlanetState"
 })
 
 export const expandState = atom<boolean>({

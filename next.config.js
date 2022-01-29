@@ -8,7 +8,17 @@ module.exports = {
 		formats: ["image/avif", "image/webp"],
 		domains: ["gateway.pinata.cloud"]
 	},
-	experimental: {
-    concurrentFeatures: true,
+  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+    config.module.rules.push({
+			test: /\.(frag|vert|glsl)$/,
+			use: [
+				{
+					loader: "ts-shader-loader",
+					options: {}
+				}
+			]
+		})
+    // Important: return the modified config
+    return config
   },
 }
