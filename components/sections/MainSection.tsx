@@ -14,7 +14,7 @@ import {
 import { Stepper, Step3 } from "@components/elements"
 import { Step1 } from "@components/elements/step1"
 import { Step2 } from "@components/elements/step2"
-import { activePlanetState, expandState } from "@state/atoms/ui"
+import { activePlanetState } from "@state/atoms/ui"
 import { useDebounceEffect, useMount } from "ahooks"
 import type { Variants } from "framer-motion"
 import {
@@ -29,7 +29,6 @@ import { ArrowFatLinesLeft, ArrowsClockwise, Parachute } from "phosphor-react"
 import { useState } from "react"
 import { useRecoilState } from "recoil"
 
-// Animation settings
 const stackVariants: Variants = {
 	hidden: {
 		backdropFilter: "blur(16px)",
@@ -135,7 +134,6 @@ const MainSection = () => {
 	const [isHover, setHover] = useState(false)
 	const [isDisabled, setDisabled] = useState(true)
 	const [, setActivePlanet] = useRecoilState(activePlanetState)
-	const [, setIsExpanded] = useRecoilState(expandState)
 
 	const stepCount = 3
 
@@ -154,8 +152,11 @@ const MainSection = () => {
 			case 2:
 				setActivePlanet("ethereum")
 				break
+			case 3:
+				setActivePlanet("warpTop")
+				break
 			default:
-				setActivePlanet("warp")
+				setActivePlanet("")
 				break
 		}
 
@@ -230,7 +231,7 @@ const MainSection = () => {
 		<MotionConfig
 			transition={{ duration: 0.25, ease: "easeInOut", type: "tween" }}
 		>
-			<Center as="section" h="100vh" w="full">
+			<Center as="section" h="100vh" w="full" zIndex="2">
 				<Flex
 					align="center"
 					animate="show"

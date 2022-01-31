@@ -31,5 +31,11 @@
 		"isolatedModules": true
 	},
 	"exclude": ["node_modules"],
-	"include": ["**/*.ts", "**/*.tsx", "next-env.d.ts", "next.config.js"]
+	"include": [
+		"**/*.ts",
+		"**/*.tsx",
+		"next-env.d.ts",
+		"next.config.js",
+		"components/sections/Background/Sparks.jsx"
+	]
 }

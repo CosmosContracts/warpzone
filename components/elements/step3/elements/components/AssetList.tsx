@@ -2,7 +2,6 @@
 import {
 	Box,
 	Flex,
-	GridItem,
 	Text,
 	useUpdateEffect,
 	Wrap,
@@ -20,7 +19,7 @@ import {
 } from "framer-motion"
 import { nanoid } from "nanoid"
 import type { MutableRefObject } from "react"
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { useRecoilState, useRecoilValue } from "recoil"
 import { useGetSupportedAssetsBalancesOnChain } from "../hooks/useGetSupportedAssetsBalancesOnChain"
 import AssetAccordion from "./AssetAccordion"
@@ -68,6 +67,14 @@ const TokenGridItem = ({
 		})
 	}
 
+	const playActiveAnimation = async () => {
+		await tokenCardControls.start("active")
+	}
+
+	const playRevealAnimation = async () => {
+		await tokenCardControls.start("reveal")
+	}
+
 	useMount(() => {
 		const element = ref.current
 		if (!element) return
@@ -95,20 +102,10 @@ const TokenGridItem = ({
 	})
 
 	useUpdateEffect(() => {
-		const playActiveAnimation = async () => {
-			await tokenCardControls.start("active")
-		}
-
-		const playRevealAnimation = async () => {
-			await tokenCardControls.start("reveal")
-		}
-
 		if (i === activeToken) {
-			// eslint-disable-next-line no-console
-			playActiveAnimation().catch(() => console.log(activeToken))
+			void playActiveAnimation()
 		} else {
-			// eslint-disable-next-line no-console
-			playRevealAnimation().catch(() => console.log(activeToken))
+			void playRevealAnimation()
 		}
 	}, [isActive])
 
@@ -139,7 +136,7 @@ const TokenGridItem = ({
 	)
 }
 
-export const AssetsList = () => {
+export const AssetList = () => {
 	const [loadingBalances, [myTokens, allTokens]] =
 		useGetSupportedAssetsBalancesOnChain()
 

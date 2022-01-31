@@ -1,18 +1,11 @@
+import { useSpring, animated } from "@react-spring/three"
 import { useTexture } from "@react-three/drei"
-import { useFrame } from "@react-three/fiber"
-import { useMotionValue } from "framer-motion"
-import { motion } from "framer-motion-3d"
 import { useMemo, useRef } from "react"
 import * as THREE from "three"
 import fragmentShader from "./shaders/planet/fragment.glsl"
 import vertexShader from "./shaders/planet/vertex.glsl"
 
-export type EthereumPlanetProps = {
-	mouseX: number
-	mouseY: number
-}
-
-export const Ethereum = ({ mouseX, mouseY }: EthereumPlanetProps) => {
+export const Ethereum = () => {
 	const ethereumTexture = useTexture("/assets/ethereumTexture.png")
 
 	const ethereumPlanetRef = useRef<THREE.Mesh>(null)
@@ -67,18 +60,15 @@ export const Ethereum = ({ mouseX, mouseY }: EthereumPlanetProps) => {
 		[]
 	)
 
-	const junoX = useMotionValue(mouseX)
-
-	useFrame(() => {
-		ethereumPlanetRef.current.rotation.x =
-			(mouseX + ethereumPlanetRef.current.rotation.x) * 0.000_5
-		ethereumPlanetRef.current.rotation.y =
-			(mouseY + ethereumPlanetRef.current.rotation.y) * 0.000_5
+	const { x } = useSpring({
+		from: { x: 10 },
+		loop: true,
+		to: { x: 0 }
 	})
 
 	return (
 		<group position={[2_000, -1_600, 1_600]} scale={[80, 80, 80]}>
-			<motion.group>
+			<animated.group position={[x.get(), 0, 0]}>
 				<mesh>
 					<sphereGeometry args={[5, 32, 32]} />
 					<shaderMaterial attach="material" {...ethereumAtmosphere} />
@@ -92,13 +82,13 @@ export const Ethereum = ({ mouseX, mouseY }: EthereumPlanetProps) => {
 						roughness={1}
 					/>
 				</mesh>
-			</motion.group>
+			</animated.group>
 			<group>
 				<mesh position={[5, -5, -5]}>
 					<sphereGeometry args={[0.75, 32, 32]} />
 					<shaderMaterial attach="material" {...netaAtmosphere} />
 				</mesh>
-				<mesh position={[5, -5, -5]}>
+				<mesh position={[4.9, -5, -5]}>
 					<sphereGeometry args={[0.75, 32, 32]} />
 					<meshStandardMaterial fog map={ethereumTexture} roughness={1} />
 				</mesh>

@@ -287,6 +287,7 @@ const Stepper = ({ activeStep }: StepperProps) => {
 				await firstCircle.start("initial")
 				await secondCircle.start("initial")
 				await thirdCircle.start("initial")
+				await line3.start("initial")
 				await line2.start("initial")
 				await line1.start("initial")
 			}

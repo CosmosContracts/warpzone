@@ -18,7 +18,6 @@ import {
 	useAnimation,
 	useMotionValue
 } from "framer-motion"
-import Image from "next/image"
 import { Plus } from "phosphor-react"
 import type { HTMLProps } from "react"
 import { ChakraNextImage } from "./ChakraNextImage"
@@ -107,93 +106,88 @@ export const AssetCard = ({
 		}
 	}
 
+	const PlayActiveAnimation = async () => {
+		await addKeplrControls.start("rest")
+		await plusIconControls.start("rest")
+		animate(
+			boxShadow,
+			"0 3px 10px 0 rgba(101, 246, 168, 0.23), 0 -3px 10px 0 rgba(0, 150, 250, 0.19),inset 0 0 0 2px  rgba(101, 246, 168, 0.25),inset 6px 0 7px -2px rgba(101, 246, 168,0.5)",
+			{
+				damping: 20,
+				type: "spring"
+			}
+		)
+		animate(
+			tokenBackground,
+			"radial-gradient(circle at left, rgba(101, 246, 168, 0.3) 4%, rgba(0, 0, 0, 0.3) 20%",
+			{
+				damping: 20,
+				type: "spring"
+			}
+		)
+	}
+
+	const PlayExitAnimation = async () => {
+		await addKeplrControls.start("exit")
+		await plusIconControls.start("exit")
+		animate(
+			boxShadow,
+			"0 3px 10px 0 rgba(101, 246, 168, 0), 0 -3px 10px 0 rgba(0, 150, 250, 0),inset 0 0 0 2px  rgba(101, 246, 168, 0),inset -4px 0 7px -2px rgba(220,220,220,0)",
+			{
+				damping: 20,
+				type: "spring"
+			}
+		)
+		animate(
+			tokenBackground,
+			"radial-gradient(circle at left, rgba(0, 0, 0, 0.3) 3%,rgba(0, 0, 0, 0.3) 10%, rgba(0, 0, 0, 0.3) 20%",
+			{
+				damping: 20,
+				type: "spring"
+			}
+		)
+	}
+
+	const playHover = async () => {
+		await addKeplrControls.start("hover")
+		await plusIconControls.start("hover")
+		animate(
+			backgroundImage,
+			"radial-gradient(circle at 40% 91%, rgba(251, 251, 251,0.04) 0%, rgba(251, 251, 251,0.04) 50%,rgba(229, 229, 229,0.04) 50%, rgba(229, 229, 229,0.04) 100%),radial-gradient(circle at 66% 97%, rgba(36, 36, 36,0.04) 0%, rgba(36, 36, 36,0.04) 50%,rgba(46, 46, 46,0.04) 50%, rgba(46, 46, 46,0.04) 100%),radial-gradient(circle at 86% 7%, rgba(40, 40, 40,0.04) 0%, rgba(40, 40, 40,0.04) 50%,rgba(200, 200, 200,0.04) 50%, rgba(200, 200, 200,0.04) 100%),radial-gradient(circle at 15% 16%, rgba(99, 99, 99,0.04) 0%, rgba(99, 99, 99,0.04) 50%,rgba(45, 45, 45,0.04) 50%, rgba(45, 45, 45,0.04) 100%),radial-gradient(circle at 75% 99%, rgba(243, 243, 243,0.04) 0%, rgba(243, 243, 243,0.04) 50%,rgba(37, 37, 37,0.04) 50%, rgba(37, 37, 37,0.04) 100%),radial-gradient(circle at bottom left, rgb(34, 222, 237),rgb(135, 89, 215) 65%)",
+			{
+				duration: 0.2,
+				ease: "linear"
+			}
+		)
+	}
+
+	const endHover = async () => {
+		await addKeplrControls.start("rest")
+		await plusIconControls.start("rest")
+		animate(
+			backgroundImage,
+			"radial-gradient(circle at 40% 91%, rgba(251, 251, 251,0.04) 0%, rgba(251, 251, 251,0.04) 50%,rgba(229, 229, 229,0.04) 50%, rgba(229, 229, 229,0.04) 100%),radial-gradient(circle at 66% 97%, rgba(36, 36, 36,0.04) 0%, rgba(36, 36, 36,0.04) 50%,rgba(46, 46, 46,0.04) 50%, rgba(46, 46, 46,0.04) 100%),radial-gradient(circle at 86% 7%, rgba(40, 40, 40,0.04) 0%, rgba(40, 40, 40,0.04) 50%,rgba(200, 200, 200,0.04) 50%, rgba(200, 200, 200,0.04) 100%),radial-gradient(circle at 15% 16%, rgba(99, 99, 99,0.04) 0%, rgba(99, 99, 99,0.04) 50%,rgba(45, 45, 45,0.04) 50%, rgba(45, 45, 45,0.04) 100%),radial-gradient(circle at 75% 99%, rgba(243, 243, 243,0.04) 0%, rgba(243, 243, 243,0.04) 50%,rgba(37, 37, 37,0.04) 50%, rgba(37, 37, 37,0.04) 100%),radial-gradient(circle at bottom left, rgb(34, 222, 237),rgb(135, 89, 215) 85%)",
+			{
+				duration: 0.2,
+				ease: "linear"
+			}
+		)
+	}
+
 	useUpdateEffect(() => {
 		if (isHover) {
-			const playHover = async () => {
-				await addKeplrControls.start("hover")
-				await plusIconControls.start("hover")
-				animate(
-					backgroundImage,
-					"radial-gradient(circle at 40% 91%, rgba(251, 251, 251,0.04) 0%, rgba(251, 251, 251,0.04) 50%,rgba(229, 229, 229,0.04) 50%, rgba(229, 229, 229,0.04) 100%),radial-gradient(circle at 66% 97%, rgba(36, 36, 36,0.04) 0%, rgba(36, 36, 36,0.04) 50%,rgba(46, 46, 46,0.04) 50%, rgba(46, 46, 46,0.04) 100%),radial-gradient(circle at 86% 7%, rgba(40, 40, 40,0.04) 0%, rgba(40, 40, 40,0.04) 50%,rgba(200, 200, 200,0.04) 50%, rgba(200, 200, 200,0.04) 100%),radial-gradient(circle at 15% 16%, rgba(99, 99, 99,0.04) 0%, rgba(99, 99, 99,0.04) 50%,rgba(45, 45, 45,0.04) 50%, rgba(45, 45, 45,0.04) 100%),radial-gradient(circle at 75% 99%, rgba(243, 243, 243,0.04) 0%, rgba(243, 243, 243,0.04) 50%,rgba(37, 37, 37,0.04) 50%, rgba(37, 37, 37,0.04) 100%),radial-gradient(circle at bottom left, rgb(34, 222, 237),rgb(135, 89, 215) 65%)",
-					{
-						duration: 0.2,
-						ease: "linear"
-					}
-				)
-			}
-
-			// eslint-disable-next-line no-console
-			playHover().catch(() => console.log("Hover", isHover))
+			void playHover()
 		} else {
-			const endHover = async () => {
-				await addKeplrControls.start("rest")
-				await plusIconControls.start("rest")
-				animate(
-					backgroundImage,
-					"radial-gradient(circle at 40% 91%, rgba(251, 251, 251,0.04) 0%, rgba(251, 251, 251,0.04) 50%,rgba(229, 229, 229,0.04) 50%, rgba(229, 229, 229,0.04) 100%),radial-gradient(circle at 66% 97%, rgba(36, 36, 36,0.04) 0%, rgba(36, 36, 36,0.04) 50%,rgba(46, 46, 46,0.04) 50%, rgba(46, 46, 46,0.04) 100%),radial-gradient(circle at 86% 7%, rgba(40, 40, 40,0.04) 0%, rgba(40, 40, 40,0.04) 50%,rgba(200, 200, 200,0.04) 50%, rgba(200, 200, 200,0.04) 100%),radial-gradient(circle at 15% 16%, rgba(99, 99, 99,0.04) 0%, rgba(99, 99, 99,0.04) 50%,rgba(45, 45, 45,0.04) 50%, rgba(45, 45, 45,0.04) 100%),radial-gradient(circle at 75% 99%, rgba(243, 243, 243,0.04) 0%, rgba(243, 243, 243,0.04) 50%,rgba(37, 37, 37,0.04) 50%, rgba(37, 37, 37,0.04) 100%),radial-gradient(circle at bottom left, rgb(34, 222, 237),rgb(135, 89, 215) 85%)",
-					{
-						duration: 0.2,
-						ease: "linear"
-					}
-				)
-			}
-
-			// eslint-disable-next-line no-console
-			endHover().catch(() => console.log("Hover", isHover))
+			void endHover()
 		}
 	}, [isHover])
 
 	useUpdateEffect(() => {
-		const PlayActiveAnimation = async () => {
-			await addKeplrControls.start("rest")
-			await plusIconControls.start("rest")
-			animate(
-				boxShadow,
-				"0 3px 10px 0 rgba(101, 246, 168, 0.23), 0 -3px 10px 0 rgba(0, 150, 250, 0.19),inset 0 0 0 2px  rgba(101, 246, 168, 0.25),inset 6px 0 7px -2px rgba(101, 246, 168,0.5)",
-				{
-					damping: 20,
-					type: "spring"
-				}
-			)
-			animate(
-				tokenBackground,
-				"radial-gradient(circle at left, rgba(101, 246, 168, 0.3) 4%, rgba(0, 0, 0, 0.3) 20%",
-				{
-					damping: 20,
-					type: "spring"
-				}
-			)
-		}
-
-		const PlayExitAnimation = async () => {
-			await addKeplrControls.start("exit")
-			await plusIconControls.start("exit")
-			animate(
-				boxShadow,
-				"0 3px 10px 0 rgba(101, 246, 168, 0), 0 -3px 10px 0 rgba(0, 150, 250, 0),inset 0 0 0 2px  rgba(101, 246, 168, 0),inset -4px 0 7px -2px rgba(220,220,220,0)",
-				{
-					damping: 20,
-					type: "spring"
-				}
-			)
-			animate(
-				tokenBackground,
-				"radial-gradient(circle at left, rgba(0, 0, 0, 0.3) 3%,rgba(0, 0, 0, 0.3) 10%, rgba(0, 0, 0, 0.3) 20%",
-				{
-					damping: 20,
-					type: "spring"
-				}
-			)
-		}
-
 		if (isActive) {
-			// eslint-disable-next-line no-console
-			PlayActiveAnimation().catch(() => console.log("test"))
+			void PlayActiveAnimation()
 		} else {
-			// eslint-disable-next-line no-console
-			PlayExitAnimation().catch(() => console.log("test"))
+			void PlayExitAnimation()
 		}
-		// console.log(isActive)
 	}, [isActive])
 
 	return (
@@ -205,7 +199,6 @@ export const AssetCard = ({
 			style={{
 				// @ts-expect-error Chakra UI != Framer Motion typed
 				backgroundImage: tokenBackground,
-
 				// @ts-expect-error Chakra UI != Framer Motion typed
 				boxShadow
 			}}

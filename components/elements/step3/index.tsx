@@ -2,7 +2,7 @@ import { InputGroup, Input, VStack } from "@chakra-ui/react"
 import { cosmosWalletState } from "@state/atoms/cosmosWallet"
 import { useEthers } from "@usedapp/core"
 import { useRecoilValue } from "recoil"
-import { AssetsList } from "./elements/components/AssetsList"
+import { AssetList } from "./elements/components/AssetList"
 
 const Step3 = () => {
 	const { account } = useEthers()
@@ -33,7 +33,7 @@ const Step3 = () => {
 					variant="glass"
 				/>
 
-				<AssetsList />
+				<AssetList />
 			</VStack>
 			<InputGroup variant="glass">
 				<Input

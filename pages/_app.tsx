@@ -1,16 +1,19 @@
 // eslint-disable-next-line canonical/filename-match-exported
 import { ChakraProvider, Flex } from "@chakra-ui/react"
-import { Background } from "@components/sections/background"
 import { queryClient } from "@services/client"
-import { activePlanetState } from "@state/atoms/ui"
 import type { Config } from "@usedapp/core"
 import { Mainnet, DAppProvider as EVMProvider } from "@usedapp/core"
 import type { AppProps } from "next/app"
+import dynamic from "next/dynamic"
 import Head from "next/head"
 import { QueryClientProvider } from "react-query"
 // import { ReactQueryDevtools } from "react-query/devtools"
-import { RecoilRoot, useRecoilValue } from "recoil"
+import { RecoilRoot } from "recoil"
 import theme from "../theme"
+
+const Background = dynamic(() => import("@components/sections/Background"), {
+	ssr: false
+})
 
 const metamaskConfig: Config = {
 	readOnlyChainId: Mainnet.chainId,
@@ -64,7 +67,7 @@ const App = ({ Component, pageProps, router }: AppProps) => {
 				<RecoilRoot>
 					<EVMProvider config={metamaskConfig}>
 						<QueryClientProvider client={queryClient}>
-							<Flex direction="column" flex={1} h="100vh">
+							<Flex className="test" h="100vh" pointerEvents="none" w="100vw">
 								<Component key={router.route} {...pageProps} />
 								<Background />
 								{/* <ReactQueryDevtools initialIsOpen={false} /> */}

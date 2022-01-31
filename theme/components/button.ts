@@ -22,6 +22,7 @@ const baseStyle = {
 	fontWeight: "bold",
 	lineHeight: "1.2",
 	overflow: "hidden",
+	pointerEvents: "auto",
 	transition: "all 0.2s ease-in-out",
 	transitionDuration: "normal",
 	transitionProperty: "common"

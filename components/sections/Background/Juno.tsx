@@ -1,17 +1,13 @@
-import { useFrame, useLoader } from "@react-three/fiber"
-import { useMotionValue } from "framer-motion"
-import { motion } from "framer-motion-3d"
-import React, { useEffect, useMemo, useRef } from "react"
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-new */
+import { a, useSpring } from "@react-spring/three"
+import { useLoader } from "@react-three/fiber"
+import { forwardRef, useMemo, useRef } from "react"
 import * as THREE from "three"
 import fragmentShader from "./shaders/planet/fragment.glsl"
 import vertexShader from "./shaders/planet/vertex.glsl"
 
-export type JunoProps = {
-	mouseX: number
-	mouseY: number
-}
-
-export const Juno = ({ mouseX, mouseY }: JunoProps) => {
+export const Juno = forwardRef((_, forwardedRef) => {
 	const [juno, neta] = useLoader(THREE.TextureLoader, [
 		"/assets/junoTexture.png",
 		"/assets/netaTexture.png"
@@ -69,23 +65,21 @@ export const Juno = ({ mouseX, mouseY }: JunoProps) => {
 		[]
 	)
 
-	const junoX = useMotionValue(mouseX)
-
-	useFrame(() => {
-		// console.log(mouseX)
-		junoRef.current.rotation.x = (mouseX + junoRef.current.rotation.x) * 0.000_5
-		junoRef.current.rotation.y = (mouseY + junoRef.current.rotation.y) * 0.000_5
+	const { x } = useSpring({
+		from: { x: 0 },
+		loop: { reverse: true },
+		to: { x: 100 }
 	})
 
 	return (
-		<group position={[700, 700, 300]} scale={[80, 80, 80]}>
-			<motion.group>
-				<mesh>
+		<group position={[2_600, 2_600, 600]} scale={[80, 80, 80]}>
+			<a.group position={[x.get(), 0, 0]}>
+				<mesh ref={forwardedRef}>
 					<sphereGeometry args={[5, 32, 32]} />
 					<shaderMaterial attach="material" {...junoAtmosphere} />
 				</mesh>
-				<mesh ref={junoRef} rotation={[-200, -200, -200]}>
-					<sphereGeometry args={[5, 32, 32]} />
+				<mesh ref={junoRef}>
+					<sphereGeometry args={[4.9, 32, 32]} />
 					<meshStandardMaterial
 						attach="material"
 						fog
@@ -93,17 +87,17 @@ export const Juno = ({ mouseX, mouseY }: JunoProps) => {
 						roughness={1}
 					/>
 				</mesh>
-			</motion.group>
+			</a.group>
 			<group>
 				<mesh position={[5, -5, -5]}>
 					<sphereGeometry args={[0.75, 32, 32]} />
 					<shaderMaterial attach="material" {...netaAtmosphere} />
 				</mesh>
 				<mesh position={[5, -5, -5]}>
-					<sphereGeometry args={[0.75, 32, 32]} />
+					<sphereGeometry args={[0.72, 32, 32]} />
 					<meshStandardMaterial fog map={neta} roughness={1} />
 				</mesh>
 			</group>
 		</group>
 	)
-}
+})
