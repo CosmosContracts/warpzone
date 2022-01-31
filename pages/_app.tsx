@@ -66,7 +66,7 @@ const App = ({
 							</Head>
 							<DefaultSeo {...defaultSEOConfig} />
 							{isLoading && <LoadingScreen />}
-							<Flex className="test" h="100vh" pointerEvents="none" w="100vw">
+							<Flex h="100vh" pointerEvents="none" w="100vw">
 								<Component key={router.route} {...pageProps} />
 								<Background />
 								{/* <ReactQueryDevtools initialIsOpen={false} /> */}

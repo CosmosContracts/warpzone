@@ -1,4 +1,16 @@
-const colors = {
+import type { DeepPartial, Theme } from "@chakra-ui/react"
+
+const extendedColors: DeepPartial<
+	Record<string, Theme["colors"]["blackAlpha"]>
+> = {
+	brand: {
+		"200": "#0DD69E"
+	},
+	juno: { "200": "#f0827d" },
+	offwhite: { "200": "#f8f8fa" }
+}
+
+const overridenChakraColors: DeepPartial<Theme["colors"]> = {
 	black: "#000000",
 	blue: {
 		50: "#a9d6e5",
@@ -12,9 +24,7 @@ const colors = {
 		800: "#013a63",
 		900: "#012a4a"
 	},
-	brand: {
-		"200": "#0DD69E"
-	},
+
 	cyan: {
 		"50": "#4bffff",
 		"100": "#41f9ff",
@@ -51,8 +61,7 @@ const colors = {
 		"800": "#168d21",
 		"900": "#0c8317"
 	},
-	juno: { "200": "#f0827d" },
-	offwhite: "#F8FAFA",
+
 	orange: {
 		"50": "#ff9246",
 		"100": "#ff883c",
@@ -128,5 +137,7 @@ const colors = {
 		"900": "#d6b42e"
 	}
 }
+
+const colors = { ...overridenChakraColors, ...extendedColors }
 
 export default colors
