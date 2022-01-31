@@ -1336,6 +1336,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@commitlint/prompt@npm:^16.1.0":
+  version: 16.1.0
+  resolution: "@commitlint/prompt@npm:16.1.0"
+  dependencies:
+    "@commitlint/ensure": ^16.0.0
+    "@commitlint/load": ^16.1.0
+    "@commitlint/types": ^16.0.0
+    chalk: ^4.0.0
+    inquirer: ^6.5.2
+    lodash: ^4.17.19
+  checksum: e64eb45dee36f2bcb345cf771a009a35f06e99dc410f61d59c3487a5f843bceb1d1ed8cc67b39b1481b57c2ab8f53d0260529c08165cca6b862482f192fa4ad1
+  languageName: node
+  linkType: hard
+
 "@commitlint/read@npm:^16.0.0":
   version: 16.0.0
   resolution: "@commitlint/read@npm:16.0.0"
@@ -2670,6 +2684,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@next/bundle-analyzer@npm:^12.0.9":
+  version: 12.0.9
+  resolution: "@next/bundle-analyzer@npm:12.0.9"
+  dependencies:
+    webpack-bundle-analyzer: 4.3.0
+  checksum: 1f8ec7b0b454eabf696d8d2fc69cbbd9bf8becd06192ab10bfaa23d5e1ebdce5b91f2213dfd4da8a3feb434e08b4ee038f9b0fc7f240ca0a00ed19c6acf8bffd
+  languageName: node
+  linkType: hard
+
 "@next/env@npm:12.0.9":
   version: 12.0.9
   resolution: "@next/env@npm:12.0.9"
@@ -2677,7 +2700,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/eslint-plugin-next@npm:12.0.8, @next/eslint-plugin-next@npm:^12.0.7":
+"@next/eslint-plugin-next@npm:12.0.9":
+  version: 12.0.9
+  resolution: "@next/eslint-plugin-next@npm:12.0.9"
+  dependencies:
+    glob: 7.1.7
+  checksum: b28f86f7f74dad8abe7f3905a1ce6465a04d41dac088c8ff61c21801b39a86319f732482083ea5903fd66800c87143bb5737e1086abf308cce52c5564ea1df4c
+  languageName: node
+  linkType: hard
+
+"@next/eslint-plugin-next@npm:^12.0.7":
   version: 12.0.8
   resolution: "@next/eslint-plugin-next@npm:12.0.8"
   dependencies:
@@ -2918,6 +2950,13 @@ __metadata:
   dependencies:
     "@octokit/openapi-types": ^11.2.0
   checksum: f122b9aee8f6baddd515e34a0913e73b21d4bc82d6ee59d77a8aaf01b4a02c10867dd013003d087a83dc96db23511893669015af6d30c27cece185e21cf1df89
+  languageName: node
+  linkType: hard
+
+"@polka/url@npm:^1.0.0-next.20":
+  version: 1.0.0-next.21
+  resolution: "@polka/url@npm:1.0.0-next.21"
+  checksum: c7654046d38984257dd639eab3dc770d1b0340916097b2fac03ce5d23506ada684e05574a69b255c32ea6a144a957c8cd84264159b545fca031c772289d88788
   languageName: node
   linkType: hard
 
@@ -3780,7 +3819,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"acorn-walk@npm:^8.1.1":
+"acorn-walk@npm:^8.0.0, acorn-walk@npm:^8.1.1":
   version: 8.2.0
   resolution: "acorn-walk@npm:8.2.0"
   checksum: 1715e76c01dd7b2d4ca472f9c58968516a4899378a63ad5b6c2d668bba8da21a71976c14ec5f5b75f887b6317c4ae0b897ab141c831d741dc76024d8745f1ad1
@@ -3796,7 +3835,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"acorn@npm:^8.4.1, acorn@npm:^8.5.0, acorn@npm:^8.7.0":
+"acorn@npm:^8.0.4, acorn@npm:^8.4.1, acorn@npm:^8.5.0, acorn@npm:^8.7.0":
   version: 8.7.0
   resolution: "acorn@npm:8.7.0"
   bin:
@@ -4675,6 +4714,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"commander@npm:^6.2.0":
+  version: 6.2.1
+  resolution: "commander@npm:6.2.1"
+  checksum: d7090410c0de6bc5c67d3ca41c41760d6d268f3c799e530aafb73b7437d1826bbf0d2a3edac33f8b57cc9887b4a986dce307fa5557e109be40eadb7c43b21742
+  languageName: node
+  linkType: hard
+
 "commander@npm:^8.3.0":
   version: 8.3.0
   resolution: "commander@npm:8.3.0"
@@ -4689,7 +4735,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commitizen@npm:4.2.4, commitizen@npm:^4.0.3":
+"commitizen@npm:^4.0.3, commitizen@npm:^4.2.4":
   version: 4.2.4
   resolution: "commitizen@npm:4.2.4"
   dependencies:
@@ -5102,7 +5148,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-spawn@npm:^7.0.0, cross-spawn@npm:^7.0.2, cross-spawn@npm:^7.0.3":
+"cross-env@npm:^7.0.3":
+  version: 7.0.3
+  resolution: "cross-env@npm:7.0.3"
+  dependencies:
+    cross-spawn: ^7.0.1
+  bin:
+    cross-env: src/bin/cross-env.js
+    cross-env-shell: src/bin/cross-env-shell.js
+  checksum: 26f2f3ea2ab32617f57effb70d329c2070d2f5630adc800985d8b30b56e8bf7f5f439dd3a0358b79cee6f930afc23cf8e23515f17ccfb30092c6b62c6b630a79
+  languageName: node
+  linkType: hard
+
+"cross-spawn@npm:^7.0.0, cross-spawn@npm:^7.0.1, cross-spawn@npm:^7.0.2, cross-spawn@npm:^7.0.3":
   version: 7.0.3
   resolution: "cross-spawn@npm:7.0.3"
   dependencies:
@@ -5480,6 +5538,13 @@ __metadata:
   version: 0.1.4
   resolution: "duplexer3@npm:0.1.4"
   checksum: c2fd6969314607d23439c583699aaa43c4100d66b3e161df55dccd731acc57d5c81a64bb4f250805fbe434ddb1d2623fee2386fb890f5886ca1298690ec53415
+  languageName: node
+  linkType: hard
+
+"duplexer@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "duplexer@npm:0.1.2"
+  checksum: 62ba61a830c56801db28ff6305c7d289b6dc9f859054e8c982abd8ee0b0a14d2e9a8e7d086ffee12e868d43e2bbe8a964be55ddbd8c8957714c87373c7a4f9b0
   languageName: node
   linkType: hard
 
@@ -7096,6 +7161,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"gzip-size@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "gzip-size@npm:6.0.0"
+  dependencies:
+    duplexer: ^0.1.2
+  checksum: 2df97f359696ad154fc171dcb55bc883fe6e833bca7a65e457b9358f3cb6312405ed70a8da24a77c1baac0639906cd52358dc0ce2ec1a937eaa631b934c94194
+  languageName: node
+  linkType: hard
+
 "hamt_plus@npm:1.0.2":
   version: 1.0.2
   resolution: "hamt_plus@npm:1.0.2"
@@ -7300,7 +7374,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"husky@npm:7.0.4":
+"husky@npm:^7.0.0":
   version: 7.0.4
   resolution: "husky@npm:7.0.4"
   bin:
@@ -7426,7 +7500,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inquirer@npm:6.5.2":
+"inquirer@npm:6.5.2, inquirer@npm:^6.5.2":
   version: 6.5.2
   resolution: "inquirer@npm:6.5.2"
   dependencies:
@@ -8622,17 +8696,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"meshline@npm:^2.0.3":
-  version: 2.0.3
-  resolution: "meshline@npm:2.0.3"
-  dependencies:
-    three: ^0.129.0
-  peerDependencies:
-    three: ">=0.126.0"
-  checksum: 70ea0a7308f349a878ce6af390d77a4e24f1c08b921a77f767bf117069709088746082f4e56df387cc4ba0a533d20b914e9ed01407c187ff35de6d0c32530d6e
-  languageName: node
-  linkType: hard
-
 "micro-spelling-correcter@npm:^1.1.1":
   version: 1.1.1
   resolution: "micro-spelling-correcter@npm:1.1.1"
@@ -8767,6 +8830,13 @@ __metadata:
   version: 1.0.1
   resolution: "modify-values@npm:1.0.1"
   checksum: 8296610c608bc97b03c2cf889c6cdf4517e32fa2d836440096374c2209f6b7b3e256c209493a0b32584b9cb32d528e99d0dd19dcd9a14d2d915a312d391cc7e9
+  languageName: node
+  linkType: hard
+
+"mrmime@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "mrmime@npm:1.0.0"
+  checksum: 2c72a40942af7c53bc97d1e9e9c5cb0e6541d18f736811c3a1b46fa2a2b2362480d687daa8ae8372523acaacd82426a4f7ce34b0bf1825ea83b3983e8cb91afd
   languageName: node
   linkType: hard
 
@@ -9174,6 +9244,15 @@ __metadata:
     is-docker: ^2.0.0
     is-wsl: ^2.1.1
   checksum: 3333900ec0e420d64c23b831bc3467e57031461d843c801f569b2204a1acc3cd7b3ec3c7897afc9dde86491dfa289708eb92bba164093d8bd88fb2c231843c91
+  languageName: node
+  linkType: hard
+
+"opener@npm:^1.5.2":
+  version: 1.5.2
+  resolution: "opener@npm:1.5.2"
+  bin:
+    opener: bin/opener-bin.js
+  checksum: 33b620c0d53d5b883f2abc6687dd1c5fd394d270dbe33a6356f2d71e0a2ec85b100d5bac94694198ccf5c30d592da863b2292c5539009c715a9c80c697b4f6cc
   languageName: node
   linkType: hard
 
@@ -10666,6 +10745,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"sirv@npm:^1.0.7":
+  version: 1.0.19
+  resolution: "sirv@npm:1.0.19"
+  dependencies:
+    "@polka/url": ^1.0.0-next.20
+    mrmime: ^1.0.0
+    totalist: ^1.0.0
+  checksum: c943cfc61baf85f05f125451796212ec35d4377af4da90ae8ec1fa23e6d7b0b4d9c74a8fbf65af83c94e669e88a09dc6451ba99154235eead4393c10dda5b07c
+  languageName: node
+  linkType: hard
+
 "slash@npm:^3.0.0":
   version: 3.0.0
   resolution: "slash@npm:3.0.0"
@@ -11233,20 +11323,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"three.meshline@npm:^1.3.0":
-  version: 1.3.0
-  resolution: "three.meshline@npm:1.3.0"
-  checksum: 08bf570ddf932aa7846c37d661b620c6fc5f75f7ae63febcdb1ae4bcba1fa86b62301175082a3fd2a33db0aa7073746797014e1b647d63a1ca389fced2de50dc
-  languageName: node
-  linkType: hard
-
-"three@npm:^0.129.0":
-  version: 0.129.0
-  resolution: "three@npm:0.129.0"
-  checksum: 1fbe60ee56a3f1ff0d715f078364f3f521907e15d632e52a786ffd493e400fbcdab71e04150523bf15e69b310dd5267cd8dd3f97c5f3e2b3abfa5522b954fb5b
-  languageName: node
-  linkType: hard
-
 "three@npm:^0.136.0":
   version: 0.136.0
   resolution: "three@npm:0.136.0"
@@ -11340,6 +11416,13 @@ __metadata:
   version: 1.0.6
   resolution: "toggle-selection@npm:1.0.6"
   checksum: a90dc80ed1e7b18db8f4e16e86a5574f87632dc729cfc07d9ea3ced50021ad42bb4e08f22c0913e0b98e3837b0b717e0a51613c65f30418e21eb99da6556a74c
+  languageName: node
+  linkType: hard
+
+"totalist@npm:^1.0.0":
+  version: 1.1.0
+  resolution: "totalist@npm:1.1.0"
+  checksum: dfab80c7104a1d170adc8c18782d6c04b7df08352dec452191208c66395f7ef2af7537ddfa2cf1decbdcfab1a47afbbf0dec6543ea191da98c1c6e1599f86adc
   languageName: node
   linkType: hard
 
@@ -11846,6 +11929,7 @@ __metadata:
     "@commitlint/cli": ^16.1.0
     "@commitlint/config-conventional": ^16.0.0
     "@commitlint/cz-commitlint": ^16.1.0
+    "@commitlint/prompt": ^16.1.0
     "@cosmjs/cosmwasm-stargate": 0.27.1
     "@cosmjs/proto-signing": 0.27.1
     "@cosmjs/stargate": 0.27.1
@@ -11854,7 +11938,8 @@ __metadata:
     "@emotion/server": ^11.4.0
     "@emotion/styled": ^11.6.0
     "@keplr-wallet/types": ^0.9.10
-    "@next/eslint-plugin-next": 12.0.8
+    "@next/bundle-analyzer": ^12.0.9
+    "@next/eslint-plugin-next": 12.0.9
     "@react-spring/three": ^9.4.2
     "@react-three/drei": 9.0.0-beta.1
     "@react-three/fiber": 8.0.0-beta-05
@@ -11869,16 +11954,16 @@ __metadata:
     "@usedapp/core": ^0.10.0
     ahooks: ^3.1.9
     camera-controls: ^1.34.1
-    commitizen: 4.2.4
+    commitizen: ^4.2.4
+    cross-env: ^7.0.3
     eslint: 7.32.0
     eslint-config-canonical: 33.0.1
     eslint-config-prettier: 8.3.0
     eslint-plugin-prettier: 4.0.0
     framer-motion: ^6.2.3
-    husky: 7.0.4
+    husky: ^7.0.0
     lint-staged: 12.2.2
     lodash: 4.17.21
-    meshline: ^2.0.3
     nanoid: 3.2.0
     next: 12.0.9
     next-seo: ^5.0.0
@@ -11892,7 +11977,6 @@ __metadata:
     recoil: ^0.5.2
     release-it: 14.12.3
     three: ^0.136.0
-    three.meshline: ^1.3.0
     ts-shader-loader: ^1.0.6
     typescript: ^4.5.5
   languageName: unknown
@@ -11932,6 +12016,25 @@ __metadata:
   version: 3.0.1
   resolution: "webidl-conversions@npm:3.0.1"
   checksum: c92a0a6ab95314bde9c32e1d0a6dfac83b578f8fa5f21e675bc2706ed6981bc26b7eb7e6a1fab158e5ce4adf9caa4a0aee49a52505d4d13c7be545f15021b17c
+  languageName: node
+  linkType: hard
+
+"webpack-bundle-analyzer@npm:4.3.0":
+  version: 4.3.0
+  resolution: "webpack-bundle-analyzer@npm:4.3.0"
+  dependencies:
+    acorn: ^8.0.4
+    acorn-walk: ^8.0.0
+    chalk: ^4.1.0
+    commander: ^6.2.0
+    gzip-size: ^6.0.0
+    lodash: ^4.17.20
+    opener: ^1.5.2
+    sirv: ^1.0.7
+    ws: ^7.3.1
+  bin:
+    webpack-bundle-analyzer: lib/bin/analyzer.js
+  checksum: 00b7bf4ac9fca17062b66b6897145b94e87153d3ec8815f0e0c05a3b8a1ca75320262db01a5fa634f604ee3d41aecde1ee59838d05b6d03cd5be62eb1addbcf8
   languageName: node
   linkType: hard
 
@@ -12068,7 +12171,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^5.2.0 || ^6.0.0 || ^7.0.0, ws@npm:^7":
+"ws@npm:^5.2.0 || ^6.0.0 || ^7.0.0, ws@npm:^7, ws@npm:^7.3.1":
   version: 7.5.6
   resolution: "ws@npm:7.5.6"
   peerDependencies:

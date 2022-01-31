@@ -3,7 +3,6 @@ import {
 	Text,
 	Button,
 	Stack,
-	ButtonGroup,
 	IconButton,
 	Flex,
 	HStack,
@@ -11,10 +10,8 @@ import {
 	useUpdateEffect,
 	Heading
 } from "@chakra-ui/react"
-import { Stepper, Step3 } from "@components/elements"
-import { Step1 } from "@components/elements/step1"
-import { Step2 } from "@components/elements/step2"
-import { activePlanetState } from "@state/atoms/ui"
+import Stepper from "@components/elements/Stepper"
+import { activePlanetState, activeStepState } from "@state/atoms/ui"
 import { useDebounceEffect, useMount } from "ahooks"
 import type { Variants } from "framer-motion"
 import {
@@ -25,9 +22,23 @@ import {
 	MotionConfig,
 	useAnimation
 } from "framer-motion"
-import { ArrowFatLinesLeft, ArrowsClockwise, Parachute } from "phosphor-react"
+import dynamic from "next/dynamic"
+import { ArrowFatLinesLeft } from "phosphor-react"
 import { useState } from "react"
 import { useRecoilState } from "recoil"
+
+const Step0 = dynamic(() => import("@components/elements/Step0"), {
+	ssr: false
+})
+const Step1 = dynamic(() => import("@components/elements/Step1"), {
+	ssr: false
+})
+const Step2 = dynamic(() => import("@components/elements/Step2"), {
+	ssr: false
+})
+const Step3 = dynamic(() => import("@components/elements/Step3"), {
+	ssr: false
+})
 
 const stackVariants: Variants = {
 	hidden: {
@@ -130,10 +141,11 @@ const MainSection = () => {
 	const stackHeaderControls = useAnimation()
 	const stackFooterControls = useAnimation()
 	const backIconControls = useAnimation()
-	const [[activeStep, direction], setActiveStep] = useState([0, 0])
 	const [isHover, setHover] = useState(false)
 	const [isDisabled, setDisabled] = useState(true)
 	const [, setActivePlanet] = useRecoilState(activePlanetState)
+	const [[activeStep, direction], setActiveStep] =
+		useRecoilState(activeStepState)
 
 	const stepCount = 3
 
@@ -375,50 +387,23 @@ const MainSection = () => {
 						{/* Step */}
 						<AnimatePresence custom={direction} exitBeforeEnter>
 							{activeStep === 0 && (
-								<ButtonGroup
+								<Flex
+									align="center"
 									animate="center"
 									as={motion.div}
-									colorScheme="brand"
 									custom={direction}
+									direction="column"
 									exit="exit"
-									h="20rem"
+									h="full"
 									initial="enter"
+									justify="center"
 									key="Step0"
-									p={6}
-									spacing={6}
-									variant="outline"
+									pos="relative"
 									variants={stepVariants}
-									w="20rem"
+									w="full"
 								>
-									<Button
-										as={motion.button}
-										disabled={isDisabled}
-										h="full"
-										key="ConvertButton"
-										onClick={() => {
-											setActivePlanet("juno")
-											paginate(1)
-										}}
-										rounded="xl"
-									>
-										<Stack align="center" direction="column" p={4}>
-											<ArrowsClockwise size={42} weight="duotone" />
-											<Text>Convert</Text>
-										</Stack>
-									</Button>
-									<Button
-										as={motion.button}
-										disabled
-										h="full"
-										key="AirdropButton"
-										rounded="xl"
-									>
-										<Stack align="center" direction="column" p={4}>
-											<Parachute size={42} weight="duotone" />
-											<Text>Airdrop</Text>
-										</Stack>
-									</Button>
-								</ButtonGroup>
+									<Step0 />
+								</Flex>
 							)}
 							{activeStep === 1 && (
 								<Flex

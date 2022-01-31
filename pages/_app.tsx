@@ -1,4 +1,3 @@
-/* eslint-disable no-negated-condition */
 // eslint-disable-next-line canonical/filename-match-exported
 import { ChakraProvider, Flex } from "@chakra-ui/react"
 import LoadingScreen from "@components/sections/LoadingScreen"

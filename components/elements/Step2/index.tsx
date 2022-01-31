@@ -46,4 +46,4 @@ const Step2 = () => {
 	)
 }
 
-export { Step2 }
+export default Step2

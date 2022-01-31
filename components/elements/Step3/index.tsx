@@ -48,4 +48,4 @@ const Step3 = () => {
 	)
 }
 
-export { Step3 }
+export default Step3

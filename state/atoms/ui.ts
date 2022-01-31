@@ -5,9 +5,9 @@ export const activePlanetState = atom<string>({
 	key: "activePlanetState"
 })
 
-export const isLoadingState = atom<boolean>({
-	default: true,
-	key: "isLoadingState"
+export const activeStepState = atom<number[]>({
+	default: [0, 0],
+	key: "activeStepState"
 })
 
 export const expandState = atom<boolean>({

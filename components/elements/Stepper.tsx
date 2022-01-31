@@ -292,7 +292,7 @@ const Stepper = ({ activeStep }: StepperProps) => {
 				await line1.start("initial")
 			}
 
-			sequence().finally(() => {})
+			void sequence()
 		}
 
 		if (active === 1) {
@@ -301,7 +301,7 @@ const Stepper = ({ activeStep }: StepperProps) => {
 				await secondCircle.start("start")
 			}
 
-			sequence().finally(() => {})
+			void sequence()
 		}
 
 		if (active === 2) {
@@ -310,7 +310,7 @@ const Stepper = ({ activeStep }: StepperProps) => {
 				await thirdCircle.start("start")
 			}
 
-			sequence().finally(() => {})
+			void sequence()
 		}
 
 		if (active === 3) {
@@ -319,7 +319,7 @@ const Stepper = ({ activeStep }: StepperProps) => {
 				await fourthCircle.start("start")
 			}
 
-			sequence().finally(() => {})
+			void sequence()
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [active])
@@ -360,4 +360,4 @@ const Stepper = ({ activeStep }: StepperProps) => {
 	)
 }
 
-export { Stepper }
+export default Stepper

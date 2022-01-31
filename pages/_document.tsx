@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 /* eslint-disable canonical/filename-match-exported */
-/* eslint-disable react/jsx-props-no-spreading */
 import createEmotionServer from "@emotion/server/create-instance"
 import type { DocumentContext } from "next/document"
 import Document, { Html, Head, Main, NextScript } from "next/document"

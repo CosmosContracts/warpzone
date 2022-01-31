@@ -72,4 +72,4 @@ const Step1 = () => {
 	)
 }
 
-export { Step1 }
+export default Step1
