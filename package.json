@@ -39,6 +39,7 @@
 		"meshline": "^2.0.3",
 		"nanoid": "3.2.0",
 		"next": "12.0.9",
+		"next-seo": "^5.0.0",
 		"phosphor-react": "^1.4.0",
 		"postprocessing": "^6.23.5",
 		"react": "rc",
