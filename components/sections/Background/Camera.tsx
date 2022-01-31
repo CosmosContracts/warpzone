@@ -18,7 +18,6 @@ export const Camera = ({ ...props }) => {
 	}
 
 	const toJunoAnim = () => {
-		void cameraControlsRef.current?.rotateTo(0, Math.PI / 2, true)
 		void cameraControlsRef.current?.setLookAt(
 			2_000,
 			2_000,
@@ -32,12 +31,12 @@ export const Camera = ({ ...props }) => {
 
 	const toEthereumAnim = () => {
 		void cameraControlsRef.current?.setLookAt(
-			800,
-			800,
-			1_000,
-			1_400,
-			1_400,
 			400,
+			-2_000,
+			500,
+			2_000,
+			-1_600,
+			1_600,
 			true
 		)
 	}
@@ -94,7 +93,7 @@ export const Camera = ({ ...props }) => {
 			<CameraControls ref={cameraControlsRef} />
 			<PerspectiveCamera
 				far={4_000}
-				fov={70}
+				fov={75}
 				makeDefault
 				near={3}
 				position={[0, 0, 4_000]}

@@ -9,7 +9,7 @@ export const Stars = () => {
 	const starParticlesRef = useRef<THREE.BufferGeometry>(null)
 	const materialRef = useRef<THREE.PointsMaterial>(null)
 
-	const particleCount = 4_000
+	const particleCount = 6_000
 
 	const starPosArray = new Float32Array(particleCount * 3)
 	const starPos = new BufferAttribute(starPosArray, 3)
@@ -37,7 +37,7 @@ export const Stars = () => {
 				alphaTest={0.5}
 				map={starTexture}
 				ref={materialRef}
-				size={3}
+				size={4}
 				sizeAttenuation
 				transparent
 			/>

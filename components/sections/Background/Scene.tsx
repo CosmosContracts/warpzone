@@ -1,4 +1,3 @@
-import { Environment } from "@react-three/drei"
 import { Canvas } from "@react-three/fiber"
 import { EffectComposer, Bloom } from "@react-three/postprocessing"
 import { KernelSize } from "postprocessing"
@@ -33,12 +32,9 @@ export const Scene = () => {
 		>
 			<RecoilBridge>
 				<Camera />
-				<Environment
-					background={false}
-					files={["px.png", "nx.png", "py.png", "ny.png", "pz.png", "nz.png"]}
-					path="/assets/background/skybox/"
-				/>
-				<ambientLight ref={ambientLightRef} />
+				<group>
+					<ambientLight ref={ambientLightRef} />
+				</group>
 				<Stars />
 				<Suspense fallback={null}>
 					<fogExp2 args={["#000202", 0.000_5]} attach="fog" />

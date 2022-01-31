@@ -74,7 +74,7 @@ export const Ethereum = () => {
 					<shaderMaterial attach="material" {...ethereumAtmosphere} />
 				</mesh>
 				<mesh ref={ethereumPlanetRef} rotation={[-200, -200, -200]}>
-					<sphereGeometry args={[5, 32, 32]} />
+					<sphereGeometry args={[4.9, 32, 32]} />
 					<meshStandardMaterial
 						attach="material"
 						fog
