@@ -1,14 +1,13 @@
 import { atom } from "recoil"
-import { Vector3 } from "three"
 
 export const activePlanetState = atom<string>({
 	default: "warp",
 	key: "activePlanetState"
 })
 
-export const activePlanetCoordsState = atom<THREE.Vector3>({
-	default: new Vector3(0, 0, 0),
-	key: "activePlanetCoordsState"
+export const isLoadingState = atom<boolean>({
+	default: true,
+	key: "isLoadingState"
 })
 
 export const expandState = atom<boolean>({

@@ -1,11 +1,14 @@
+/* eslint-disable no-negated-condition */
 // eslint-disable-next-line canonical/filename-match-exported
 import { ChakraProvider, Flex } from "@chakra-ui/react"
+import LoadingScreen from "@components/sections/LoadingScreen"
 import { queryClient } from "@services/client"
 import type { Config } from "@usedapp/core"
 import { Mainnet, DAppProvider as EVMProvider } from "@usedapp/core"
 import type { AppProps } from "next/app"
 import dynamic from "next/dynamic"
 import Head from "next/head"
+import { useEffect, useState } from "react"
 import { QueryClientProvider } from "react-query"
 // import { ReactQueryDevtools } from "react-query/devtools"
 import { RecoilRoot } from "recoil"
@@ -24,6 +27,15 @@ const metamaskConfig: Config = {
 }
 
 const App = ({ Component, pageProps, router }: AppProps) => {
+	const [isLoading, setLoading] = useState<boolean>(true)
+
+	useEffect(() => {
+		setTimeout(() => {
+			setLoading(false)
+		}, 1_600)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
+
 	return (
 		<>
 			<Head>
@@ -67,6 +79,7 @@ const App = ({ Component, pageProps, router }: AppProps) => {
 				<RecoilRoot>
 					<EVMProvider config={metamaskConfig}>
 						<QueryClientProvider client={queryClient}>
+							{isLoading && <LoadingScreen />}
 							<Flex className="test" h="100vh" pointerEvents="none" w="100vw">
 								<Component key={router.route} {...pageProps} />
 								<Background />

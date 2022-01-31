@@ -35,9 +35,9 @@ export const Scene = () => {
 				<group>
 					<ambientLight ref={ambientLightRef} />
 				</group>
+				<fogExp2 args={["#000202", 0.000_5]} attach="fog" />
 				<Stars />
 				<Suspense fallback={null}>
-					<fogExp2 args={["#000202", 0.000_5]} attach="fog" />
 					<Warpzone position={[0, 0, 0]} />
 					<Juno />
 					<Ethereum />

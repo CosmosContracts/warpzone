@@ -1,4 +1,4 @@
-import { Center, CircularProgress, Flex } from "@chakra-ui/react"
+import { Flex } from "@chakra-ui/react"
 import { motion } from "framer-motion"
 import { Suspense } from "react"
 import { Scene } from "./Scene"
@@ -15,13 +15,7 @@ const Background = () => {
 			w="full"
 			zIndex={0}
 		>
-			<Suspense
-				fallback={
-					<Center w="full">
-						<CircularProgress color="brand" isIndeterminate size="5xl" />
-					</Center>
-				}
-			>
+			<Suspense fallback="">
 				<Scene />
 			</Suspense>
 		</Flex>

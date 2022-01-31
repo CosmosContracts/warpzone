@@ -31,11 +31,11 @@ export const Camera = ({ ...props }) => {
 
 	const toEthereumAnim = () => {
 		void cameraControlsRef.current?.setLookAt(
-			400,
-			-2_000,
-			500,
-			2_000,
-			-1_600,
+			3_000,
+			3_000,
+			1_300,
+			3_600,
+			3_600,
 			1_600,
 			true
 		)
@@ -92,7 +92,7 @@ export const Camera = ({ ...props }) => {
 		<>
 			<CameraControls ref={cameraControlsRef} />
 			<PerspectiveCamera
-				far={4_000}
+				far={12_000}
 				fov={75}
 				makeDefault
 				near={3}
