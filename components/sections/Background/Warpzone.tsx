@@ -10,14 +10,12 @@ import { degToRad } from "three/src/math/MathUtils"
 
 export const Warpzone = (props: JSX.IntrinsicElements["points"]) => {
 	const circleRef = useRef<THREE.Points>(null)
-	const innerCircleRef = useRef<THREE.Mesh>(null)
 	const activePlanet = useRecoilValue(activePlanetState)
 
 	const circleTexture = useTexture("/assets/star.png")
 
 	useFrame(() => {
 		circleRef.current.rotation.z -= 0.000_8
-		innerCircleRef.current.rotation.z += 0.000_4
 		if (activePlanet === "warpTop") {
 			circleRef.current.rotation.x = degToRad(90)
 		} else {
