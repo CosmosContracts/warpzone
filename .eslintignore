@@ -28,6 +28,7 @@
 
 *.config.js
 *.config.cjs
+/package.json
 
 # debug
 npm-debug.log*

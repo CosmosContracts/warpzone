@@ -10,7 +10,7 @@ import {
 	useUpdateEffect,
 	Heading
 } from "@chakra-ui/react"
-import Stepper from "@components/elements/Stepper"
+import Logo from "@components/elements/Logo"
 import { activePlanetState, activeStepState } from "@state/atoms/ui"
 import { useDebounceEffect, useMount } from "ahooks"
 import type { Variants } from "framer-motion"
@@ -28,6 +28,9 @@ import { useState } from "react"
 import { useRecoilState } from "recoil"
 
 const Step0 = dynamic(() => import("@components/elements/Step0"), {
+	ssr: false
+})
+const Stepper = dynamic(() => import("@components/elements/Stepper"), {
 	ssr: false
 })
 const Step1 = dynamic(() => import("@components/elements/Step1"), {
@@ -92,13 +95,9 @@ const stepVariants: Variants = {
 	}
 }
 const headingVariants: Variants = {
-	glow: {
-		opacity: 1,
-		textShadow: "0 0 30px #0DD69E, 0 0 10px #4dbbc7"
-	},
 	hidden: {
 		opacity: 1,
-		y: 0
+		y: 30
 	},
 	show: {
 		opacity: 1,
@@ -251,9 +250,10 @@ const MainSection = () => {
 					direction="column"
 					fontWeight={400}
 					initial="hidden"
-					inset="1rem 0 auto 0"
+					inset="1rem auto auto auto"
 					justify="center"
 					letterSpacing={15}
+					maxW="6xl"
 					pos="absolute"
 					variants={headingVariants}
 				>
@@ -267,26 +267,55 @@ const MainSection = () => {
 						w="20rem"
 					>
 						<Text
+							align="right"
+							color="offwhite"
+							flex={5}
+							fontFamily="heading"
+							fontSize="14"
+							fontWeight="100"
+							px={0}
+						>
+							Juno
+						</Text>
+						<Text
 							align="center"
 							color="offwhite"
 							flex={1}
 							fontFamily="heading"
 							fontSize="14"
 							fontWeight="100"
-							px={3}
+							px={0}
 						>
-							Juno x Ethereum
+							x
+						</Text>
+						<Text
+							align="left"
+							color="offwhite"
+							flex={5}
+							fontFamily="heading"
+							fontSize="14"
+							fontWeight="100"
+							px={0}
+						>
+							Ethereum
 						</Text>
 					</HStack>
-					<Heading
-						animate="glow"
-						as={motion.h1}
-						fontSize="52"
+					<HStack
+						animate={activeStep === 0 ? "show" : "hidden"}
+						as={motion.div}
+						fontSize={42}
+						h="3rem"
 						initial="hidden"
+						justify="center"
+						spacing={0}
 						variants={headingVariants}
+						w="full"
 					>
-						WARPZONE
-					</Heading>
+						<Heading textAlign="right">WARPZ</Heading>
+						<Logo />
+						<Heading>NE</Heading>
+					</HStack>
+
 					<HStack
 						align="center"
 						color="brand.1"

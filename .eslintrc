@@ -1,13 +1,34 @@
 {
 	"extends": ["canonical", "prettier"],
+	// "plugins": ["@next/next"],
 	"rules": {
+		"eslint-comments/no-unlimited-disable": "off",
+		"unicorn/no-abusive-eslint-disable": "off",
 		"no-warning-comments": "off",
 		"id-length": ["error", { "min": 1 }],
 		"import/no-unassigned-import": ["warn", { "allow": ["**/*.css"] }],
 		"react/jsx-first-prop-new-line": ["error", "always"],
 		"no-param-reassign": ["error", { "props": false }],
 		"func-style": "off",
-		"react-hooks/exhaustive-deps": "warn"
+		"react-hooks/exhaustive-deps": "warn",
+		"@next/next/google-font-display": "warn",
+		"@next/next/google-font-preconnect": "warn",
+		"@next/next/inline-script-id": "error",
+		"@next/next/link-passhref": "warn",
+		"@next/next/next-script-for-ga": "warn",
+		"@next/next/no-css-tags": "warn",
+		"@next/next/no-document-import-in-page": "error",
+		"@next/next/no-duplicate-head": "error",
+		"@next/next/no-head-import-in-document": "error",
+		"@next/next/no-html-link-for-pages": "warn",
+		"@next/next/no-page-custom-font": "warn",
+		"@next/next/no-script-in-document": "error",
+		"@next/next/no-script-in-head": "error",
+		"@next/next/no-server-import-in-page": "error",
+		"@next/next/no-sync-scripts": "warn",
+		"@next/next/no-title-in-document-head": "warn",
+		"@next/next/no-typos": "warn",
+		"@next/next/no-unwanted-polyfillio": "warn"
 	},
 	"overrides": [
 		{

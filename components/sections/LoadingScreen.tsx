@@ -32,15 +32,7 @@ const LoadingScreen: FC = () => {
 				w="100vw"
 				zIndex="4"
 			/>
-			<Box
-				bg="whiteAlpha.50"
-				h="full"
-				p="15rem"
-				pos="absolute"
-				top="0"
-				w="full"
-				zIndex="5"
-			>
+			<Box h="full" p="15rem" pos="absolute" top="0" w="full" zIndex="5">
 				<motion.svg
 					fill="transparent"
 					height="100%"

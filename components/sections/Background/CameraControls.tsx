@@ -1,13 +1,10 @@
-/* eslint-disable unicorn/no-abusive-eslint-disable */
-/* eslint-disable eslint-comments/no-unlimited-disable */
+// eslint-disable-next-line unicorn/no-abusive-eslint-disable
 /* eslint-disable */
-import React, {
-	forwardRef,
-	ForwardedRef,
-	MutableRefObject,
-	useEffect,
-	useRef
-} from "react"
+import type { ReactThreeFiber } from "@react-three/fiber"
+import { extend, useFrame, useThree } from "@react-three/fiber"
+import CameraControlsDefault from "camera-controls"
+import type { ForwardedRef, MutableRefObject } from "react"
+import React, { forwardRef, useEffect, useRef } from "react"
 import {
 	MOUSE,
 	Vector2,
@@ -21,8 +18,6 @@ import {
 	Raycaster,
 	MathUtils
 } from "three"
-import { ReactThreeFiber, extend, useFrame, useThree } from "@react-three/fiber"
-import CameraControlsDefault from "camera-controls"
 
 declare global {
 	namespace JSX {
@@ -36,20 +31,20 @@ declare global {
 }
 
 const subsetOfTHREE = {
-	MOUSE: MOUSE,
-	Vector2: Vector2,
-	Vector3: Vector3,
-	Vector4: Vector4,
-	Quaternion: Quaternion,
-	Matrix4: Matrix4,
-	Spherical: Spherical,
-	Box3: Box3,
-	Sphere: Sphere,
-	Raycaster: Raycaster,
+	Box3,
 	MathUtils: {
-		DEG2RAD: MathUtils.DEG2RAD,
-		clamp: MathUtils.clamp
-	}
+		clamp: MathUtils.clamp,
+		DEG2RAD: MathUtils.DEG2RAD
+	},
+	Matrix4,
+	MOUSE,
+	Quaternion,
+	Raycaster,
+	Sphere,
+	Spherical,
+	Vector2,
+	Vector3,
+	Vector4
 }
 
 CameraControlsDefault.install({ THREE: subsetOfTHREE })
@@ -64,8 +59,8 @@ export const CameraControls = forwardRef<CameraControlsDefault, unknown>(
 		useEffect(() => () => cameraControls.current?.dispose(), [])
 		return (
 			<cameraControlsDefault
-				ref={mergeRefs<CameraControlsDefault>(cameraControls, ref)}
 				args={[camera, renderer.domElement]}
+				ref={mergeReferences<CameraControlsDefault>(cameraControls, ref)}
 			/>
 		)
 	}
@@ -73,9 +68,11 @@ export const CameraControls = forwardRef<CameraControlsDefault, unknown>(
 
 export type CameraControls = CameraControlsDefault
 
-function mergeRefs<T>(...refs: (MutableRefObject<T> | ForwardedRef<T>)[]) {
+function mergeReferences<T>(
+	...references: Array<ForwardedRef<T> | MutableRefObject<T>>
+) {
 	return (instance: T): void => {
-		for (const ref of refs) {
+		for (const ref of references) {
 			if (typeof ref === "function") {
 				ref(instance)
 			} else if (ref) {

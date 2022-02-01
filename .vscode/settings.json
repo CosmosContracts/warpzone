@@ -1,7 +1,6 @@
 {
 	"search.exclude": {
-		"**/.yarn": true,
-		"**/.pnp.*": true
+		"**/.yarn": true
 	},
 	"editor.codeActionsOnSave": {
 		"source.fixAll.eslint": true
@@ -18,6 +17,7 @@
 	"smoothtype.duration": 60,
 	"smoothtype.autoReload": true,
 	"eslint.nodePath": ".yarn/sdks",
+	"eslint.validate": ["javascript", "json", "typescript", "typescriptreact"],
 	"files.exclude": {
 		"**/.git": false
 	}
