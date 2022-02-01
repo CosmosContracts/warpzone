@@ -11959,6 +11959,7 @@ __metadata:
     eslint-config-prettier: 8.3.0
     eslint-plugin-prettier: 4.0.0
     framer-motion: ^6.2.3
+    glsl-noise: ^0.0.0
     husky: ^7.0.0
     lint-staged: 12.2.2
     lodash: 4.17.21

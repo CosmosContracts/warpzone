@@ -101,17 +101,17 @@ export const Juno = () => {
 	useFrame((state) => {
 		netaRef.current.rotation.z += 0.002
 		const target = {
-			x: (1 - state.mouse.x) * 5,
-			y: (1 - state.mouse.y) * 5
+			x: (1 - state.mouse.x) * 3,
+			y: (1 - state.mouse.y) * 3
 		}
 
 		if (isActive) {
 			junoRef.current.rotation.y =
 				-0.05 * (target.x - junoRef.current.rotation.z) + junoRotX.get() - 0.2
 			junoSystemRef.current.position.x =
-				0.1 * (target.y - junoSystemRef.current.position.x) + x.get()
+				0.07 * (target.y - junoSystemRef.current.position.x) + x.get()
 			junoSystemRef.current.position.y =
-				0.1 * (target.x - junoSystemRef.current.position.y) + y.get()
+				0.07 * (target.x - junoSystemRef.current.position.y) + y.get()
 		}
 	})
 

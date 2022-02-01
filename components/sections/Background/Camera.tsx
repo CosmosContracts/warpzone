@@ -42,7 +42,7 @@ export const Camera = ({ ...props }) => {
 	}
 
 	const toEnterWarpAnim = () => {
-		void cameraControlsRef.current?.setLookAt(0, 800, 0, 0, 0, 0, true)
+		void cameraControlsRef.current?.setLookAt(0, 0, 700, 0, 0, 0, true)
 	}
 
 	useEffect(() => {
