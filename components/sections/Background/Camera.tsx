@@ -67,7 +67,7 @@ export const Camera = ({ ...props }) => {
 
 	useFrame(() => {
 		if (cameraRef.current.position.z >= 4_000) {
-			void cameraControlsRef.current?.dollyTo(500, true)
+			void cameraControlsRef.current?.dollyTo(700, true)
 		}
 	})
 
@@ -81,8 +81,8 @@ export const Camera = ({ ...props }) => {
 
 	useFrame((state) => {
 		const target = {
-			x: (1 - state.mouse.x) * 0.2,
-			y: (1 - state.mouse.y) * 0.2
+			x: state.mouse.x * 0.2,
+			y: state.mouse.y * 0.2
 		}
 		state.camera.rotation.x += 0.1 * (target.y - state.camera.rotation.x)
 		state.camera.rotation.y += 0.1 * (target.x - state.camera.rotation.y)

@@ -1,26 +1,41 @@
+/* eslint-disable @babel/no-unused-expressions */
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+import { useTexture } from "@react-three/drei"
 import { useFrame } from "@react-three/fiber"
 import { activePlanetState } from "@state/atoms/ui"
 import { useRef } from "react"
 import { useRecoilValue } from "recoil"
+import type * as THREE from "three"
 import { degToRad } from "three/src/math/MathUtils"
 
 export const Warpzone = (props: JSX.IntrinsicElements["points"]) => {
-	const tunnelRef = useRef<THREE.Points>(null)
+	const circleRef = useRef<THREE.Points>(null)
+	const innerCircleRef = useRef<THREE.Mesh>(null)
 	const activePlanet = useRecoilValue(activePlanetState)
 
+	const circleTexture = useTexture("/assets/star.png")
+
 	useFrame(() => {
-		tunnelRef.current.rotation.z += 0.002_5
+		circleRef.current.rotation.z -= 0.000_8
+		innerCircleRef.current.rotation.z += 0.000_4
 		if (activePlanet === "warpTop") {
-			tunnelRef.current.rotation.x = degToRad(90)
+			circleRef.current.rotation.x = degToRad(90)
 		} else {
-			tunnelRef.current.rotation.x = degToRad(0)
+			circleRef.current.rotation.x = degToRad(0)
 		}
 	})
 
 	return (
-		<points {...props} ref={tunnelRef}>
-			<torusGeometry args={[300, 100, 32, 32]} />
-			<pointsMaterial color="#0DD69E" size={10} />
-		</points>
+		<group>
+			<points ref={circleRef} {...props}>
+				<torusGeometry args={[300, 40, 8, 32]} />
+				<pointsMaterial
+					alphaTest={0.7}
+					color="#0DD69E"
+					map={circleTexture}
+					size={25}
+				/>
+			</points>
+		</group>
 	)
 }

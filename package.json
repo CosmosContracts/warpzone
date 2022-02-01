@@ -48,6 +48,7 @@
 		"react-query": "3.34.11",
 		"recoil": "^0.5.2",
 		"three": "^0.136.0",
+		"three-nebula": "^10.0.3",
 		"ts-shader-loader": "^1.0.6"
 	},
 	"devDependencies": {

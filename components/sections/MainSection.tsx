@@ -8,7 +8,8 @@ import {
 	HStack,
 	Box,
 	useUpdateEffect,
-	Heading
+	Heading,
+	Badge
 } from "@chakra-ui/react"
 import Logo from "@components/elements/Logo"
 import { activePlanetState, activeStepState } from "@state/atoms/ui"
@@ -132,6 +133,18 @@ const backIconVariants: Variants = {
 	rest: {
 		color: "rgba(248, 250, 250, 0.45)",
 		x: 0
+	}
+}
+const LogoVariants: Variants = {
+	spin: {
+		rotate: [0, 360],
+		scale: [0.75, 0.65, 0.75],
+		transition: {
+			duration: 12,
+			ease: "linear",
+			repeat: Number.POSITIVE_INFINITY,
+			repeatType: "loop"
+		}
 	}
 }
 
@@ -303,7 +316,7 @@ const MainSection = () => {
 					<HStack
 						animate={activeStep === 0 ? "show" : "hidden"}
 						as={motion.div}
-						fontSize={42}
+						fontSize={48}
 						h="3rem"
 						initial="hidden"
 						justify="center"
@@ -312,14 +325,26 @@ const MainSection = () => {
 						w="full"
 					>
 						<Heading textAlign="right">WARPZ</Heading>
-						<Logo />
+						<Box
+							animate="spin"
+							as={motion.div}
+							boxSize="full"
+							pos="relative"
+							right={1}
+							style={{ scale: 0.65 }}
+							top={1}
+							variants={LogoVariants}
+						>
+							<Logo />
+						</Box>
+
 						<Heading>NE</Heading>
 					</HStack>
 
 					<HStack
 						align="center"
 						color="brand.1"
-						inset="-0.75rem auto auto 0"
+						inset="0 auto auto 0"
 						letterSpacing={3}
 						pos="relative"
 						spacing={0}
@@ -333,16 +358,9 @@ const MainSection = () => {
 							h="0.1rem"
 							rounded="sm"
 						/>
-						<Text
-							align="center"
-							color="offwhite"
-							flex={1}
-							flexGrow={1}
-							fontFamily="heading"
-							px={3}
-						>
-							Interface
-						</Text>
+						<Badge colorScheme="teal" rounded="md">
+							pre-alpha
+						</Badge>
 						<Box bg="brand.200" flex={1} flexGrow={2} h="0.1rem" rounded="sm" />
 					</HStack>
 				</Flex>

@@ -1,28 +1,7 @@
-import type { Variants } from "framer-motion"
 import { motion } from "framer-motion"
 
-const LogoVariants: Variants = {
-	normal: {
-		rotateZ: 0
-	},
-	spin: {
-		rotateZ: 360
-	}
-}
-
 const Logo = () => (
-	<motion.svg
-		animate="spin"
-		initial="normal"
-		style={{ fontSize: 38, position: "relative", right: 1, top: 0.8 }}
-		transition={{
-			duration: 1,
-			repeat: Number.POSITIVE_INFINITY,
-			repeatType: "loop"
-		}}
-		variants={LogoVariants}
-		viewBox="0 0 100 100"
-	>
+	<motion.svg viewBox="0 0 100 100">
 		<path
 			d="M45 13.1c9.7-5.6 21.9-4.4 30.3 3l4.6 4-6-1.2c-7.7-1.5-15.9-.1-23.2 4.1-7.3 4.2-12.6 10.6-15.1 18l-2 5.8-1.2-6C30.3 29.9 35.3 18.7 45 13.1z"
 			fill="rgb(241, 242, 243)"
