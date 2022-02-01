@@ -1336,20 +1336,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@commitlint/prompt@npm:^16.1.0":
-  version: 16.1.0
-  resolution: "@commitlint/prompt@npm:16.1.0"
-  dependencies:
-    "@commitlint/ensure": ^16.0.0
-    "@commitlint/load": ^16.1.0
-    "@commitlint/types": ^16.0.0
-    chalk: ^4.0.0
-    inquirer: ^6.5.2
-    lodash: ^4.17.19
-  checksum: e64eb45dee36f2bcb345cf771a009a35f06e99dc410f61d59c3487a5f843bceb1d1ed8cc67b39b1481b57c2ab8f53d0260529c08165cca6b862482f192fa4ad1
-  languageName: node
-  linkType: hard
-
 "@commitlint/read@npm:^16.0.0":
   version: 16.0.0
   resolution: "@commitlint/read@npm:16.0.0"
@@ -7500,7 +7486,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inquirer@npm:6.5.2, inquirer@npm:^6.5.2":
+"inquirer@npm:6.5.2":
   version: 6.5.2
   resolution: "inquirer@npm:6.5.2"
   dependencies:
@@ -11929,7 +11915,6 @@ __metadata:
     "@commitlint/cli": ^16.1.0
     "@commitlint/config-conventional": ^16.0.0
     "@commitlint/cz-commitlint": ^16.1.0
-    "@commitlint/prompt": ^16.1.0
     "@cosmjs/cosmwasm-stargate": 0.27.1
     "@cosmjs/proto-signing": 0.27.1
     "@cosmjs/stargate": 0.27.1
