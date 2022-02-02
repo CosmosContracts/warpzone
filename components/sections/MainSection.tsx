@@ -97,8 +97,8 @@ const stepVariants: Variants = {
 }
 const headingVariants: Variants = {
 	hidden: {
-		opacity: 1,
-		y: 30
+		opacity: 0,
+		y: -100
 	},
 	show: {
 		opacity: 1,
@@ -138,7 +138,6 @@ const backIconVariants: Variants = {
 const LogoVariants: Variants = {
 	spin: {
 		rotate: [0, 360],
-		scale: [0.75, 0.65, 0.75],
 		transition: {
 			duration: 12,
 			ease: "linear",
@@ -272,11 +271,15 @@ const MainSection = () => {
 				>
 					<HStack
 						align="center"
+						animate={activeStep === 0 ? "show" : "hidden"}
+						as={motion.div}
 						color="brand.1"
-						inset=".75rem auto auto 0"
+						initial="hidden"
+						inset="0.7rem auto auto 0"
 						letterSpacing={3}
 						pos="relative"
 						spacing={0}
+						variants={headingVariants}
 						w="20rem"
 					>
 						<Text
@@ -324,7 +327,9 @@ const MainSection = () => {
 						variants={headingVariants}
 						w="full"
 					>
-						<Heading textAlign="right">WARPZ</Heading>
+						<Heading left={2} pos="relative" textAlign="right">
+							WARPZ
+						</Heading>
 						<Box
 							animate="spin"
 							as={motion.div}
@@ -334,34 +339,46 @@ const MainSection = () => {
 							style={{ scale: 0.65 }}
 							top={1}
 							variants={LogoVariants}
+							w="full"
 						>
 							<Logo />
 						</Box>
 
-						<Heading>NE</Heading>
+						<Heading pos="relative" right={2}>
+							NE
+						</Heading>
 					</HStack>
 
 					<HStack
 						align="center"
-						color="brand.1"
-						inset="0 auto auto 0"
+						animate={activeStep === 0 ? "show" : "hidden"}
+						as={motion.div}
+						initial="hidden"
+						inset="-0.2rem auto auto 0"
 						letterSpacing={3}
 						pos="relative"
-						spacing={0}
-						w="20rem"
+						spacing={1}
+						variants={headingVariants}
+						w="19rem"
 					>
 						<Box
 							bg="brand.200"
 							display="inline-flex"
 							flex={1}
 							flexGrow={2}
-							h="0.1rem"
+							h="0.05rem"
 							rounded="sm"
 						/>
 						<Badge colorScheme="teal" rounded="md">
 							pre-alpha
 						</Badge>
-						<Box bg="brand.200" flex={1} flexGrow={2} h="0.1rem" rounded="sm" />
+						<Box
+							bg="brand.200"
+							flex={1}
+							flexGrow={2}
+							h="0.05rem"
+							rounded="sm"
+						/>
 					</HStack>
 				</Flex>
 				<Center direction="column" h="full" pos="relative" w="full">
@@ -383,6 +400,7 @@ const MainSection = () => {
 								"linear-gradient(325deg,hsl(163deg 89% 45% / 0.15) 0%,hsl(163deg 84% 42% / 0.15) 2%,hsl(163deg 81% 40% / 0.15) 4%,hsl(163deg 78% 37% / 0.15) 5%,hsl(164deg 76% 34% / 0.15) 7%,hsl(164deg 73% 31% / 0.15) 10%,hsl(165deg 71% 29% / 0.15) 13%,hsl(165deg 69% 26% / 0.15) 16%,hsl(165deg 61% 24% / 0.15) 20%,hsl(164deg 51% 23% / 0.15) 25%,hsl(163deg 43% 21% / 0.15) 31%,hsl(162deg 35% 20% / 0.15) 39%,hsl(161deg 27% 18% / 0.15) 48%,hsl(160deg 19% 16% / 0.15) 60%,hsl(159deg 11% 14% / 0.15) 76%,hsl(0deg 0% 11% / 0.15) 100%)"
 						}}
 						variants={stackVariants}
+						willChange="transform"
 					>
 						{/* Back button bar */}
 						<AnimatePresence custom={direction}>
