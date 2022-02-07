@@ -19,6 +19,7 @@ const theme = extendTheme({
 			"html, body": {
 				color: props.colorMode === "dark" ? "white" : "gray.600",
 				fontSize: "lg",
+				fontWeight: "thin",
 				lineHeight: "tall",
 				overflow: "hidden"
 			}

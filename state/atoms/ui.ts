@@ -10,12 +10,17 @@ export const activeStepState = atom<number[]>({
 	key: "activeStepState"
 })
 
-export const expandState = atom<boolean>({
+export const disableNextStepState = atom<boolean>({
 	default: false,
-	key: "expandState"
+	key: "disableNextStepState"
 })
 
 export const activeTokenState = atom<number>({
 	default: undefined,
 	key: "activeTokenState"
+})
+
+export const isCosmosWalletConnectedState = atom<boolean>({
+	default: false,
+	key: "isCosmosWalletConnectedState"
 })

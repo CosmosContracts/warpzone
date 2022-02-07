@@ -9,11 +9,19 @@ import {
 	Box,
 	useUpdateEffect,
 	Heading,
-	Badge
+	Badge,
+	Portal,
+	Circle
 } from "@chakra-ui/react"
 import Logo from "@components/elements/Logo"
-import { activePlanetState, activeStepState } from "@state/atoms/ui"
-import { useDebounceEffect, useMount } from "ahooks"
+import Step0 from "@components/elements/Step0"
+import {
+	activePlanetState,
+	activeStepState,
+	disableNextStepState,
+	isCosmosWalletConnectedState
+} from "@state/atoms/ui"
+import { useMount } from "ahooks"
 import type { Variants } from "framer-motion"
 import {
 	animate,
@@ -24,13 +32,9 @@ import {
 	useAnimation
 } from "framer-motion"
 import dynamic from "next/dynamic"
-import { ArrowFatLinesLeft } from "phosphor-react"
-import { useState } from "react"
-import { useRecoilState } from "recoil"
+import { ArrowLeft, ArrowRight, Wallet } from "phosphor-react"
+import { useRecoilState, useRecoilValue } from "recoil"
 
-const Step0 = dynamic(() => import("@components/elements/Step0"), {
-	ssr: false
-})
 const Stepper = dynamic(() => import("@components/elements/Stepper"), {
 	ssr: false
 })
@@ -57,22 +61,22 @@ const stackVariants: Variants = {
 		filter: "blur(0px)",
 		height: "10rem",
 		opacity: 1,
-		width: "auto"
+		width: "20rem"
 	},
 	step1: {
-		height: "14rem",
+		height: "10rem",
 		opacity: 1,
 		width: "35rem"
 	},
 	step2: {
-		height: "14rem",
+		height: "10rem",
 		opacity: 1,
 		width: "35rem"
 	},
 	step3: {
-		height: "25rem",
+		height: "30rem",
 		opacity: 1,
-		width: "45rem"
+		width: "50rem"
 	}
 }
 const stepVariants: Variants = {
@@ -152,16 +156,21 @@ const MainSection = () => {
 	const stackHeaderControls = useAnimation()
 	const stackFooterControls = useAnimation()
 	const backIconControls = useAnimation()
-	const [isHover, setHover] = useState(false)
-	const [isDisabled, setDisabled] = useState(true)
 	const [, setActivePlanet] = useRecoilState(activePlanetState)
 	const [[activeStep, direction], setActiveStep] =
 		useRecoilState(activeStepState)
+	const [disableNextStep, setDisableNextStep] =
+		useRecoilState(disableNextStepState)
+	const isCosmosWalletConnected = useRecoilValue(isCosmosWalletConnectedState)
 
 	const stepCount = 3
 
 	const backButtonBg = useMotionValue(
 		"radial-gradient(circle at top left, rgba(13,214,158,0.0), rgba(0,0,0,0) 60%)"
+	)
+
+	const walletStatusCircle = useMotionValue(
+		"linear-gradient(213deg, #D31027, #EA384D 60%)"
 	)
 
 	// When back or next button was clicked
@@ -184,9 +193,9 @@ const MainSection = () => {
 		}
 
 		if (activeStep + newDirection >= stepCount) {
-			setDisabled(true)
+			setDisableNextStep(true)
 		} else {
-			setDisabled(false)
+			setDisableNextStep(false)
 		}
 	}
 
@@ -208,46 +217,28 @@ const MainSection = () => {
 		})
 	}, [activeStep])
 
-	// Previous step button hover transitions
+	// Show/hide back/next button + bars
 	useUpdateEffect(() => {
-		if (isHover) {
-			const playHover = async () => {
-				animate(
-					backButtonBg,
-					"radial-gradient(ellipse at top left, rgba(13,214,158,0.25), rgba(0,0,0,0) 70%)"
-				)
-				await backIconControls.start("hover")
-			}
-
-			// eslint-disable-next-line no-console
-			playHover().catch(() => console.log("Hover", isHover))
+		if (isCosmosWalletConnected) {
+			animate(
+				walletStatusCircle,
+				"linear-gradient(213deg, #56ab2f, #a8e063 60%)"
+			)
 		} else {
-			const endHover = async () => {
-				animate(
-					backButtonBg,
-					"radial-gradient(circle at top left, rgba(13,214,158,0.0), rgba(0,0,0,0) 70%)"
-				)
-				await backIconControls.start("rest")
-			}
-
-			endHover().finally(() => {})
+			animate(
+				walletStatusCircle,
+				"linear-gradient(213deg, #D31027, #EA384D 60%)"
+			)
 		}
-	}, [isHover])
-
-	// Wait until enabling convert button
-	useDebounceEffect(
-		() => {
-			setDisabled(false)
-		},
-		[isDisabled],
-		{ wait: 0 }
-	)
+	}, [isCosmosWalletConnected])
 
 	// Intro animation on first mount
 	useMount(() => {
-		stackControls
-			.start("step0", { duration: 1.25, ease: "easeOut", type: "tween" })
-			.finally(() => {})
+		void stackControls.start("step0", {
+			duration: 1.25,
+			ease: "easeOut",
+			type: "tween"
+		})
 	})
 
 	return (
@@ -405,7 +396,8 @@ const MainSection = () => {
 						{/* Back button bar */}
 						<AnimatePresence custom={direction}>
 							{activeStep !== 0 && (
-								<HStack
+								<Flex
+									align="center"
 									animate={stackHeaderControls}
 									as={motion.div}
 									custom={direction}
@@ -420,7 +412,6 @@ const MainSection = () => {
 									<IconButton
 										_active={{ bg: "none" }}
 										_hover={{ bg: "none" }}
-										alignSelf="start"
 										aria-label="go back one step"
 										as={motion.button}
 										colorScheme="white"
@@ -432,24 +423,70 @@ const MainSection = () => {
 												initial="hidden"
 												variants={backIconVariants}
 											>
-												<ArrowFatLinesLeft size={22} weight="duotone" />
+												<ArrowLeft size={24} weight="duotone" />
 											</motion.div>
 										}
 										onClick={() => {
 											paginate(-1)
 										}}
-										onHoverEnd={() => setHover(false)}
-										onHoverStart={() => setHover(true)}
+										onHoverEnd={() => {
+											animate(
+												backButtonBg,
+												"radial-gradient(circle at top left, rgba(13,214,158,0.0), rgba(0,0,0,0) 70%)"
+											)
+											void backIconControls.start("rest")
+										}}
+										onHoverStart={() => {
+											animate(
+												backButtonBg,
+												"radial-gradient(ellipse at top left, rgba(13,214,158,0.25), rgba(0,0,0,0) 70%)"
+											)
+											void backIconControls.start("hover")
+										}}
 										rounded="sm"
 										// @ts-expect-error Chakra style is not supporting MotionValue type from framer motion but it works anyway
 										style={{ backgroundImage: backButtonBg }}
 										variant="ghost"
 										w="2.5rem"
 									/>
-								</HStack>
+									<Center h="2.5rem" ml="auto" mr={2} pos="relative">
+										<Box
+											as={Wallet}
+											boxSize="1.25em"
+											size={20}
+											weight="duotone"
+										/>
+										<Circle
+											as={motion.div}
+											pos="absolute"
+											right={0}
+											size={2}
+											style={{
+												// @ts-expect-error Chakra > < Motion types
+												backgroundImage: walletStatusCircle
+											}}
+											top={6}
+										/>
+									</Center>
+									<Center h="2.5rem" mr={2} pos="relative">
+										<Box
+											as={Wallet}
+											boxSize="1.25em"
+											size={20}
+											weight="duotone"
+										/>
+										<Circle
+											bg="red.100"
+											pos="absolute"
+											right={0}
+											size={2}
+											top={6}
+										/>
+									</Center>
+								</Flex>
 							)}
 						</AnimatePresence>
-						{/* Step */}
+						{/* Steps */}
 						<AnimatePresence custom={direction} exitBeforeEnter>
 							{activeStep === 0 && (
 								<Flex
@@ -471,23 +508,43 @@ const MainSection = () => {
 								</Flex>
 							)}
 							{activeStep === 1 && (
-								<Flex
-									align="center"
-									animate="center"
-									as={motion.div}
-									custom={direction}
-									direction="column"
-									exit="exit"
-									h="full"
-									initial="enter"
-									justify="center"
-									key="Step1"
-									pos="relative"
-									variants={stepVariants}
-									w="full"
-								>
-									<Step1 />
-								</Flex>
+								<>
+									<Flex
+										align="start"
+										animate="center"
+										as={motion.div}
+										custom={direction}
+										direction="column"
+										exit="exit"
+										h="full"
+										initial="enter"
+										justify="start"
+										key="Step1"
+										pos="relative"
+										px={4}
+										py={14}
+										variants={stepVariants}
+										w="full"
+									>
+										<Step1 />
+									</Flex>
+									<Portal>
+										<Heading
+											as={motion.h1}
+											bgClip="text"
+											bgGradient="linear(to-r, #f0827d, #C77974)"
+											fontSize={150}
+											fontWeight="extrabold"
+											opacity={0.2}
+											pos="absolute"
+											pr={4}
+											right={0}
+											top={0}
+										>
+											JUNO
+										</Heading>
+									</Portal>
+								</>
 							)}
 							{activeStep === 2 && (
 								<Flex
@@ -502,6 +559,8 @@ const MainSection = () => {
 									justify="center"
 									key="Step2"
 									pos="relative"
+									px={4}
+									py={10}
 									variants={stepVariants}
 									w="full"
 								>
@@ -520,9 +579,10 @@ const MainSection = () => {
 									initial="enter"
 									justify="start"
 									key="Step3"
+									pb={12}
 									pos="relative"
+									pt={12}
 									px={4}
-									py={10}
 									variants={stepVariants}
 									w="full"
 								>
@@ -540,9 +600,9 @@ const MainSection = () => {
 									bottom="0"
 									custom={direction}
 									exit="hidden"
+									h="2rem"
 									initial="hidden"
 									justify="end"
-									p={2}
 									pos="absolute"
 									variants={stackFooterVariants}
 									w="full"
@@ -550,14 +610,22 @@ const MainSection = () => {
 								>
 									<Button
 										as={motion.button}
+										border="1px solid rgba(255, 255, 255,0.125)"
+										borderBottom="0px"
+										borderBottomRadius="0px"
+										borderEnd="0px"
+										borderEndRadius="0px"
 										color="white"
 										colorScheme="brand"
-										disabled={isDisabled}
+										disabled={disableNextStep}
+										fontWeight={400}
 										onClick={() => paginate(1)}
+										py={0}
+										rightIcon={<ArrowRight size={22} weight="duotone" />}
 										rounded="2xl"
 										variant="outline"
 									>
-										Next Step
+										Next
 									</Button>
 								</HStack>
 							)}

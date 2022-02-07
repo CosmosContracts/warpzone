@@ -190,9 +190,7 @@ const variantGlass: PartsStyleFunction<typeof parts> = (props) => {
 
 	return {
 		addon: {
-			bg: mode("gray.100", "whiteAlpha.300")(props),
-			border: "1px solid",
-			borderColor: mode("inherit", "whiteAlpha.50")(props)
+			bg: mode("gray.100", "whiteAlpha.300")(props)
 		},
 		field: {
 			_disabled: {
@@ -204,22 +202,14 @@ const variantGlass: PartsStyleFunction<typeof parts> = (props) => {
 				boxShadow: "0 1px 12px juno.200",
 				zIndex: 1
 			},
-			_hover: {
-				borderColor: mode("gray.300", "whiteAlpha.400")(props)
-			},
 			_invalid: {
 				borderColor: getColor(theme, ec),
 				boxShadow: `0 0 0 1px ${getColor(theme, ec)}`
 			},
 			_readOnly: {
-				boxShadow: `inset 0 -10px 18px -10px ${getColor(theme, "juno.200")}`,
 				userSelect: "all"
 			},
-			backdropBlur: "12px",
-			bg: "whiteAlpha.50",
-			border: "2px solid",
-			borderColor: "inherit",
-			rounded: "xl"
+			bg: "blackAlpha.200"
 		}
 	}
 }

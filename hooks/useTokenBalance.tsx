@@ -12,6 +12,7 @@ import {
 import { unsafelyGetTokenInfo } from "./useTokenInfo"
 
 const DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL = 10_000
+const DEFAULT_TOKEN_BALANCE_STALE_TIME = 8_000
 
 const fetchTokenBalance = async ({
 	client,
@@ -77,7 +78,7 @@ export const useTokenBalance = (tokenSymbol: string) => {
 	return { balance, isLoading }
 }
 
-export const useMultipleTokenBalance = (tokenSymbols?: string[]) => {
+export const useMultipleTokenBalance = (tokenSymbols: string[]) => {
 	const { address, client, status } = useRecoilValue(cosmosWalletState)
 
 	const queryKey = useMemo(
@@ -98,24 +99,28 @@ export const useMultipleTokenBalance = (tokenSymbols?: string[]) => {
 				)
 			)
 
-			console.log(balances)
-
 			return tokenSymbols.map((tokenSymbol, index) => ({
 				balance: balances[index],
 				tokenSymbol
 			}))
 		},
 		{
-			enabled: status === WalletStatusType.connected,
+			enabled: Boolean(tokenSymbols && status === WalletStatusType.connected),
+			notifyOnChangeProps: ["data", "error"],
 			onError() {
 				throw new Error("Error fetching token balance")
 			},
 			refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
 			refetchIntervalInBackground: false,
-
-			refetchOnMount: "always"
+			refetchOnMount: "always",
+			refetchOnReconnect: true,
+			refetchOnWindowFocus: "always",
+			retry: false,
+			staleTime: DEFAULT_TOKEN_BALANCE_STALE_TIME
 		}
 	)
+
+	// console.log(data)
 
 	return [data, isLoading] as const
 }

@@ -2,7 +2,7 @@ import { useMultipleTokenBalance } from "@hooks/useTokenBalance"
 import { useTokenList } from "@hooks/useTokenList"
 import { useMemo } from "react"
 
-export const useGetSupportedAssetsBalancesOnChain = () => {
+export const useFetchSupportedTokens = () => {
 	const [tokenList] = useTokenList()
 
 	const convertedTokenList = useMemo(
@@ -10,35 +10,32 @@ export const useGetSupportedAssetsBalancesOnChain = () => {
 		[tokenList]
 	)
 
+	const convertedTokenNameList = useMemo(
+		() => tokenList?.tokens.map(({ name }) => name),
+		[tokenList]
+	)
+
 	const [tokenBalances, loadingBalances] =
 		useMultipleTokenBalance(convertedTokenList)
 
-	const categorizedBalances = useMemo((): [
-		typeof tokenBalances,
-		typeof tokenBalances
-	] => {
+	const categorizedBalances = useMemo((): [typeof tokenBalances] => {
 		if (!tokenBalances?.length) {
 			const fallbackTokensList =
 				convertedTokenList?.map((tokenSymbol) => ({
 					balance: 0,
 					tokenSymbol
 				})) ?? []
-			return [[], fallbackTokensList]
+			return [fallbackTokensList]
 		}
 
 		const userTokens = []
-		const otherTokens = []
 
 		for (const token of tokenBalances) {
-			if (token.balance > 0) {
-				userTokens.push(token)
-			} else {
-				otherTokens.push(token)
-			}
+			userTokens.push(token)
 		}
 
-		return [userTokens, otherTokens]
+		return [userTokens]
 	}, [tokenBalances, convertedTokenList])
 
-	return [loadingBalances, categorizedBalances] as const
+	return [loadingBalances, categorizedBalances, convertedTokenNameList] as const
 }

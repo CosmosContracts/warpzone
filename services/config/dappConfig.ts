@@ -3,12 +3,12 @@ import type { AppConfig, NetworkConfigs } from "."
 
 export const testnet: AppConfig = {
 	addressPrefix: "juno",
-	chainId: "uni-1",
-	chainName: "UNI TESTNET",
+	chainId: "uni-2",
+	chainName: "uni-2 (testnet)",
 	contract: "",
 	gasPrice: 0.025,
-	httpUrl: "https://api.uni.junomint.com",
-	rpcUrl: "https://rpc.uni.junomint.com",
+	httpUrl: "https://lcd.juno.giansalex.dev:443",
+	rpcUrl: "https://rpc.juno.giansalex.dev:443",
 	token: {
 		coinDecimals: 6,
 		coinDenom: "Juno",

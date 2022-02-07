@@ -51,12 +51,15 @@ export const useTokenList = () => {
 			return await response.json()
 		},
 		{
+			notifyOnChangeProps: ["data", "error"],
 			onError() {
 				throw new Error("Error fetching token list")
 			},
-			refetchInterval: 1_000 * 60,
-			refetchIntervalInBackground: true,
-			refetchOnMount: false
+			refetchOnMount: true,
+			refetchOnReconnect: true,
+			refetchOnWindowFocus: true,
+			retry: false,
+			staleTime: 3 * 60 * 1_000
 		}
 	)
 

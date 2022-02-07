@@ -1,41 +1,75 @@
-import { InputGroup, Input, VStack } from "@chakra-ui/react"
-import { cosmosWalletState } from "@state/atoms/cosmosWallet"
-import { useEthers } from "@usedapp/core"
-import { useRecoilValue } from "recoil"
+import {
+	Text,
+	VStack,
+	Flex,
+	Button,
+	ButtonGroup,
+	HStack
+} from "@chakra-ui/react"
+import { CurrencyEth } from "phosphor-react"
 import { AssetList } from "./elements/components/AssetList"
+import Pagination from "./elements/components/Pagination"
 
 const Step3 = () => {
-	const { account } = useEthers()
-	const { address } = useRecoilValue(cosmosWalletState)
-
 	return (
-		<VStack align="center" w="full">
+		<VStack align="center" h="full" w="full">
 			<VStack
-				border="2px double"
-				borderColor="whiteAlpha.500"
+				border="1px solid rgba(255, 255, 255, 0.125)"
+				h="full"
 				overflow="hidden"
 				rounded="2xl"
 				spacing="0"
 				w="full"
 			>
-				<Input
+				<Flex
+					align="center"
 					border="0"
-					borderBottom="1px double"
-					color="juno.200"
-					colorScheme="juno"
-					defaultValue={address}
-					maxH="1rem"
+					borderBottom="1px solid"
+					borderColor="brand.200"
+					color="white"
 					px={2}
-					py={5}
+					py={1}
 					readOnly
 					rounded="0"
-					type="tel"
-					variant="glass"
-				/>
-
+					w="full"
+				>
+					<Text>Available Assets</Text>
+					<HStack ml="auto">
+						<ButtonGroup isAttached variant="ghost">
+							<Button
+								border="1px solid rgba(255, 255, 255, 0.125)"
+								fontSize="sm"
+								fontWeight="400"
+								h="1.5rem"
+								roundedStart="0.6rem"
+							>
+								Amount
+							</Button>
+							<Button
+								border="1px solid rgba(255, 255, 255, 0.125)"
+								fontSize="sm"
+								fontWeight="400"
+								h="1.5rem"
+							>
+								Juno
+							</Button>
+							<Button
+								border="1px solid rgba(255, 255, 255, 0.125)"
+								fontSize="sm"
+								fontWeight="400"
+								h="1.5rem"
+								py={2}
+								roundedEnd="0.6rem"
+							>
+								<CurrencyEth size={20} weight="regular" />
+							</Button>
+						</ButtonGroup>
+					</HStack>
+				</Flex>
 				<AssetList />
+				<Pagination />
 			</VStack>
-			<InputGroup variant="glass">
+			{/* <InputGroup variant="glass">
 				<Input
 					color="blue.200"
 					colorScheme="blue"
@@ -43,7 +77,7 @@ const Step3 = () => {
 					h="3rem"
 					type="tel"
 				/>
-			</InputGroup>
+			</InputGroup> */}
 		</VStack>
 	)
 }

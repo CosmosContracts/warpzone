@@ -47,7 +47,7 @@ const App = ({
 	useEffect(() => {
 		setTimeout(() => {
 			setLoading(false)
-		}, 1_600)
+		}, 1_250)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
@@ -65,6 +65,7 @@ const App = ({
 							</Head>
 							<DefaultSeo {...defaultSEOConfig} />
 							{isLoading && <LoadingScreen />}
+							{/* pointerEvents "none" in production, "all" to better debug threejs */}
 							<Flex h="100vh" pointerEvents="none" w="100vw">
 								<Component key={router.route} {...pageProps} />
 								<Background />
