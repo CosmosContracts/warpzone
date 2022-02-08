@@ -29,7 +29,6 @@ const Step3 = () => {
 					color="white"
 					px={2}
 					py={1}
-					readOnly
 					rounded="0"
 					w="full"
 				>

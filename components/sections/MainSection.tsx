@@ -372,7 +372,7 @@ const MainSection = () => {
 						/>
 					</HStack>
 				</Flex>
-				<Center direction="column" h="full" pos="relative" w="full">
+				<Center h="full" pos="relative" w="full">
 					<Stack
 						align="center"
 						animate={stackControls}
