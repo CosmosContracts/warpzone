@@ -26,6 +26,13 @@
 3. Install dependencies ("npm install" or "yarn")
 4. Run development server ("npm run dev" or "yarn dev")
 
+## Contribution
+
+1. Stage your changes ("git add .")
+2. Type "git commit" to launch the commitizen CLI
+3. Fill in every part of the commit message
+4. Type ":qa" and hit Enter.
+
 ## Requirements
 
 Please ensure you have the [**Keplr wallet extension**](https://chrome.google.com/webstore/detail/keplr/dmkamcknogkgcdfhhbddcghachkejeap) installed in your **Chrome based browser** (Chrome, Brave, etc).
