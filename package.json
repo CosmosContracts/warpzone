@@ -45,6 +45,7 @@
 		"phosphor-react": "^1.4.0",
 		"postprocessing": "^6.23.5",
 		"react": "rc",
+		"react-device-detect": "^2.1.2",
 		"react-dom": "rc",
 		"react-query": "3.34.11",
 		"recoil": "^0.5.2",

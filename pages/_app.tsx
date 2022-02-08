@@ -1,6 +1,5 @@
 // eslint-disable-next-line canonical/filename-match-exported
 import { ChakraProvider, Flex } from "@chakra-ui/react"
-import LoadingScreen from "@components/sections/LoadingScreen"
 import type { EmotionCache } from "@emotion/cache"
 import { CacheProvider } from "@emotion/react"
 import { queryClient } from "@services/client"
@@ -11,6 +10,7 @@ import type { AppProps } from "next/app"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import { useEffect, useState } from "react"
+import { isFirefox } from "react-device-detect"
 import { QueryClientProvider } from "react-query"
 // import { ReactQueryDevtools } from "react-query/devtools"
 import { RecoilRoot } from "recoil"
@@ -21,6 +21,13 @@ import createEmotionCache from "../theme/createEmotionCache"
 const Background = dynamic(() => import("@components/sections/Background"), {
 	ssr: false
 })
+
+const LoadingScreen = dynamic(
+	() => import("@components/sections/LoadingScreen"),
+	{
+		ssr: false
+	}
+)
 
 const clientSideEmotionCache = createEmotionCache()
 
@@ -45,9 +52,13 @@ const App = ({
 	const [isLoading, setLoading] = useState<boolean>(true)
 
 	useEffect(() => {
-		setTimeout(() => {
-			setLoading(false)
-		}, 1_250)
+		if (isFirefox) {
+			setLoading(true)
+		} else {
+			setTimeout(() => {
+				setLoading(false)
+			}, 1_250)
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 

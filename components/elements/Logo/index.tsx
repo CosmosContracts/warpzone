@@ -1,7 +1,7 @@
 import { motion } from "framer-motion"
 
 const Logo = () => (
-	<motion.svg viewBox="0 0 100 100">
+	<motion.svg height="100%" viewBox="0 0 100 100" width="100%">
 		<path
 			d="M45 13.1c9.7-5.6 21.9-4.4 30.3 3l4.6 4-6-1.2c-7.7-1.5-15.9-.1-23.2 4.1-7.3 4.2-12.6 10.6-15.1 18l-2 5.8-1.2-6C30.3 29.9 35.3 18.7 45 13.1z"
 			fill="rgb(241, 242, 243)"
