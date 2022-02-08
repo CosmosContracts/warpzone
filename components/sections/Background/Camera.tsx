@@ -42,7 +42,10 @@ export const Camera = ({ ...props }) => {
 	}
 
 	const toEnterWarpAnim = () => {
-		void cameraControlsRef.current?.setLookAt(0, 0, 700, 0, 0, 0, true)
+		void cameraControlsRef.current?.setLookAt(0, 0, 900, 0, 100, 0, true)
+		void cameraControlsRef.current?.rotateAzimuthTo(1, true)
+		void cameraControlsRef.current?.rotatePolarTo(2.35, true)
+		void cameraControlsRef.current?.truck(630, -100, true)
 	}
 
 	useEffect(() => {
