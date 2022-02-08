@@ -19,7 +19,7 @@
 - Framer Motion 6
 - React Three Fiber 8 (Beta)
 
-## Getting Started
+## Developement
 
 1. Clone or fork this repository
 2. (optional) Edit config parameters in "**/services/config/dappConfig**"
